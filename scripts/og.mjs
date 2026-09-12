@@ -30,11 +30,16 @@ const wordmark = (await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'u
   .replace(/class="cls-2"/g, 'fill="#16F4D0"')
   .replace('<svg ', '<svg class="logo" ');
 
+/*
+ * Headings are transcribed from each page's h1, not read from the data files,
+ * because they carry their own line breaks. That means they drift when a page
+ * is reworded: check them against src/data/*.ts when you change an h1.
+ */
 const CARDS = [
   { file: 'home.png', heading: 'Prove the <span class="mark">value</span>,\nprove your why.', eyebrow: null },
   { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
   { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'For startups' },
-  { file: 'how-we-work.png', heading: 'Fast, hands-on, and\nspecific to your business.', eyebrow: 'How we work' },
+  { file: 'how-we-work.png', heading: 'Priced before we start.\nUseful after we leave.', eyebrow: 'How we work' },
   { file: 'who-we-are.png', heading: 'We have been\nin your shoes.', eyebrow: 'Who we are' },
   { file: 'contact.png', heading: 'Start a conversation.', eyebrow: 'Contact' },
   { file: 'privacy.png', heading: 'Privacy notice.', eyebrow: 'Legal' },

@@ -8,8 +8,8 @@ export const meta: PageMeta = {
 };
 
 export const hero: Hero = {
-  heading: 'Fast, hands-on, and specific to your business.',
-  sub: 'We work as an extension of your team rather than from the sidelines. Healthcare rarely follows a straight line, so we plan for that instead of pretending otherwise.',
+  heading: 'Priced before we start. Useful after we leave.',
+  sub: 'We work inside your team rather than presenting to it. You see the deliverables and the price before you commit to anything, and what we hand over has to keep working once we have gone.',
 };
 
 export const engagement = {
@@ -18,7 +18,7 @@ export const engagement = {
     {
       heading: 'Discover',
       when: 'Week one',
-      body: 'Every product has a context. We spend the first conversations understanding the problem you are solving, how you are solving it, and what the market is currently demanding of you. We listen before we propose.',
+      body: 'We spend the first conversations on the problem you are solving, how you are solving it, and what your market is currently demanding of you. No proposal until we understand all three.',
     },
     {
       heading: 'Brief',
@@ -62,7 +62,7 @@ export const offers = {
 
 export const tests = {
   heading: 'Six tests for anything we hand over',
-  lede: 'We are in this for long relationships, which means the work has to keep earning after the invoice. Every deliverable has to pass the same six tests before it leaves us.',
+  lede: 'Work that stops being useful the month after we invoice it was not worth buying. Every deliverable passes the same six tests before it leaves us.',
   items: [
     '<strong>Impactful</strong>: it changes a decision someone is about to make',
     '<strong>Relevant</strong>: it speaks to your market, not to consultancy in general',
@@ -84,7 +84,7 @@ export const qa = {
     {
       question: 'Can we trust you to speak to our customers directly?',
       answer:
-        'Yes. We have worked with organisations around the world and can be clear about our purpose, our limits and our respect for a client&rsquo;s own processes. We turn up as an extension of your team.',
+        'Yes, and we have done it with organisations around the world. We are explicit about who we are, what we are asking and why, and we work to your rules on how your customers are approached. We turn up as part of your team, not as a third party running research on them.',
     },
     {
       question:

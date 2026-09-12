@@ -48,16 +48,16 @@ export const different = {
       body: 'We have carried the number into the meeting and had it questioned. That is a different experience from advising on it.',
     },
     {
-      heading: 'We roll up our sleeves',
-      body: 'We do not shout from the sidelines. We get into the data, sit with your team, and hand back things people can use on Monday.',
+      heading: 'We get into the data, not just the strategy',
+      body: 'We do not hand over a set of recommendations and leave. We sit with your analysts, work in the actual numbers, and give back things your team can use on Monday.',
     },
     {
       heading: 'We know how health systems buy',
       body: 'Evidence that convinces a clinician does not always convince a commissioner. What clears an NHS business case is not what clears a German sickness fund or a US integrated delivery network. We build for the system you are selling into, and we know where the approval actually sits.',
     },
     {
-      heading: 'We are comfortable with ambiguity',
-      body: 'Healthcare rarely follows a straight path. We are used to incomplete data, shifting stakeholders and a roadmap that moved last week.',
+      heading: 'We do not need the data to be tidy',
+      body: 'Incomplete data, a stakeholder who leaves mid-project, a roadmap that moved last week. That is the normal case in healthcare, not the exception, and it is what we plan for.',
     },
   ],
 };
