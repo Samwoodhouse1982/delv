@@ -286,6 +286,37 @@ deliverables on For startups, and a working session on How we work.
 
 Setting `src` and `alt` on a slot turns it into the image, in the same space.
 
+### The intro
+
+A 5.5-second brand animation, added 12 Sep 2026 from a design handoff kept at
+`reference/design_handoff_delv_intro/`. The phrase **deliver value.** types
+itself in, the letters that are not part of the logo drop away, the survivors
+slide together into **delv.**, and the camera dives into the aquamarine full
+stop until it fills the frame.
+
+The handoff is marked high fidelity: colours, type, timing and easing are
+final and reproduced exactly. It ships a React component; the site is Astro,
+so `Intro.astro` is the same piece in vanilla, to the same numbers.
+
+Three behaviours matter more than the animation itself.
+
+**It plays once per session.** The gate is a blocking script in the document
+head, not in the component, because deciding any later means a returning
+visitor sees a frame of the overlay before it is removed. `sessionStorage`
+means it replays in a new tab; `localStorage` would make it once-ever.
+
+**Reduced motion skips it entirely.** The overlay is never rendered at all,
+rather than rendered and hurried.
+
+**The letters are measured against the real EB Garamond**, never a fallback.
+They stay hidden until `document.fonts.load` resolves, because a fallback
+first frame gives different advance widths and the letters visibly jump when
+the real face arrives. The face is preloaded ahead of the gate script.
+
+The overlay is `aria-hidden`, has no focusable children, and any key or click
+ends it early. That last is not in the handoff: 5.5 seconds is a long time to
+hold someone who arrived to read something.
+
 ### Proof and quotes
 
 Added after the prototype, at Sam's request, against §13.6. Two components and

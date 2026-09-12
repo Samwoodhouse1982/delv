@@ -304,6 +304,32 @@ column, section rules draw from the left. Hover is colour only, plus a nav
 underline that grows and list tick marks that extend a few pixels. Parallax,
 counters and hover transforms that move a block stay out.
 
+**The intro** is a separate thing again: a 5.5s brand animation that plays
+once per session on first entry, ported from
+`reference/design_handoff_delv_intro/` (its README has the timing table and
+the geometry). `Intro.astro` is the vanilla port of the handoff's React
+component, to the same numbers. Everything visible is a pure function of
+elapsed seconds; there is no state but the clock.
+
+Two things about it are worth knowing before you touch it.
+
+*The gate runs in the document head*, as a blocking inline script in
+`Base.astro`, not in the component. It has to: deciding later means a
+returning visitor gets a frame of the overlay before it is taken away. It sets
+`data-intro="play"` on `<html>`, which is also what unhides the overlay and
+locks body scroll. Because that attribute locks scroll, the same script arms
+an 8-second timeout to remove it, so a module script that never arrives cannot
+leave the page stuck.
+
+*The letters are measured against the real font, never a fallback.* The
+component holds them at `visibility: hidden` until `document.fonts.load` for
+EB Garamond 600 resolves, because a fallback first frame gives different
+advance widths and every letter jumps when the real face swaps in. The face is
+preloaded in the head, ahead of the gate script, so this resolves from cache.
+
+`sessionStorage` means the intro replays in a new tab, which is what
+`sessionStorage` is. Swap it for `localStorage` if you want once-ever.
+
 **The hero has its own sequence**, the claim demo. Three beats over
 about two seconds, once on load: the activity claim is struck through, the
 evidenced claim rises in, the highlighter sweeps the number. Nothing else on

@@ -1,0 +1,271 @@
+---
+/**
+ * The delv. intro, ported from the design handoff in
+ * design_handoff_delv_intro/ (README.md has the timing table and geometry).
+ *
+ * The handoff ships a React component; this is the same piece in vanilla, to
+ * the same numbers. Everything visible is a pure function of elapsed seconds,
+ * exactly as the handoff specifies, so there is no state beyond the clock.
+ *
+ * It does not play for everyone. A blocking script in the document head, in
+ * Base.astro, decides before the first paint: seen this session, or reduced
+ * motion, and the overlay never renders at all. That check has to happen in
+ * the head, because deciding later means returning visitors get a flash of
+ * the overlay before it is taken away.
+ */
+const PHRASE = 'deliver value.';
+---
+
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-stage" id="introStage">
+    <div class="intro-zoom" id="introZoom">
+      <div class="intro-ground" id="introGround"></div>
+      <div class="intro-group" id="introGroup">
+        <div class="intro-row" id="introRow">
+          {PHRASE.split('').map((c) => <span>{c === ' ' ? ' ' : c}</span>)}
+        </div>
+      </div>
+    </div>
+    <div class="intro-hole" id="introHole"></div>
+  </div>
+  <div class="intro-flash" id="introFlash"></div>
+</div>
+
+<script>
+  const STAGE_W = 1600;
+  const STAGE_H = 900;
+  const SIZE = 150;
+  const ROW_H = SIZE * 1.2;
+  const FONT = `600 ${SIZE}px "EB Garamond", Georgia, serif`;
+
+  const KEEP = new Set([0, 1, 2, 8, 13]);
+  const PERIOD = 13;
+
+  const CUE = { Arrive: 0, Mark: 1.2, Merge: 2.0, Lock: 3.0, Enter: 4.3 };
+  const DURATION = 5.5;
+  const GROUND_START = 2400;
+  const GROUND_END = 700;
+  const DIVE_MAX = 6;
+  const HOLE_MAX = 160;
+
+  const C = {
+    ink: [21, 59, 80],
+    // The handoff sets the surviving letters to Yale Blue. Pacific Blue
+    // #429EA6 -> [66, 158, 166] is the documented alternative.
+    accent: [21, 59, 80],
+    dot: [22, 244, 208],
+  };
+
+  const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const easeInOutCubic = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeOutBack = (t: number) =>
+    1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2);
+  const easeInQuad = (t: number) => t * t;
+
+  const ramp =
+    (ease: (t: number) => number) => (start: number, end: number) => (T: number) =>
+      ease(clamp((T - start) / (end - start), 0, 1));
+  const enter = ramp(easeOutCubic);
+  const collapse = (s: number, e: number) => {
+    const f = ramp(easeInOutCubic)(s, e);
+    return (T: number) => 1 - f(T);
+  };
+  const pop = ramp(easeOutBack);
+  const dive = ramp(easeInQuad);
+
+  const mix = (A: number[], B: number[], t: number) =>
+    A.map((v, i) => v + (B[i] - v) * clamp(t, 0, 1));
+  const rgb = (c: number[]) => `rgb(${c.map(Math.round).join(',')})`;
+
+  const overlay = document.getElementById('intro');
+  const root = document.documentElement;
+
+  const finish = () => {
+    root.removeAttribute('data-intro');
+    overlay?.remove();
+  };
+
+  if (overlay && root.getAttribute('data-intro') === 'play') {
+    const stage = document.getElementById('introStage')!;
+    const zoom = document.getElementById('introZoom')!;
+    const ground = document.getElementById('introGround')!;
+    const group = document.getElementById('introGroup')!;
+    const row = document.getElementById('introRow')!;
+    const hole = document.getElementById('introHole')!;
+    const flash = document.getElementById('introFlash')!;
+    const spans = Array.from(row.children) as HTMLElement[];
+    const chars = spans.map((s) => s.textContent!.replace(' ', ' '));
+
+    const fit = () =>
+      stage.style.setProperty(
+        'transform',
+        `scale(${Math.max(innerWidth / STAGE_W, innerHeight / STAGE_H)})`,
+      );
+    fit();
+    addEventListener('resize', fit, { passive: true });
+
+    /*
+     * Measure only once the real font is in. The handoff is explicit about
+     * why: a fallback first frame gives different advance widths, so every
+     * letter jumps sideways the moment EB Garamond swaps in. The face is
+     * already preloaded in the head, so this resolves immediately from cache.
+     */
+    const measure = () => {
+      const ctx = document.createElement('canvas').getContext('2d')!;
+      ctx.font = FONT;
+      const w = chars.map((c) => ctx.measureText(c).width);
+      const d = ctx.measureText('.');
+      const inkAsc = d.actualBoundingBoxAscent;
+      const inkDesc = d.actualBoundingBoxDescent;
+      const fAsc = d.fontBoundingBoxAscent;
+      const fDesc = d.fontBoundingBoxDescent;
+      const baselineFromTop = (ROW_H - (fAsc + fDesc)) / 2 + fAsc;
+      return {
+        w,
+        dotSize: inkAsc + inkDesc,
+        dotCenterFromPen: (d.actualBoundingBoxRight - d.actualBoundingBoxLeft) / 2,
+        dotCenterY: baselineFromTop - ROW_H / 2 + (inkDesc - inkAsc) / 2,
+      };
+    };
+
+    const run = (M: ReturnType<typeof measure>) => {
+      const W = M.w;
+      const dropBefore: number[] = [];
+      let acc = 0;
+      for (let i = 0; i < chars.length; i++) {
+        dropBefore.push(acc);
+        if (!KEEP.has(i)) acc += W[i];
+      }
+      const dropTotal = acc;
+      const fullWidth = W.reduce((a, b) => a + b, 0);
+
+      // Fixed measured widths, set once. Animating width would reflow the row
+      // every frame, which is what the handoff warns visibly janks.
+      spans.forEach((s, i) => (s.style.width = `${W[i]}px`));
+      overlay.classList.add('is-ready');
+
+      const collapseW = collapse(CUE.Merge, CUE.Merge + 0.85);
+      const fadeOut = collapse(CUE.Merge, CUE.Merge + 0.36);
+
+      let raf = 0;
+      let ended = false;
+      const t0 = performance.now();
+
+      const frame = (T: number) => {
+        const mark = enter(CUE.Mark, CUE.Mark + 0.55)(T);
+        const dotPop =
+          pop(CUE.Lock - 0.1, CUE.Lock + 0.3)(T) *
+          (1 - enter(CUE.Lock + 0.3, CUE.Lock + 0.62)(T));
+        const push = enter(CUE.Merge, CUE.Enter + 0.2)(T);
+        const shrink = collapse(CUE.Merge + 0.25, CUE.Enter - 0.05)(T);
+        const cool = enter(CUE.Merge + 0.5, CUE.Lock + 0.05)(T);
+        const diveP = dive(CUE.Enter, CUE.Enter + 1.05)(T);
+        const land = enter(CUE.Enter + 0.98, CUE.Enter + 1.2)(T);
+
+        const groupScale = 1 + 0.17 * push;
+        const prog = 1 - collapseW(T);
+        const recentre = (dropTotal / 2) * prog;
+
+        const dotX =
+          STAGE_W / 2 +
+          groupScale *
+            (fullWidth / 2 - W[PERIOD] + M.dotCenterFromPen - dropTotal * prog + recentre);
+        const dotY = STAGE_H / 2 + M.dotCenterY * groupScale;
+        const holeSize = M.dotSize * groupScale * Math.pow(HOLE_MAX, diveP);
+        const groundSize = GROUND_END + (GROUND_START - GROUND_END) * shrink;
+
+        // Scale only, about the full stop's ink centre. Panning to recentre
+        // while the zoom is shallow is what made earlier versions lurch.
+        zoom.style.transformOrigin = `${dotX}px ${dotY}px`;
+        zoom.style.transform = `scale(${Math.pow(DIVE_MAX, diveP)})`;
+
+        ground.style.width = `${groundSize}px`;
+        ground.style.height = `${groundSize}px`;
+        group.style.transform = `scale(${groupScale}) translateX(${recentre}px)`;
+
+        for (let i = 0; i < spans.length; i++) {
+          const s = spans[i];
+          const start = CUE.Arrive + 0.05 * i;
+          const p = enter(start, start + 0.55)(T);
+          let opacity = p;
+          let extra = '';
+
+          if (KEEP.has(i)) {
+            s.style.color =
+              i === PERIOD
+                ? rgb(mix(C.ink, C.dot, mark))
+                : rgb(mix(mix(C.ink, C.accent, mark), C.ink, cool));
+            if (i === PERIOD) extra = ` scale(${1 + 0.22 * dotPop})`;
+          } else {
+            opacity = p * (1 - 0.66 * mark) * fadeOut(T);
+            extra = ` translateY(${12 * (1 - fadeOut(T))}px) scale(${0.5 + 0.5 * fadeOut(T)})`;
+          }
+
+          s.style.opacity = String(opacity);
+          s.style.transform =
+            `translate(${-dropBefore[i] * prog}px, ${(1 - p) * 58}px)` +
+            ` rotate(${(1 - p) * -7}deg)${extra}`;
+        }
+
+        // A separate disc, starting at the glyph's exact ink diameter in the
+        // same place and colour, so it reads as the full stop swallowing the
+        // screen. Scaling the live text this far would rasterise badly.
+        hole.style.width = `${holeSize}px`;
+        hole.style.height = `${holeSize}px`;
+        hole.style.left = `${dotX}px`;
+        hole.style.top = `${dotY}px`;
+        hole.style.marginLeft = `${-holeSize / 2}px`;
+        hole.style.marginTop = `${-holeSize / 2}px`;
+        hole.style.opacity = diveP > 0 ? '1' : '0';
+
+        flash.style.opacity = String(land);
+        if (land > 0) overlay.style.pointerEvents = 'none';
+      };
+
+      const end = () => {
+        if (ended) return;
+        ended = true;
+        cancelAnimationFrame(raf);
+        removeEventListener('resize', fit);
+        finish();
+      };
+
+      const tick = (now: number) => {
+        const T = (now - t0) / 1000;
+        frame(T);
+        if (T >= DURATION) return end();
+        raf = requestAnimationFrame(tick);
+      };
+
+      frame(0);
+      raf = requestAnimationFrame(tick);
+
+      // Not in the handoff, but 5.5 seconds is a long time to hold someone
+      // who has arrived to read something. Any key or click ends it.
+      addEventListener('keydown', end, { once: true });
+      overlay.addEventListener('click', end, { once: true });
+    };
+
+    const start = () => {
+      try {
+        sessionStorage.setItem('delv:intro', 'seen');
+      } catch {
+        // Private mode. It replays next visit; nothing else breaks.
+      }
+      run(measure());
+    };
+
+    if (document.fonts) {
+      document.fonts
+        .load(`600 ${SIZE}px "EB Garamond"`)
+        .then(start)
+        .catch(start);
+    } else {
+      start();
+    }
+  } else {
+    finish();
+  }
+</script>

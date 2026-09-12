@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Intro from '../components/Intro.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
@@ -73,6 +74,30 @@ const ogUrl = new URL(ogImage, Astro.site).href;
       crossorigin
     />
 
+    <script is:inline>
+      /*
+       * Runs before the body paints, so the overlay is never shown to someone
+       * who should not see it. Three ways out: already seen this session,
+       * reduced motion, or storage unavailable.
+       *
+       * The timeout is a dead man's switch. This attribute also locks body
+       * scroll, so if the module script never arrives the page would be stuck.
+       */
+      try {
+        if (
+          sessionStorage.getItem('delv:intro') !== 'seen' &&
+          !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          document.documentElement.setAttribute('data-intro', 'play');
+          setTimeout(function () {
+            document.documentElement.removeAttribute('data-intro');
+          }, 8000);
+        }
+      } catch (e) {
+        /* Storage blocked. The intro simply does not play. */
+      }
+    </script>
+
     {
       jsonLd && (
         <script
@@ -85,6 +110,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
   </head>
 
   <body>
+    <Intro />
     <a class="skip ui" href="#main">Skip to content</a>
     <Header />
     <main id="main" tabindex="-1">

@@ -389,6 +389,97 @@ footer :focus-visible {
 }
 
 /* --------------------------------------------------------------------------
+   Intro overlay
+
+   Hidden unless the head script has decided this visitor should see it, so a
+   returning visitor never gets a frame of it. The letters stay invisible
+   until the script has measured them against the real EB Garamond: measuring
+   against a fallback gives different advance widths, and every letter jumps
+   when the real face swaps in.
+   -------------------------------------------------------------------------- */
+
+.intro {
+  display: none;
+}
+[data-intro="play"] .intro {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--paper-dim);
+  overflow: hidden;
+}
+/* No scrolling behind the overlay while it plays. */
+[data-intro="play"] body {
+  overflow: hidden;
+}
+
+.intro-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1600px;
+  height: 900px;
+  margin-left: -800px;
+  margin-top: -450px;
+}
+.intro-zoom {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.intro-ground {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* Rosy taupe lightened towards soft linen, per the handoff's token table. */
+  background: #dec8bf;
+}
+.intro-group {
+  position: relative;
+  flex-shrink: 0;
+}
+.intro-row {
+  font-family: "EB Garamond", "EB Garamond Fallback", Georgia, serif;
+  font-weight: 600;
+  font-size: 150px;
+  line-height: 1.2;
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  justify-content: center;
+  /* Revealed by the script once the row has been measured. */
+  visibility: hidden;
+}
+.intro.is-ready .intro-row {
+  visibility: visible;
+}
+.intro-row > span {
+  display: inline-block;
+  white-space: pre;
+  flex-shrink: 0;
+  transform-origin: 50% 80%;
+  opacity: 0;
+}
+.intro-hole {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--mark);
+  opacity: 0;
+}
+.intro-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
    The dot
 
    The brand mark is a full stop, so the full stop is the background graphic.
