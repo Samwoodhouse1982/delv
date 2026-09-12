@@ -4,9 +4,18 @@ import ClaimDemo from '../components/ClaimDemo.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Pillars from '../components/Pillars.astro';
 import ProblemList from '../components/ProblemList.astro';
+import Quote from '../components/Quote.astro';
+import Results from '../components/Results.astro';
 import Rule from '../components/Rule.astro';
 import { site } from '../data/site';
 import { claim, cta, hero, meta, problems, stages, table, what } from '../data/home';
+import { placement, quoteFor, resultsFor } from '../data/proof';
+
+// Empty until there is proof to publish, and both bands render nothing when
+// they are. See src/data/proof.ts.
+const proofResults = resultsFor('home');
+const proofQuote = quoteFor('home');
+const proofCopy = placement.home;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -72,6 +81,22 @@ const jsonLd = {
     </div>
   </div>
 
+  {
+    proofResults.length > 0 && (
+      <div class="band">
+        <div class="wrap">
+          <div class="split" style="margin-bottom:clamp(28px,3vw,44px)">
+            <h2>{proofCopy.heading}</h2>
+            {proofCopy.lede && (
+              <p class="muted" style="margin:0" set:html={proofCopy.lede} />
+            )}
+          </div>
+          <Results items={proofResults} />
+        </div>
+      </div>
+    )
+  }
+
   <div class="band">
     <div class="wrap split">
       <div>
@@ -86,6 +111,16 @@ const jsonLd = {
       </div>
     </div>
   </div>
+
+  {
+    proofQuote && (
+      <div class="band band--tight dim">
+        <div class="wrap">
+          <Quote quote={proofQuote} />
+        </div>
+      </div>
+    )
+  }
 
   <CtaBand cta={cta} />
 </Base>

@@ -32,7 +32,9 @@ npm run a11y         # just the axe pass (needs a build first)
 
 `npm run a11y` serves `dist/` and runs axe-core over all eight pages at 320,
 375, 768, 1024 and 1440px, and fails on any violation or any horizontal
-overflow. It needs a Chromium:
+overflow. `npm run check:proof` does the same against a build with the proof
+and quote slots filled, which a normal build leaves empty. Both need a
+Chromium:
 
 ```
 npx playwright install chromium
@@ -63,6 +65,7 @@ opening a component.
 | `src/data/contact.ts` | `/contact`, including the form fields and messages |
 | `src/data/privacy.ts` | `/privacy` |
 | `src/data/site.ts` | nav, footer, company details, email |
+| `src/data/proof.ts` | results and quotes, and which pages show them |
 
 Strings are rendered with `set:html`, so they keep their typographic
 characters — `&rsquo;`, `&mdash;`, `&middot;`, `&ldquo;` — and must stay
@@ -85,6 +88,62 @@ the bitmaps.
 Adding a section means a component in `src/components/` and a block in the
 page file. The components are deliberately thin: they take content and render
 the prototype's markup, and hold no copy of their own.
+
+---
+
+## Proof and quotes
+
+`src/data/proof.ts` holds two registries — anonymised `results` and client
+`quotes` — and a `placement` map saying which page shows which. **Both
+registries are empty.** The components render nothing when they are, so the
+proof band and the quote band do not appear at all today and the live site
+looks exactly as it did before the slots existed.
+
+That is deliberate rather than unfinished. A consultancy whose argument is
+that unevidenced claims do not survive contact with a buyer cannot ship
+invented ones of its own, so there is no sample content anywhere in a normal
+build.
+
+To see the design:
+
+```
+npm run dev:proof       # or: npm run build:proof
+```
+
+`PROOF_PREVIEW=1` fills both registries with entries marked "Sample" and
+"Placeholder Name". They exist only when that variable is set, so they cannot
+reach a deploy by accident.
+
+To publish real proof, add entries to `published` / `publishedQuotes` in
+`src/data/proof.ts` and list their ids under the right page in `placement`.
+Ids that do not resolve are ignored, so withdrawing a result is a one-line
+change rather than a broken build.
+
+Where they appear:
+
+| Page | Results | Quote |
+| --- | --- | --- |
+| `/` | 3-up band after the pillars | dim band before the CTA |
+| `/for-startups` | 3-up band before the CTA | dim band before the CTA |
+| `/how-we-work` | — | band before the CTA |
+| `/who-we-are` | — | dim band before the CTA |
+
+A `Result` is a figure, the client at whatever level of anonymity they agreed
+to, what the work was, and the basis. **The basis is not optional.** The
+figure gets the highlighter, which on this site means an evidenced claim, and
+the basis is the line that earns it.
+
+Check the slots render correctly before publishing content into them:
+
+```
+npm run check:proof
+```
+
+which builds with the sample entries and runs the full axe pass over them.
+
+One thing not to add: `Review` or `AggregateRating` JSON-LD. §9 of the brief
+rules it out, and self-serving review markup on your own site is against
+Google's structured data guidelines regardless of what the brief says.
 
 ---
 
@@ -191,6 +250,8 @@ None of these blocks development. All of them block launch.
 - **Brand punctuation.** The favicon and OG cards use `delv.` with a single
   terminal full stop. `.delv.` and `:delv:` were both in the source material.
   Confirm before these are treated as final.
+- **Proof and quotes.** Both registries in `src/data/proof.ts` are empty, so
+  four bands across four pages are currently absent. See the section above.
 - **LinkedIn.** `site.sameAs` is empty, so the home page's `Organization`
   JSON-LD omits the property rather than pointing at nothing.
 - **Analytics.** Nothing is loaded. Plausible is the intended choice, and is

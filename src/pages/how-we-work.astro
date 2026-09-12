@@ -4,9 +4,13 @@ import CtaBand from '../components/CtaBand.astro';
 import DetailList from '../components/DetailList.astro';
 import OfferGrid from '../components/OfferGrid.astro';
 import QA from '../components/QA.astro';
+import Quote from '../components/Quote.astro';
 import Rule from '../components/Rule.astro';
 import StageList from '../components/StageList.astro';
 import { cta, engagement, hero, meta, offers, qa, tests } from '../data/how-we-work';
+import { quoteFor } from '../data/proof';
+
+const proofQuote = quoteFor('how-we-work');
 ---
 
 <Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
@@ -53,6 +57,16 @@ import { cta, engagement, hero, meta, offers, qa, tests } from '../data/how-we-w
       <QA items={qa.items} />
     </div>
   </div>
+
+  {
+    proofQuote && (
+      <div class="band band--tight">
+        <div class="wrap">
+          <Quote quote={proofQuote} />
+        </div>
+      </div>
+    )
+  }
 
   <CtaBand cta={cta} />
 </Base>

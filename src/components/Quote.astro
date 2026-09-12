@@ -1,0 +1,25 @@
+---
+import type { Quote } from '../data/proof';
+
+interface Props {
+  quote: Quote | null;
+}
+const { quote } = Astro.props;
+
+// A name is optional — some clients will agree to a role and not a byline.
+const attribution = [quote?.name, quote?.role, quote?.company]
+  .filter(Boolean)
+  .join(' · ');
+---
+
+{
+  quote && (
+    <figure class="quote">
+      <div class="rule rule--short" aria-hidden="true" />
+      <blockquote>
+        <p set:html={quote.text} />
+      </blockquote>
+      <figcaption set:html={attribution} />
+    </figure>
+  )
+}

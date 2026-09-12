@@ -2,8 +2,12 @@
 import Base from '../layouts/Base.astro';
 import Bios from '../components/Bios.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Quote from '../components/Quote.astro';
 import Rule from '../components/Rule.astro';
 import { bench, cta, different, hero, meta, people } from '../data/who-we-are';
+import { quoteFor } from '../data/proof';
+
+const proofQuote = quoteFor('who-we-are');
 ---
 
 <Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
@@ -48,6 +52,16 @@ import { bench, cta, different, hero, meta, people } from '../data/who-we-are';
       </div>
     </div>
   </div>
+
+  {
+    proofQuote && (
+      <div class="band band--tight dim">
+        <div class="wrap">
+          <Quote quote={proofQuote} />
+        </div>
+      </div>
+    )
+  }
 
   <CtaBand cta={cta} />
 </Base>

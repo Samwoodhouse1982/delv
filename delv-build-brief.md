@@ -54,6 +54,8 @@ delv-site/
       DetailList.astro            # hairline list with short tick markers
       ProblemList.astro
       Bios.astro                  # 2-col founder bios
+      Results.astro               # 3-up anonymised results, highlighted figure
+      Quote.astro                 # pull quote with tick rule and attribution
       QA.astro
       Note.astro                  # aquamarine left-rule callout
       CtaBand.astro
@@ -62,6 +64,7 @@ delv-site/
     data/
       home.ts  what-we-do.ts  for-startups.ts  how-we-work.ts  who-we-are.ts  contact.ts
       site.ts                     # nav, footer, company details, email, strapline
+      proof.ts                    # results and quotes registries, and placement
     pages/
       index.astro
       what-we-do.astro
@@ -205,17 +208,41 @@ Placeholders in the prototype that need replacing before launch — leave them i
 
 Build these as components and compose the pages from content files.
 
-**Home** — hero (H1 strapline + lede + two CTAs) → claim demo (what/why, captioned "Illustrative") → tick rule → dark band "Anyone can report the what" → "Sound familiar?" six-item problem list → dim band with three pillars → "We have been on your side of the table" split → dark CTA band.
+**Home** — hero (H1 strapline + lede + two CTAs) → claim demo (what/why, captioned "Illustrative") → tick rule → dark band "Anyone can report the what" → "Sound familiar?" six-item problem list → dim band with three pillars → **results band** → "We have been on your side of the table" split → **quote band** → dark CTA band.
 
 **What we do** — hero → tick rule → three alternating bands (Define / Measure / Articulate), each a split with stage label, H2, lede and a detail list → dark band "We will tell you when a claim does not hold."
 
-**For startups** — hero → "Three moments when founders call us" stage list → dim band with three stage-of-company pillars → "What you end up with" detail list plus the `Note` callout → dark CTA band ending on the Value Audit.
+**For startups** — hero → "Three moments when founders call us" stage list → dim band with three stage-of-company pillars → "What you end up with" detail list plus the `Note` callout → **results band** → **quote band** → dark CTA band ending on the Value Audit.
 
-**How we work** — hero → four-step engagement stage list → dim band with the three-up offer grid (Value Audit / Project / Embedded) → "Six tests" split → dim band Q&A (six items) → dark CTA band.
+**How we work** — hero → four-step engagement stage list → dim band with the three-up offer grid (Value Audit / Project / Embedded) → "Six tests" split → dim band Q&A (six items) → **quote band** → dark CTA band.
 
-**Who we are** — hero → two-column bios → dim band "What makes us different" (three items) → "A small core, and a wider bench" split → dark CTA band.
+**Who we are** — hero → two-column bios → dim band "What makes us different" (three items) → "A small core, and a wider bench" split → **quote band** → dark CTA band.
 
 **Contact** — hero → split with the form on the left and "What happens next" plus the deadline note on the right.
+
+### Proof and quotes
+
+Added after the prototype, at Sam's request, against §13.6. Two components and
+one data file, `src/data/proof.ts`, holding a registry of anonymised results, a
+registry of client quotes, and a map of which page shows which.
+
+**The registries ship empty and the components render nothing when they are**,
+so no proof band or quote band appears until there is something true to put in
+it. This is not a stub waiting to be finished: a consultancy arguing that
+unevidenced claims do not survive a buyer cannot publish invented ones, and
+placeholder testimonials on a live site are indistinguishable from fabricated
+ones to everyone reading it. `PROOF_PREVIEW=1` fills both registries with
+entries marked &ldquo;Sample&rdquo; and &ldquo;Placeholder Name&rdquo; so the
+design can be reviewed; they exist only when that variable is set.
+
+A result is a figure, the client at whatever level of anonymity they agreed to,
+what the work was, and the basis. The figure carries the highlighter, which on
+this site means an evidenced claim &mdash; so the basis is required, not
+optional. It is the line that earns the highlighter.
+
+No `Review` or `AggregateRating` markup accompanies any of this. §9 already
+rules it out, and self-serving review markup on your own domain is against
+Google's structured data guidelines independently of that.
 
 ---
 
@@ -325,5 +352,5 @@ Not blockers for starting, but all are blockers for launch.
 3. **Company details** for the trading disclosures strip.
 4. **Email address** for the form recipient and the footer.
 5. **Privacy notice** text, and whether analytics goes in at launch.
-6. **Proof.** There is no case study, client result or named logo anywhere on the site. For a consultancy selling evidence, this is the largest remaining gap — one anonymised result would change the conversion profile of the whole site.
+6. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
 7. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
