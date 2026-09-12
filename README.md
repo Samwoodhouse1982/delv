@@ -105,15 +105,22 @@ invented ones of its own, and a placeholder testimonial or a placeholder
 colleague on a live site is indistinguishable from a fabricated one to
 everybody reading it.
 
-To see any of it:
+**Vercel preview deployments show the placeholders automatically.** Every
+branch preview has them filled in so they can be reviewed in place; production
+never does. That is `VERCEL_ENV`, handled in `src/data/preview.ts`, and it
+needs nothing set in the Vercel dashboard.
+
+Locally:
 
 ```
 npm run dev:preview      # or: build:preview, check:preview
 ```
 
 `PLACEHOLDER_PREVIEW=1` fills all three with entries marked "Sample" and
-"Placeholder Name". They exist only when that variable is set — see
-`src/data/preview.ts` — so they cannot reach a deploy by accident.
+"Placeholder Name"; `PLACEHOLDER_PREVIEW=0` forces them off even on a preview
+deployment. Setting the variable explicitly always wins over `VERCEL_ENV`, so
+production only ever shows placeholders if someone deliberately sets it
+there.
 
 ### Proof and quotes
 

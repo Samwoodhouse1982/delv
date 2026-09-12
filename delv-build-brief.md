@@ -234,8 +234,11 @@ Three things are structurally built and empty: the proof results, the client
 quotes, and the wider bench on Who we are. All of it renders nothing while
 empty, and `PLACEHOLDER_PREVIEW=1` fills it with entries marked
 &ldquo;Sample&rdquo; and &ldquo;Placeholder Name&rdquo; so the design can be
-reviewed. The flag lives in `src/data/preview.ts`; sample content exists only
-when it is set.
+reviewed. The flag lives in `src/data/preview.ts`.
+
+Vercel preview deployments turn it on by themselves, via `VERCEL_ENV`, so every
+branch preview shows the placeholders in place with nothing to configure.
+Production never does unless the variable is set there deliberately.
 
 The rule for all three: never write sample content a reader could mistake for
 a real client or a real colleague. A placeholder testimonial or a placeholder

@@ -13,8 +13,18 @@
  *   npm run build:preview
  *   npm run check:preview
  *
- * Sample entries exist only when this is set, so they cannot reach a deploy
- * by accident. Every one of them is marked "Sample" or "Placeholder" — never
- * write sample content a reader could mistake for a real client or colleague.
+ * On Vercel this turns itself on for preview deployments, so every branch
+ * preview shows the placeholders and they can be reviewed in place without
+ * anyone setting anything. Production never shows them unless someone sets
+ * PLACEHOLDER_PREVIEW explicitly in the Production environment, which is a
+ * deliberate act rather than an accident.
+ *
+ * Every sample entry is marked "Sample" or "Placeholder" — never write sample
+ * content a reader could mistake for a real client or a real colleague.
  */
-export const isPreview = Boolean(process.env.PLACEHOLDER_PREVIEW);
+const explicit = process.env.PLACEHOLDER_PREVIEW;
+
+export const isPreview =
+  explicit === undefined
+    ? process.env.VERCEL_ENV === 'preview'
+    : explicit !== '' && explicit !== '0';
