@@ -95,7 +95,7 @@ export const qa = {
     {
       question: 'Who do you usually work with?',
       answer:
-        'Companies of all sizes, but most often startups and scale-ups evidencing their value in order to sell, raise or exit. We also run value reviews for investors looking at a portfolio company.',
+        'Companies of all sizes, but most often startups and scale-ups evidencing their value in order to sell, raise or exit. We also run value reviews for investors looking at a portfolio company. Most of that work is aimed at the NHS, and we build for health systems outside the UK where the buyer, the budget and the evidence bar are all different.',
     },
     {
       question: 'How quickly can you start?',

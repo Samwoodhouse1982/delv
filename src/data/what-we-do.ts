@@ -63,6 +63,7 @@ export const stages: Stage[] = [
     paragraphs: [
       'A finding that stays in a spreadsheet has no commercial effect. The same result has to become a business case a trust can put through its own approvals, a slide a founder can use in a room, and a line an investor can check.',
       'We build the assets and the governance around them: where each claim came from, what it can and cannot be used for, and who updates it when the data moves.',
+      'One piece of evidence, built properly, has more than one job. The same finding becomes the value proposition your sales team leads with, the narrative in an investor update, an abstract or a conference poster, the numbers inside an ROI tool, a year of content, and the training that gets a new starter saying it correctly. You are not buying a report. You are buying the asset everything else is built from.',
     ],
     details: [
       'Messaging and claims library: versioned, sourced and auditable, ready to sit alongside your QMS',

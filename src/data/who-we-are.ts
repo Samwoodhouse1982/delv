@@ -52,6 +52,10 @@ export const different = {
       body: 'We do not shout from the sidelines. We get into the data, sit with your team, and hand back things people can use on Monday.',
     },
     {
+      heading: 'We know how health systems buy',
+      body: 'Evidence that convinces a clinician does not always convince a commissioner. What clears an NHS business case is not what clears a German sickness fund or a US integrated delivery network. We build for the system you are selling into, and we know where the approval actually sits.',
+    },
+    {
       heading: 'We are comfortable with ambiguity',
       body: 'Healthcare rarely follows a straight path. We are used to incomplete data, shifting stakeholders and a roadmap that moved last week.',
     },

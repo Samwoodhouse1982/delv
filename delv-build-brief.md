@@ -199,6 +199,8 @@ One orchestrated moment: the highlighter sweep on the home hero, 750ms, 500ms de
 All copy is final and lives in `reference/prototype.html`. Move it into `src/data/*.ts` as typed objects. Rules:
 
 - **Do not rewrite, shorten, expand, or "tighten" any sentence** on your own initiative. Copy is the client's deliverable and has been through review. Sam directs changes to it; this brief does not.
+- **The value of value.** Added 12 Sep 2026, from a colleague's note. delv sells the case for doing the work, not only the work: the proof is the asset, and the narrative, the science communications and research, the value propositions, the tools, the content and the training are all built from it. The argument sits in the Articulate stage on What we do, where the outputs already live, phrased as "you are not buying a report, you are buying the asset everything else is built from".
+- **Knowing where the number has to land.** Same note. The capability being sold is not only the number but the understanding of how the NHS, and health systems elsewhere, actually buy: who signs a business case off, at what level, and how the same argument has to be rebuilt for another system. It appears in the Home "side of the table" section, as a named differentiator on Who we are, and in the "Who do you usually work with?" answer. **Deliberately not claimed: proven success.** The colleague's note mentioned it, but the proof slots are still empty, and asserting a track record the site cannot evidence is the precise failure the site exists to argue against. It goes in when there is a result to put behind it (§13.9).
 - **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "Anyone can report the what" band, in the Measure pillar, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new.
 - Preserve UK spelling throughout (organisation, prioritise, recognise).
 - Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
@@ -226,7 +228,7 @@ Build these as components and compose the pages from content files.
 
 **How we work** — hero → four-step engagement stage list → dim band with the three-up offer grid (Value Audit / Project / Embedded) → "Six tests" split → dim band Q&A (six items) → **quote band** → dark CTA band.
 
-**Who we are** — hero → two-column bios with portrait slots → dim band "What makes us different" (three items) → "A small core, and a wider bench" split, followed by **the bench list** → **quote band** → dark CTA band.
+**Who we are** — hero → two-column bios with portrait slots → dim band "What makes us different" (four items) → "A small core, and a wider bench" split, followed by **the bench list** → **quote band** → dark CTA band.
 
 **Contact** — hero → split with the form on the left and "What happens next" plus the deadline note on the right.
 

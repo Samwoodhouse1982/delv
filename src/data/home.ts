@@ -82,6 +82,7 @@ export const table = {
   paragraphs: [
     'Between us we have been a practising GP, a medical director inside a fast-scaling digital health company, and the person responsible for making a health tech vendor&rsquo;s value story stand up in NHS procurement.',
     'We have written the claim, found the data that did not support it, and had to go back and rebuild it. That is why we are useful early, and why we will tell you when a number does not hold.',
+    'The other half of the job is knowing where the number has to land. We know how the NHS buys, who signs a business case off and at what level, and how the same argument has to be rebuilt for a health system in another country.',
   ],
   action: { label: 'Who we are', href: '/who-we-are' },
 };

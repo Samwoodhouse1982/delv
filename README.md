@@ -76,6 +76,14 @@ substituting a hyphen: a colon where it introduces a list or an elaboration, a
 comma where it is parenthetical, a full stop where the clauses stand alone.
 `&middot;` separates the parts of a page title.
 
+**Two positioning arguments** run through the copy and anything new should
+carry them. First, the value of value: the proof is the asset, and the
+narrative, the research, the value propositions, the tools, the content and the
+training are all built from it, so the client is not buying a report. Second,
+knowing where the number has to land: the capability is not only the figure but
+how the NHS and other health systems actually buy it. Neither claims a track
+record; that waits on real proof.
+
 **Metrics over narrative** is the voice. Procurement scores what it can count
 and investors discount what they cannot check, so the copy says so. Keep that
 in anything new: a number with a stated basis, not three paragraphs working up
