@@ -1,4 +1,5 @@
 import type { CtaBand, Hero, PageMeta, Person } from './types';
+import { isPreview } from './preview';
 
 export const meta: PageMeta = {
   title: 'Who we are — delv.',
@@ -49,6 +50,43 @@ export const different = {
   ],
 };
 
+/**
+ * The wider bench: specialists brought in per engagement, distinct from the
+ * two co-founders above.
+ *
+ * `name` is optional. A specialist who has not agreed to be named, or a seat
+ * that is not filled yet, is listed by discipline alone — which is honest and
+ * still tells a buyer the capability is there.
+ */
+export interface BenchMember {
+  /** Omit until there is a real person who has agreed to be named. */
+  name?: string;
+  /** The discipline. Doubles as the heading when there is no name. */
+  role: string;
+  /** One sentence: what they are brought in for. */
+  body: string;
+}
+
+/** Real bench members go here. */
+const publishedBench: BenchMember[] = [];
+
+/**
+ * Shape and length reference. Obviously not real people — never replace these
+ * with anything a reader could mistake for a colleague.
+ */
+const sampleBench: BenchMember[] = [
+  {
+    name: 'Placeholder Name',
+    role: 'Health economics',
+    body: 'Cost-effectiveness and budget impact modelling, and the submissions that have to survive an HTA reviewer rather than a sales meeting.',
+  },
+  {
+    name: 'Placeholder Name',
+    role: 'Product',
+    body: 'What the product would need to capture to prove the claim, and how to instrument for it without derailing a roadmap.',
+  },
+];
+
 export const bench = {
   heading: 'A small core, and a wider bench',
   paragraphs: [
@@ -56,6 +94,8 @@ export const bench = {
   ],
   muted:
     'We would rather tell you a piece of work is outside our range than stretch to fill it.',
+  /** Renders nothing while empty, so the section reads exactly as it does now. */
+  people: isPreview ? sampleBench : publishedBench,
 };
 
 export const cta: CtaBand = {

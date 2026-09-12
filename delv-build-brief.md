@@ -54,6 +54,7 @@ delv-site/
       DetailList.astro            # hairline list with short tick markers
       ProblemList.astro
       Bios.astro                  # 2-col founder bios
+      Bench.astro                 # the wider bench, name optional
       Results.astro               # 3-up anonymised results, highlighted figure
       Quote.astro                 # pull quote with tick rule and attribution
       QA.astro
@@ -65,6 +66,7 @@ delv-site/
       home.ts  what-we-do.ts  for-startups.ts  how-we-work.ts  who-we-are.ts  contact.ts
       site.ts                     # nav, footer, company details, email, strapline
       proof.ts                    # results and quotes registries, and placement
+      preview.ts                  # the PLACEHOLDER_PREVIEW flag, shared
     pages/
       index.astro
       what-we-do.astro
@@ -216,11 +218,25 @@ Build these as components and compose the pages from content files.
 
 **How we work** — hero → four-step engagement stage list → dim band with the three-up offer grid (Value Audit / Project / Embedded) → "Six tests" split → dim band Q&A (six items) → **quote band** → dark CTA band.
 
-**Who we are** — hero → two-column bios → dim band "What makes us different" (three items) → "A small core, and a wider bench" split → **quote band** → dark CTA band.
+**Who we are** — hero → two-column bios → dim band "What makes us different" (three items) → "A small core, and a wider bench" split, followed by **the bench list** → **quote band** → dark CTA band.
 
 **Contact** — hero → split with the form on the left and "What happens next" plus the deadline note on the right.
 
-### Proof and quotes
+### Placeholder content
+
+Three things are structurally built and empty: the proof results, the client
+quotes, and the wider bench on Who we are. All of it renders nothing while
+empty, and `PLACEHOLDER_PREVIEW=1` fills it with entries marked
+&ldquo;Sample&rdquo; and &ldquo;Placeholder Name&rdquo; so the design can be
+reviewed. The flag lives in `src/data/preview.ts`; sample content exists only
+when it is set.
+
+The rule for all three: never write sample content a reader could mistake for
+a real client or a real colleague. A placeholder testimonial or a placeholder
+person on a live site is indistinguishable from a fabricated one to everybody
+reading it.
+
+#### Proof and quotes
 
 Added after the prototype, at Sam's request, against §13.6. Two components and
 one data file, `src/data/proof.ts`, holding a registry of anonymised results, a
@@ -243,6 +259,24 @@ optional. It is the line that earns the highlighter.
 No `Review` or `AggregateRating` markup accompanies any of this. §9 already
 rules it out, and self-serving review markup on your own domain is against
 Google's structured data guidelines independently of that.
+
+#### The wider bench
+
+`bench.people` in `src/data/who-we-are.ts`, rendered by `Bench.astro` under the
+&ldquo;A small core, and a wider bench&rdquo; split, in the `stage-row` pattern
+rather than as full bios. Specialists brought in per engagement go here &mdash;
+the health economist and the statistician that section's own copy already names
+&mdash; as distinct from the two co-founders, who stay in `people`.
+
+`name` is optional; a member without one is headed by their discipline. That
+covers both a specialist who will not be named and a seat that is not filled,
+without either becoming a fictional person.
+
+Placeholders for a health economist and a product leader are set up in preview.
+Promoting one to the core team means writing them into `people` and removing
+them from `bench.people` &mdash; but note that the section promises a *small*
+core and every bio is currently titled Co-founder, so a third full bio implies
+a standing that may not be intended.
 
 ---
 

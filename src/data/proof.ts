@@ -10,10 +10,11 @@
  *
  * To see the design without publishing anything:
  *
- *   npm run dev:proof
+ *   npm run dev:preview
  *
  * which fills both registries with clearly fake sample entries. They exist
- * only when PROOF_PREVIEW is set, so they cannot reach a deploy by accident.
+ * only when PLACEHOLDER_PREVIEW is set, so they cannot reach a deploy by
+ * accident. See src/data/preview.ts.
  *
  * To publish real proof: add entries below and list their ids in `placement`.
  *
@@ -21,6 +22,8 @@
  * build brief rules it out, and self-serving review markup on your own site
  * is against Google's structured data guidelines regardless.
  */
+
+import { isPreview } from './preview';
 
 export interface Result {
   /** Referenced from `placement`. */
@@ -54,8 +57,6 @@ type PageKey =
   | 'for-startups'
   | 'how-we-work'
   | 'who-we-are';
-
-const isPreview = Boolean(process.env.PROOF_PREVIEW);
 
 /** Real results go here. */
 const published: Result[] = [];

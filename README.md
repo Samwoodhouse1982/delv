@@ -32,7 +32,7 @@ npm run a11y         # just the axe pass (needs a build first)
 
 `npm run a11y` serves `dist/` and runs axe-core over all eight pages at 320,
 375, 768, 1024 and 1440px, and fails on any violation or any horizontal
-overflow. `npm run check:proof` does the same against a build with the proof
+overflow. `npm run check:preview` does the same against a build with the proof
 and quote slots filled, which a normal build leaves empty. Both need a
 Chromium:
 
@@ -91,7 +91,31 @@ the prototype's markup, and hold no copy of their own.
 
 ---
 
-## Proof and quotes
+## Placeholder content
+
+Three things are structurally built but have no real content yet: the proof
+results, the client quotes, and the wider bench on `/who-we-are`. All of it
+ships **empty**, and every component renders nothing when its data is, so
+those sections do not appear at all and the live site looks exactly as it did
+before the slots existed.
+
+That is deliberate rather than unfinished. A consultancy whose argument is
+that unevidenced claims do not survive contact with a buyer cannot ship
+invented ones of its own, and a placeholder testimonial or a placeholder
+colleague on a live site is indistinguishable from a fabricated one to
+everybody reading it.
+
+To see any of it:
+
+```
+npm run dev:preview      # or: build:preview, check:preview
+```
+
+`PLACEHOLDER_PREVIEW=1` fills all three with entries marked "Sample" and
+"Placeholder Name". They exist only when that variable is set — see
+`src/data/preview.ts` — so they cannot reach a deploy by accident.
+
+### Proof and quotes
 
 `src/data/proof.ts` holds two registries — anonymised `results` and client
 `quotes` — and a `placement` map saying which page shows which. **Both
@@ -107,10 +131,10 @@ build.
 To see the design:
 
 ```
-npm run dev:proof       # or: npm run build:proof
+npm run dev:preview       # or: npm run build:preview
 ```
 
-`PROOF_PREVIEW=1` fills both registries with entries marked "Sample" and
+`PLACEHOLDER_PREVIEW=1` fills both registries with entries marked "Sample" and
 "Placeholder Name". They exist only when that variable is set, so they cannot
 reach a deploy by accident.
 
@@ -136,7 +160,7 @@ the basis is the line that earns it.
 Check the slots render correctly before publishing content into them:
 
 ```
-npm run check:proof
+npm run check:preview
 ```
 
 which builds with the sample entries and runs the full axe pass over them.
@@ -144,6 +168,26 @@ which builds with the sample entries and runs the full axe pass over them.
 One thing not to add: `Review` or `AggregateRating` JSON-LD. §9 of the brief
 rules it out, and self-serving review markup on your own site is against
 Google's structured data guidelines regardless of what the brief says.
+
+### The wider bench
+
+`bench.people` in `src/data/who-we-are.ts`, rendered under "A small core, and
+a wider bench" on `/who-we-are` by `Bench.astro`. This is where specialists
+brought in per engagement go — the health economist and the statistician the
+section's own copy already names — as distinct from the two co-founders above,
+whose bios stay in `people`.
+
+A `BenchMember` is `{ name?, role, body }`. **`name` is optional**, and that is
+the useful part: a specialist who has not agreed to be named, or a seat you
+have not filled, is listed by discipline alone. The row is then headed by the
+role instead, which is honest and still tells a buyer the capability is there.
+
+Two placeholders are set up in preview — health economics and product. Moving
+either into the core team is a matter of writing them into `people` as a
+`Person` with `role: 'Co-founder'` or whatever is accurate, and deleting them
+from `bench.people`. Worth thinking about before you do: the section's copy
+promises a *small* core, and the bios are all currently titled Co-founder, so
+a third full bio implies something about standing that may not be true.
 
 ---
 
@@ -251,7 +295,11 @@ None of these blocks development. All of them block launch.
   terminal full stop. `.delv.` and `:delv:` were both in the source material.
   Confirm before these are treated as final.
 - **Proof and quotes.** Both registries in `src/data/proof.ts` are empty, so
-  four bands across four pages are currently absent. See the section above.
+  four bands across four pages are currently absent.
+- **The wider bench.** `bench.people` in `src/data/who-we-are.ts` is empty, so
+  `/who-we-are` currently describes the bench in prose without naming anyone
+  on it. Placeholders for an economist and a product leader are set up in
+  preview. See the section above.
 - **LinkedIn.** `site.sameAs` is empty, so the home page's `Organization`
   JSON-LD omits the property rather than pointing at nothing.
 - **Analytics.** Nothing is loaded. Plausible is the intended choice, and is

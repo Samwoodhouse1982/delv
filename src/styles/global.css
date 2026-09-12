@@ -834,6 +834,12 @@ nav.main a:not(.btn)[aria-current="page"] {
   }
 }
 
+/* The bench sits under the "small core, and a wider bench" prose, so it needs
+   air above it that a stage list mid-band does not. */
+.bench {
+  margin-top: clamp(32px, 4vw, 52px);
+}
+
 .stage-label {
   font-family: var(--font-ui);
   font-size: 13px;

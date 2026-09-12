@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Bench from '../components/Bench.astro';
 import Bios from '../components/Bios.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Quote from '../components/Quote.astro';
@@ -44,12 +45,16 @@ const proofQuote = quoteFor('who-we-are');
   </div>
 
   <div class="band">
-    <div class="wrap split">
-      <div><h2>{bench.heading}</h2></div>
-      <div>
-        {bench.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-        <p class="muted" set:html={bench.muted} />
+    <div class="wrap">
+      <div class="split">
+        <div><h2>{bench.heading}</h2></div>
+        <div>
+          {bench.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+          <p class="muted" set:html={bench.muted} />
+        </div>
       </div>
+      {/* Empty until there are real specialists to name — see the data file. */}
+      <Bench members={bench.people} />
     </div>
   </div>
 
