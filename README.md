@@ -291,8 +291,16 @@ npm ci --omit=dev   →   npm run build   →   dist/
 downloads a Chromium nobody uses. Playwright is only needed for `npm run og`,
 `npm run icons` and `npm run a11y`, all of which run locally.
 
-`vercel.json` also carries the cache and security headers, and `cleanUrls` so
-`/what-we-do.html` redirects to `/what-we-do`, matching the canonicals.
+`vercel.json` also carries the cache and security headers, `trailingSlash:
+false` and `cleanUrls`.
+
+**On page URLs.** Astro builds with its default directory format, so a page is
+`what-we-do/index.html` and every static host resolves `/what-we-do` to it
+without being told. Do not switch to `build.format: 'file'`. That writes a flat
+`what-we-do.html`, which Vercel only serves at `/what-we-do` when `cleanUrls`
+is set — so deleting one line of `vercel.json` 404s every page on the site.
+That is not hypothetical: it is what the first preview deploy of this branch
+did.
 
 Environment variables to set in the Vercel project:
 

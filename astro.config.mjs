@@ -11,7 +11,14 @@ export default defineConfig({
   site: SITE_URL,
   output: 'static',
   trailingSlash: 'never',
-  build: { format: 'file' },
+  /*
+   * Astro's default directory format, deliberately: it writes
+   * what-we-do/index.html, which every static host resolves at /what-we-do on
+   * its own. The flat `file` format writes what-we-do.html, which Vercel only
+   * serves at /what-we-do when `cleanUrls` is set in vercel.json — so the whole
+   * site 404s if that one line is ever removed. It did, on the first preview
+   * deploy of this branch. Routing should not depend on a host config flag.
+   */
   // Keep the transactional pages and the 404 out of the sitemap; they are
   // noindex and only reachable as a form redirect target.
   integrations: [

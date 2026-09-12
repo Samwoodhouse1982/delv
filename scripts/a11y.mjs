@@ -48,17 +48,28 @@ const TYPES = {
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
-  let path = url.pathname === '/' ? '/index.html' : url.pathname;
-  if (!extname(path)) path += '.html';
+  // Mirrors a static host: an extensionless path resolves to the index.html
+  // inside the matching directory (Astro's directory format), falling back to
+  // a sibling .html file, which is how /404 is emitted.
+  const path = url.pathname;
+  const candidates = extname(path)
+    ? [path]
+    : [join(path, 'index.html'), `${path.replace(/\/$/, '')}.html`];
 
-  try {
-    const body = await readFile(join(root, path));
-    res.writeHead(200, { 'Content-Type': TYPES[extname(path)] ?? 'application/octet-stream' });
-    res.end(body);
-  } catch {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('not found');
+  for (const candidate of candidates) {
+    try {
+      const body = await readFile(join(root, candidate));
+      res.writeHead(200, {
+        'Content-Type': TYPES[extname(candidate)] ?? 'application/octet-stream',
+      });
+      return res.end(body);
+    } catch {
+      // Try the next shape.
+    }
   }
+
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('not found');
 });
 
 await new Promise((done) => server.listen(0, '127.0.0.1', done));
