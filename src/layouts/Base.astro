@@ -80,8 +80,12 @@ const ogUrl = new URL(ogImage, Astro.site).href;
        * who should not see it. Three ways out: already seen this session,
        * reduced motion, or storage unavailable.
        *
-       * The timeout is a dead man's switch. This attribute also locks body
+       * The timeout is a dead man's switch: this attribute also locks body
        * scroll, so if the module script never arrives the page would be stuck.
+       * The component takes ownership of it the moment the animation actually
+       * starts, because the clock here begins at page load while the animation
+       * waits on the font. On a slow connection the two drift apart and this
+       * would otherwise cut the animation off part-way through.
        */
       try {
         if (
@@ -89,7 +93,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
           !matchMedia('(prefers-reduced-motion: reduce)').matches
         ) {
           document.documentElement.setAttribute('data-intro', 'play');
-          setTimeout(function () {
+          window.__delvIntroGuard = setTimeout(function () {
             document.documentElement.removeAttribute('data-intro');
           }, 8000);
         }

@@ -1,15 +1,22 @@
 /**
- * Rasterises public/favicon.svg into the PNG and ICO the layout links.
+ * Derives public/favicon.svg from the brand icon, then rasterises it into the
+ * PNG and ICO the layout links.
  *
- * Run manually (`npm run icons`) and commit the output; it only changes when
- * the favicon does. The SVG is the master — edit that, not the bitmaps.
+ * public/brand/delv-icon.svg is the single master. favicon.svg used to be a
+ * hand copy of it, which is a drift path: update the brand file, forget the
+ * copy, and the tab icon quietly stays on the old mark. Run `npm run icons`
+ * after any change to the brand icon and commit all three outputs.
  */
-import { readFile, writeFile } from 'node:fs/promises';
+import { copyFile, readFile, writeFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchChromium } from './browser.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+await copyFile(
+  resolve(root, 'public/brand/delv-icon.svg'),
+  resolve(root, 'public/favicon.svg'),
+);
 const svg = await readFile(resolve(root, 'public/favicon.svg'), 'utf-8');
 
 const browser = await launchChromium();

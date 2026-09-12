@@ -79,6 +79,12 @@ const PHRASE = 'deliver value.';
     A.map((v, i) => v + (B[i] - v) * clamp(t, 0, 1));
   const rgb = (c: number[]) => `rgb(${c.map(Math.round).join(',')})`;
 
+  declare global {
+    interface Window {
+      __delvIntroGuard?: ReturnType<typeof setTimeout>;
+    }
+  }
+
   const overlay = document.getElementById('intro');
   const root = document.documentElement;
 
@@ -228,6 +234,7 @@ const PHRASE = 'deliver value.';
         if (ended) return;
         ended = true;
         cancelAnimationFrame(raf);
+        clearTimeout(window.__delvIntroGuard);
         removeEventListener('resize', fit);
         finish();
       };
@@ -254,6 +261,15 @@ const PHRASE = 'deliver value.';
       } catch {
         // Private mode. It replays next visit; nothing else breaks.
       }
+      /*
+       * Take over the head's dead man's switch. Its clock started at page
+       * load; ours starts now, after the font resolved. On a slow connection
+       * those are seconds apart, and leaving the original running cuts the
+       * animation off mid-dive. Reproduced with the font held back 3.5s: the
+       * overlay vanished at 8.1s needing until 9.0s.
+       */
+      clearTimeout(window.__delvIntroGuard);
+      window.__delvIntroGuard = setTimeout(finish, (DURATION + 2) * 1000);
       run(measure());
     };
 

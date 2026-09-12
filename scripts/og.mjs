@@ -24,7 +24,16 @@ const fontUrl = (file) => pathToFileURL(resolve(root, 'public/fonts', file)).hre
  * painted white on the ink ground. The supplied file paints them in --ink,
  * which would be invisible here.
  */
-const wordmark = (await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'utf-8'))
+const logoSvg = await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'utf-8');
+if (!/class="cls-1"/.test(logoSvg) || !/class="cls-2"/.test(logoSvg)) {
+  throw new Error(
+    'delv-logo.svg no longer uses cls-1 (letterforms) and cls-2 (dot). ' +
+      'Recolouring here depends on those names: without them the wordmark ' +
+      'would paint in its own ink and vanish against the card. Update the ' +
+      'replacements below to match the new export.',
+  );
+}
+const wordmark = logoSvg
   .replace(/<defs>[\s\S]*?<\/defs>/, '')
   .replace(/class="cls-1"/g, 'fill="currentColor"')
   .replace(/class="cls-2"/g, 'fill="#16F4D0"')

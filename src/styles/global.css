@@ -168,8 +168,10 @@
    * decorative and one meaning "you have made a mistake", is a signal worth
    * protecting.
    *
-   * Text that wants to be coral uses --coral-deep, which is the same hue
-   * carried to ink until it clears 4.5:1 on every light ground.
+   * --coral-deep is the same hue carried towards ink until it clears 4.5:1 on
+   * every light ground (paper 5.14, dim 4.62, mint 4.99). Nothing uses it
+   * yet: it is here so that the next person who wants coral text has a tested
+   * value rather than reaching for --coral and failing contrast.
    */
   --coral: #ff5e5b;
   --coral-deep: #a15057;
