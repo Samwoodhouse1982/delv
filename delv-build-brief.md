@@ -462,6 +462,52 @@ Several of these are likely in phase two. Structure the CSS and components so a 
 
 ---
 
+## 12a. Checked against the business plan
+
+`delv. 101 overview` was reviewed against the built site on 12 Sep 2026. The
+site carries the plan's spine faithfully: the Define / Measure / Articulate
+pillars and their sub-lists, the space between the economists and the
+optimists, the six pain points, the four-step engagement, the six tests, both
+bios, the pricing model, the VBA and trust answers, and the QMS integration.
+Three small additions were made where the site had narrowed the plan: the
+regulatory and quality dimension of the first pain point, and the investor use
+of the Value Audit, both in the offer card and in the answer to who we work
+with.
+
+Four things in the plan are **deliberately not on the site**, and each is a
+decision rather than an oversight.
+
+1. **Two of the four audience segments.** The plan writes full Define /
+   Measure / Articulate propositions for Startups, SMBs, Large Corporations
+   and Investors. §1 of this brief scopes the site to founders and commercial
+   leads at funded startups and scale-ups, plus a smaller investor audience,
+   so SMB and enterprise have no page. Investors now appear in two places
+   rather than one, but still have no page of their own.
+2. **The Value Incubator.** A named offer in the plan, twice. The site's three
+   ways to work are Value Audit, Project and Embedded; Embedded is the closest
+   but is not the same thing and is not named that way.
+3. **The Value Due Diligence Framework.** The plan's investor-facing method.
+   Not on the site at all.
+4. **The value flywheel.** The plan calls for a graphic and uses the word four
+   times. The site expresses the idea once, as &ldquo;a repeatable flow so
+   evidence keeps refreshing instead of ageing in a slide&rdquo;, and has an
+   empty image slot on What we do that would take the diagram.
+
+Smaller omissions, all judged not worth the words: press releases, landing
+pages and sales decks from the deliverables list, and named partner
+organisations such as OHE.
+
+**Where the site deliberately departs from the plan.** The voice is harder.
+The plan is a conventional consultancy document; the site says it will tell
+you when a claim does not hold, that it does not do fundraising theatre, and
+that if the honest answer is smaller than you hoped you will hear it first.
+That came from the prototype and from Sam's direction since, and it is the
+site's strongest asset. The plan's `.delv.` and `:delv:` are settled as
+`delv.` by the supplied logo, and the plan's US spellings are UK throughout,
+per §6.
+
+---
+
 ## 13. Open decisions for Sam
 
 Not blockers for starting, but all are blockers for launch.
@@ -475,4 +521,6 @@ Not blockers for starting, but all are blockers for launch.
 7. **Placeholders on production.** `SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts` is `true`, so the live site serves sample results, sample quotes and placeholder colleagues. Sam asked for this on 12 Sep 2026 while the site is on a test domain with no traffic. **Set it back to `false` before launch.**
 8. **Photography.** Six image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
 9. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
-10. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+10. **The Value Incubator and the Value Due Diligence Framework.** Both are named offers in the business plan and neither is on the site. If they are real, they belong on How we work next to the Value Audit; if they were working titles, this brief should stop citing them.
+11. **Investors as an audience.** The plan gives them a full proposition. The site gives them two mentions and a line in the contact form. A page, or a section on For startups, is a scope call.
+12. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.

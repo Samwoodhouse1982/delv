@@ -51,7 +51,7 @@ export const problems = {
   heading: 'Sound familiar?',
   lede: 'If two or more of these are true, there is usually a month of work that changes the shape of your year.',
   items: [
-    'Your marketing claims have run ahead of the evidence behind them, and someone has started asking for the source.',
+    'Your marketing claims have run ahead of the evidence behind them, and someone has started asking for the source: a customer, a regulator, or your own quality team.',
     'Procurement keeps asking for a business case, and every deal stalls in the same place.',
     'You are raising, and the deck says &ldquo;proven&rdquo; where the data room says &ldquo;pilot&rdquo;.',
     'You signed an outcomes-based or value-based agreement and now have to evidence delivery to get paid.',

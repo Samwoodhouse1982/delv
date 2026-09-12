@@ -45,7 +45,7 @@ export const offers = {
     {
       heading: 'Value Audit',
       meta: 'Fixed fee &middot; about three weeks',
-      body: 'Where your claims stand, what your data can support, and a ranked list of what to fix first. Ends with a claims-and-evidence map you own.',
+      body: 'Where your claims stand, what your data can support, and a ranked list of what to fix first. Ends with a claims-and-evidence map you own. Investors run the same audit over a company before backing it.',
     },
     {
       heading: 'Project',
@@ -95,7 +95,7 @@ export const qa = {
     {
       question: 'Who do you usually work with?',
       answer:
-        'Companies of all sizes, but most often startups and scale-ups evidencing their value in order to sell, raise or exit. We also run value reviews for investors looking at a portfolio company. Most of that work is aimed at the NHS, and we build for health systems outside the UK where the buyer, the budget and the evidence bar are all different.',
+        'Companies of all sizes, but most often startups and scale-ups evidencing their value in order to sell, raise or exit. Investors use us too: a Value Audit to screen a company before backing it, or to find the readiness gaps in one already in the portfolio. Most of that work is aimed at the NHS, and we build for health systems outside the UK where the buyer, the budget and the evidence bar are all different.',
     },
     {
       question: 'How quickly can you start?',
