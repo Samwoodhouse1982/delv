@@ -108,7 +108,7 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 | `/thank-you` | Form success, no-JavaScript redirect target | Thank you — delv. |
 | `/could-not-send` | Form failure, no-JavaScript redirect target | That did not send — delv. |
 
-Nav labels stay exactly as the prototype: What we do · For startups · How we work · Who we are · [Start a conversation]. Note the prototype's internal routes were `/approach` and `/startups`; the public URLs are `/what-we-do` and `/for-startups` to match the labels. Page files, data files and component props all use the public names. The prototype was never published, so no redirects from the old hash routes are needed.
+Nav labels are the prototype's, plus a Home link added 12 Sep 2026 at Sam's request: Home &middot; What we do · For startups · How we work · Who we are · [Start a conversation]. Note the prototype's internal routes were `/approach` and `/startups`; the public URLs are `/what-we-do` and `/for-startups` to match the labels. Page files, data files and component props all use the public names. The prototype was never published, so no redirects from the old hash routes are needed.
 
 `/privacy` is new and not in the prototype. Build the page and layout; Sam supplies the text. Do not draft a privacy notice yourself.
 
@@ -152,7 +152,8 @@ One further correction to the prototype: `.claim-text.weak` is `#8E7E79`, which 
 
 ### Type
 
-- **Archivo** (variable, width 88–112, weight 400–700) — headings, nav, buttons, labels, form fields.
+- **EB Garamond** (variable, weight 400&ndash;800, set at 600) &mdash; headings. Added 12 Sep 2026 at Sam's request, replacing Archivo there so the headings sit with the serif wordmark supplied the same day. The scale, tracking and leading all moved with it; see the comment above the heading rules in `global.css` for why and by how much.
+- **Archivo** (variable, width 88&ndash;112, weight 400&ndash;700) &mdash; nav, buttons, labels, form fields, captions.
 - **Newsreader** (variable, optical size 6–72, weight 300–500) — body prose.
 
 The prototype loads these from Google Fonts. **Self-host them** in production: download the variable woff2 files to `public/fonts/`, declare with `@font-face` and `font-display: swap`, and `<link rel="preload">` the two faces used above the fold. This removes a third-party request and the associated GDPR question about Google Fonts and IP addresses.

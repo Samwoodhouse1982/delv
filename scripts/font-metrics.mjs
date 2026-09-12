@@ -37,6 +37,16 @@ const FACES = [
     instanceNote: 'default instance is wght 600 / wdth 100, the weight we set headings at',
   },
   {
+    name: 'EB Garamond',
+    file: 'public/fonts/ebgaramond-latin.woff2',
+    fallback: 'Georgia',
+    metrics: georgia,
+    // fvar defaults to wght 400; headings are set at 600. Mean lowercase
+    // advance is 0.42863em at 400 and 0.45730em at 600.
+    instanceCorrection: 0.45730 / 0.42863,
+    instanceNote: 'corrected from the wght 400 default up to the wght 600 headings are set at',
+  },
+  {
     name: 'Newsreader',
     file: 'public/fonts/newsreader-latin.woff2',
     fallback: 'Georgia',

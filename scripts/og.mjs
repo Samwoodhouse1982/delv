@@ -50,6 +50,11 @@ const card = ({ heading, eyebrow }) => `
     font-weight: 100 900;
     font-stretch: 62% 125%;
   }
+  @font-face {
+    font-family: "EB Garamond";
+    src: url("${fontUrl('ebgaramond-latin.woff2')}") format("woff2");
+    font-weight: 400 800;
+  }
   * { box-sizing: border-box; margin: 0; }
   body {
     width: 1200px; height: 630px;
@@ -65,8 +70,9 @@ const card = ({ heading, eyebrow }) => `
     letter-spacing: 0.01em; margin-bottom: 22px;
   }
   h1 {
-    font-size: 76px; font-weight: 600; font-stretch: 105%;
-    letter-spacing: -0.022em; line-height: 1.06;
+    font-family: "EB Garamond", serif;
+    font-size: 86px; font-weight: 600;
+    letter-spacing: -0.008em; line-height: 1.08;
     white-space: pre-line; max-width: 20ch;
   }
   .rule {

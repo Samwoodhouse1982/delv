@@ -61,6 +61,38 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ebgaramond-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ebgaramond-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* EB Garamond over Georgia — corrected from the wght 400 default up to the
+   wght 600 headings are set at. EB Garamond 0.41075em, Georgia 0.44580em. */
+@font-face {
+  font-family: "EB Garamond Fallback";
+  src: local("Georgia");
+  size-adjust: 92.14%;
+  ascent-override: 109.29%;
+  descent-override: 32.34%;
+  line-gap-override: 0%;
+}
+
 /* Archivo over Arial — default instance is wght 600 / wdth 100, the weight we
    set headings at. Archivo 0.45600em average advance, Arial 0.44580em. */
 @font-face {
@@ -123,6 +155,8 @@
 
   --font-ui: "Archivo", "Archivo Fallback", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
+  --font-display: "EB Garamond", "EB Garamond Fallback", Georgia,
+    "Times New Roman", serif;
   --font-prose: "Newsreader", "Newsreader Fallback", Georgia, "Times New Roman",
     serif;
 }
@@ -154,10 +188,6 @@ body {
   overflow-x: hidden;
 }
 
-h1,
-h2,
-h3,
-h4,
 nav,
 button,
 .ui,
@@ -168,31 +198,47 @@ select {
   font-family: var(--font-ui);
 }
 
+/*
+ * Headings are EB Garamond Semibold, to sit with the serif wordmark. Three
+ * things had to move with it, because the old values were tuned for Archivo:
+ *
+ * - Size. EB Garamond's x-height is 0.40em against Archivo's 0.526em, so the
+ *   same px size reads much smaller. Matching x-heights exactly would need
+ *   1.32x and would look enormous; matching cap heights needs 1.055x. The
+ *   scale below lands around 1.12x, which is where the two read as the same
+ *   size on the page.
+ * - Tracking. -0.022em is a grotesque's setting. An oldstyle serif at display
+ *   size wants close to none.
+ * - Leading. 1.06 suited Archivo's short extenders. EB Garamond's ascenders
+ *   and descenders span 1.3em, so tight leading collides them.
+ *
+ * No font-stretch: EB Garamond has a weight axis only.
+ */
 h1,
 h2,
 h3,
 h4 {
+  font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.022em;
-  line-height: 1.06;
+  letter-spacing: -0.008em;
+  line-height: 1.12;
   margin: 0;
 }
 h1 {
-  font-size: clamp(38px, 6.4vw, 74px);
-  font-stretch: 105%;
+  font-size: clamp(43px, 7.2vw, 83px);
+  line-height: 1.08;
 }
 h2 {
-  font-size: clamp(28px, 3.8vw, 44px);
-  font-stretch: 103%;
+  font-size: clamp(31px, 4.3vw, 49px);
 }
 h3 {
-  font-size: clamp(20px, 1.6vw, 25px);
-  letter-spacing: -0.01em;
+  font-size: clamp(22px, 1.8vw, 28px);
+  letter-spacing: -0.004em;
   line-height: 1.2;
 }
 h4 {
-  font-size: 17px;
-  letter-spacing: -0.005em;
+  font-size: 19px;
+  letter-spacing: 0;
 }
 
 p {
@@ -292,8 +338,8 @@ footer :focus-visible {
    Marking them h2 fixes the skipped level §10 rules out; this keeps the
    prototype's visual size. */
 .as-h3 {
-  font-size: clamp(20px, 1.6vw, 25px);
-  letter-spacing: -0.01em;
+  font-size: clamp(22px, 1.8vw, 28px);
+  letter-spacing: -0.004em;
   line-height: 1.2;
 }
 
@@ -430,16 +476,23 @@ nav.main {
    specificity. Without it the "Start a conversation" button renders graphite
    on ink (1.96:1), and ink on ink — invisible — once aria-current lands on it
    on /contact. Both are inherited from the prototype. */
-nav.main a:not(.btn) {
-  color: var(--graphite);
-}
+/*
+ * `nav.main a` outweighs `.btn` on specificity, so anything set here that a
+ * button also sets wins over the button. That silently stripped the header
+ * CTA's colour, and its padding down to `6px 0`, leaving the dark box hugging
+ * its text with no horizontal padding at all. Only the two properties that
+ * genuinely apply to every child of the nav stay unscoped.
+ */
 nav.main a {
+  text-decoration: none;
+  white-space: nowrap;
+}
+nav.main a:not(.btn) {
   font-size: 14.5px;
   font-weight: 500;
-  text-decoration: none;
+  color: var(--graphite);
   padding: 6px 0;
   border-bottom: 2px solid transparent;
-  white-space: nowrap;
 }
 nav.main a:not(.btn):hover {
   color: var(--ink);
@@ -519,7 +572,7 @@ nav.main a:not(.btn)[aria-current="page"] {
   nav.main.open {
     display: flex;
   }
-  nav.main a {
+  nav.main a:not(.btn) {
     padding: 12px 0;
     font-size: 18px;
     width: 100%;

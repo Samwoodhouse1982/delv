@@ -287,8 +287,21 @@ the taupe wash at 30%, `--hair-strong` on form controls, and the first
 
 ### Fonts
 
-Archivo and Newsreader, both variable, both self-hosted from `public/fonts/`
-so there is no third-party request. Each real face is shadowed by a
+Three variable faces, all self-hosted from `public/fonts/` so there is no
+third-party request: **EB Garamond Semibold** for headings, **Archivo** for
+nav, buttons, labels and captions, **Newsreader** for body prose.
+
+EB Garamond replaced Archivo on headings so they sit with the serif wordmark.
+Three values had to move with it, because the old ones were tuned for a
+grotesque: the size scale is up about 12% (EB Garamond's x-height is 0.40em
+against Archivo's 0.526em, so the same px size reads much smaller), tracking
+relaxed from -0.022em to -0.008em, and leading from 1.06 to 1.12 because EB
+Garamond's extenders span 1.3em and collide at the tighter setting. There is
+no `font-stretch`: EB Garamond has a weight axis only.
+
+Archivo is deliberately **not** preloaded. It sets 14.5px nav links and
+buttons, its fallback is metric-matched so nothing shifts when it arrives, and
+a third preload would put 90kb in front of the LCP. Each real face is shadowed by a
 metric-matched fallback (`size-adjust`, `ascent-override`,
 `descent-override`, `line-gap-override`) so `font-display: swap` cannot shift
 the layout when the webfont lands.

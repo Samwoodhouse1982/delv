@@ -36,6 +36,7 @@ export const site = {
   sameAs: [] as string[],
 
   nav: [
+    { label: 'Home', href: '/' },
     { label: 'What we do', href: '/what-we-do' },
     { label: 'For startups', href: '/for-startups' },
     { label: 'How we work', href: '/how-we-work' },

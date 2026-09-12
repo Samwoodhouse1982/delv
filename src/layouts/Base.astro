@@ -50,11 +50,17 @@ const ogUrl = new URL(ogImage, Astro.site).href;
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    {/* The two faces used above the fold. The latin-ext subsets are left to
-        load on demand — nothing in the site's own copy needs them. */}
+    {/*
+      The two faces that set the largest text above the fold: the heading and
+      the lede. Archivo is deliberately not preloaded. It only sets nav links
+      and buttons here, its fallback is metric-matched so nothing shifts when
+      it arrives, and a third preload would put 90kb in front of the LCP for
+      14.5px of navigation. The latin-ext subsets load on demand; nothing in
+      the site's own copy needs them.
+    */}
     <link
       rel="preload"
-      href="/fonts/archivo-latin.woff2"
+      href="/fonts/ebgaramond-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
