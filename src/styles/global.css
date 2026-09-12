@@ -849,6 +849,82 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 
 /* --------------------------------------------------------------------------
+   Imagery
+
+   The site had none. These slots reserve their space from an aspect ratio, so
+   a real photograph dropped in later moves nothing. Until then each one shows
+   the brief for the picture that belongs in it rather than a grey rectangle.
+   -------------------------------------------------------------------------- */
+
+.figure {
+  margin: 0;
+}
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio);
+  object-fit: cover;
+  border: 1px solid var(--hair);
+}
+.figure-slot {
+  aspect-ratio: var(--ratio);
+  border: 1px solid var(--hair);
+  background: color-mix(in srgb, var(--paper-dim) 55%, var(--paper));
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dim .figure-slot {
+  background: color-mix(in srgb, var(--paper-dim) 55%, #fff);
+}
+.dark .figure-slot {
+  border-color: var(--hair-dark);
+  background: color-mix(in srgb, var(--ink) 88%, #fff);
+}
+.figure-slot-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.dark .figure-slot-label,
+.dark .figure-slot-ratio {
+  color: var(--on-brand);
+}
+.figure-slot-brief {
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+  max-width: 34ch;
+}
+.dark .figure-slot-brief {
+  color: #fff;
+}
+/* Pinned to the bottom so a column of slots lines its ratios up. */
+.figure-slot-ratio {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--graphite);
+  margin-top: auto;
+}
+.figure .caption {
+  margin-top: 12px;
+}
+
+/* The portrait pair on Who we are. Capped: a headshot at full column width
+   is 600px of face before a reader reaches a word of the bio. */
+.person .figure {
+  margin-bottom: 20px;
+  max-width: 240px;
+}
+
+/* --------------------------------------------------------------------------
    Proof
 
    Anonymised results and client quotes. Both render only when there is

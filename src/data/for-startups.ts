@@ -1,7 +1,7 @@
-import type { CtaBand, Hero, PageMeta, Pillar, StageRow } from './types';
+import type { CtaBand, Figure, Hero, PageMeta, Pillar, StageRow } from './types';
 
 export const meta: PageMeta = {
-  title: 'For startups — delv.',
+  title: 'For startups · delv.',
   description:
     'Early-stage healthtech is judged on evidence long before it has any. How delv. helps founders build the proof before a deal, a raise or an outcomes contract needs it.',
   ogImage: '/og/for-startups.png',
@@ -9,7 +9,7 @@ export const meta: PageMeta = {
 
 export const hero: Hero = {
   heading: 'For founders with traction and no proof yet.',
-  sub: 'Early-stage healthtech gets judged on evidence long before it has any. We help you build the base &mdash; and the narrative &mdash; early enough that it compounds instead of costing you a quarter.',
+  sub: 'Early-stage healthtech gets judged on evidence long before it has any. We help you build the base, and the narrative, early enough that it compounds instead of costing you a quarter.',
 };
 
 export const moments = {
@@ -18,7 +18,7 @@ export const moments = {
     {
       heading: 'The deal that will not close',
       when: 'Usually the second or third NHS conversation',
-      body: 'The clinical team love it. Then it reaches finance, and someone asks what it saves and against what baseline. Enthusiasm does not survive that meeting without numbers behind it.',
+      body: 'The clinical team love it. Then it reaches finance, and someone asks what it saves and against what baseline. Enthusiasm scores nothing in that meeting. Minutes, money and metrics do.',
     },
     {
       heading: 'The raise',
@@ -65,6 +65,11 @@ export const outcome = {
     'A measurement plan that keeps producing evidence after we leave',
   ],
   note: 'What we do not do: market sizing, fundraising theatre, or inventing a comparator to make a number look better. If the honest answer is smaller than you hoped, you will hear it from us first.',
+};
+
+export const outcomeImage: Figure = {
+  label: 'The deliverables as objects: a claims library, a business case pack, a one-page evidence map. Flat lay or on a desk, ordered rather than styled.',
+  ratio: '3/2',
 };
 
 export const cta: CtaBand = {

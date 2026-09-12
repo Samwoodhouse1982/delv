@@ -1,4 +1,5 @@
 ---
+import Figure from './Figure.astro';
 import type { Person } from '../data/types';
 
 interface Props {
@@ -14,6 +15,7 @@ const { people } = Astro.props;
   {
     people.map((person) => (
       <div class="person">
+        {person.portrait && <Figure figure={person.portrait} />}
         <h2 class="as-h3">{person.name}</h2>
         <span class="role">{person.role}</span>
         {person.paragraphs.map((paragraph) => (

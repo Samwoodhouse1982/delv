@@ -1,7 +1,7 @@
 import type { Hero, PageMeta } from './types';
 
 export const meta: PageMeta = {
-  title: 'Privacy — delv.',
+  title: 'Privacy · delv.',
   description:
     'How DELV Consulting Ltd handles personal data collected through this website.',
   ogImage: '/og/privacy.png',

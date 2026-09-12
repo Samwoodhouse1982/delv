@@ -1,8 +1,8 @@
-import type { CtaBand, Hero, PageMeta, Person } from './types';
+import type { CtaBand, Figure, Hero, PageMeta, Person } from './types';
 import { isPreview } from './preview';
 
 export const meta: PageMeta = {
-  title: 'Who we are — delv.',
+  title: 'Who we are · delv.',
   description:
     'A former GP and medical director, and a commercial lead who has taken value stories through NHS procurement. The two people behind delv.',
   ogImage: '/og/who-we-are.png',
@@ -10,13 +10,17 @@ export const meta: PageMeta = {
 
 export const hero: Hero = {
   heading: 'We have been in your shoes.',
-  sub: 'Between us we have worked across the digital health ecosystem &mdash; clinical practice, global health technology, health systems, and startups trying to get their first real contract over the line.',
+  sub: 'Between us we have worked across the digital health ecosystem: clinical practice, global health technology, health systems, and startups trying to get their first real contract over the line.',
 };
 
 export const people: Person[] = [
   {
     name: 'Dr Shubs Upadhyay',
     role: 'Co-founder',
+    portrait: {
+      label: 'Headshot. Plain background, natural light, no clinical props or stethoscope staging. Shoulders up, looking at camera.',
+      ratio: '4/5',
+    },
     paragraphs: [
       'A former GP who became medical director at Ada Health, where value and evidence were commercial questions as much as clinical ones.',
       'Shubs co-chaired the ITU/WHO focus group working group on clinical evaluation of AI for health, bringing together experts globally to establish evaluation frameworks for developers and policy makers. He works at the join between clinical credibility, regulatory expectation and commercial reality.',
@@ -25,9 +29,13 @@ export const people: Person[] = [
   {
     name: 'Sam Woodhouse',
     role: 'Co-founder',
+    portrait: {
+      label: 'Headshot. Same background, light and crop as the other founder, shot in the same session so the pair sit together.',
+      ratio: '4/5',
+    },
     paragraphs: [
       'Sam has spent his career making health technology understandable to the people who buy it, as a marketing and commercial lead inside and alongside digital health companies.',
-      'He has built ROI calculators and value narratives for electronic patient record, symptom assessment and healthcare risk management vendors, and has worked at the sharp end of NHS procurement &mdash; where a claim either survives scrutiny or quietly loses the deal.',
+      'He has built ROI calculators and value narratives for electronic patient record, symptom assessment and healthcare risk management vendors, and has worked at the sharp end of NHS procurement, where a claim either survives scrutiny or quietly loses the deal.',
     ],
   },
 ];
@@ -87,10 +95,16 @@ const sampleBench: BenchMember[] = [
   },
 ];
 
+export const teamImage: Figure = {
+  label: 'The two founders working, not posing. A whiteboard, a laptop with a model open, a real conversation. Landscape, room to breathe on the right.',
+  ratio: '16/9',
+  caption: 'Replace with a real photograph before launch.',
+};
+
 export const bench = {
   heading: 'A small core, and a wider bench',
   paragraphs: [
-    'We keep the core team small on purpose &mdash; you get the people you met, not a team you have never spoken to. When a piece of work needs a health economist, a statistician or a specialist from your own part of the market, we bring them in and say what they cost.',
+    'We keep the core team small on purpose. You get the people you met, not a team you have never spoken to. When a piece of work needs a health economist, a statistician or a specialist from your own part of the market, we bring them in and say what they cost.',
   ],
   muted:
     'We would rather tell you a piece of work is outside our range than stretch to fill it.',

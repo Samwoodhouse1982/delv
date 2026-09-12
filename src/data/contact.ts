@@ -1,15 +1,15 @@
 import type { Hero, PageMeta } from './types';
 
 export const meta: PageMeta = {
-  title: 'Start a conversation — delv.',
+  title: 'Start a conversation · delv.',
   description:
-    'Tell us where the evidence gap is hurting — a stalled deal, an approaching raise, a claim you are no longer sure about. We reply within two working days.',
+    'Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We reply within two working days.',
   ogImage: '/og/contact.png',
 };
 
 export const hero: Hero = {
   heading: 'Start a conversation.',
-  sub: 'Tell us where the evidence gap is hurting &mdash; a stalled deal, an approaching raise, a claim you are no longer sure about. We will come back within two working days.',
+  sub: 'Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We will come back within two working days.',
 };
 
 export interface Field {
@@ -89,7 +89,7 @@ export const form = {
    * /thank-you, which is where a no-JavaScript submission lands.
    */
   success: {
-    heading: 'Thank you — that has reached us.',
+    heading: 'Thank you. That has reached us.',
     paragraphs: [
       'We reply within two working days, from a real person. The first step is a 30-minute call to understand the problem, with no deck.',
       'If there is a fit, you will get a short written brief with deliverables and pricing. If there is not, we will tell you, and point you somewhere better if we can.',
@@ -112,7 +112,7 @@ export const form = {
   },
   /** Shown if the POST fails; the mailto: composer is offered alongside. */
   failure:
-    'That did not send, and we would rather not lose what you wrote. Your answers are still here &mdash; send them by email instead and you will also keep a copy.',
+    'That did not send, and we would rather not lose what you wrote. Your answers are still here. Send them by email instead and you will also keep a copy.',
   failureAction: 'Send it by email instead',
   invalidEmail: 'That email address is missing something. Check it and try again.',
 };
@@ -121,7 +121,7 @@ export const next = {
   heading: 'What happens next',
   items: [
     'We reply within two working days, from a real person',
-    'A 30-minute call to understand the problem &mdash; no deck',
+    'A 30-minute call to understand the problem, with no deck',
     'If there is a fit, a short written brief with deliverables and pricing',
     'If there is not, we will tell you, and point you somewhere better if we can',
   ],

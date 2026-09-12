@@ -54,4 +54,30 @@ export interface Person {
   name: string;
   role: string;
   paragraphs: string[];
+  /** Optional. Renders as a labelled slot until a real headshot exists. */
+  portrait?: Figure;
+}
+
+/**
+ * An image slot.
+ *
+ * `src` is empty everywhere at the moment, so every one of these renders as a
+ * labelled placeholder carrying the brief for the picture that belongs there.
+ * Add `src` and `alt` and it becomes the image, in the same space: the box is
+ * sized from `ratio` either way, so nothing on the page moves.
+ *
+ * Write `label` as an instruction to whoever takes the photograph, not as a
+ * description of a photograph that exists.
+ */
+export interface Figure {
+  /** What the picture needs to be. Shown in the placeholder. */
+  label: string;
+  /** Aspect ratio as "w/h", e.g. "16/9", "3/2", "1/1". */
+  ratio: string;
+  /** Optional caption, in the site's small Archivo caption style. */
+  caption?: string;
+  /** Path under public/. Until this is set the slot stays a placeholder. */
+  src?: string;
+  /** Required once `src` is set. Empty string only if purely decorative. */
+  alt?: string;
 }

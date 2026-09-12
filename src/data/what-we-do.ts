@@ -1,7 +1,7 @@
-import type { Hero, PageMeta } from './types';
+import type { Figure, Hero, PageMeta } from './types';
 
 export const meta: PageMeta = {
-  title: 'What we do — delv.',
+  title: 'What we do · delv.',
   description:
     'Define, measure and articulate: the three stages every delv. engagement runs through, and what each one produces.',
   ogImage: '/og/what-we-do.png',
@@ -30,7 +30,7 @@ export const stages: Stage[] = [
       'Then we look honestly at what you already say. Most companies are carrying a mix of claims: some evidenced, some inherited from a pitch deck two years ago, some quietly indefensible. Sorting them is uncomfortable and fast.',
     ],
     details: [
-      'Audit of current messaging, claims and proof points &mdash; including the ones nobody can source',
+      'Audit of current messaging, claims and proof points, including the ones nobody can source',
       'Hypotheses for the claims that would actually move deals, ranked by what it would cost to prove them',
       'A shift from inward-looking product language to statements the market recognises',
       'Baselining whatever real-world or research data already exists',
@@ -43,14 +43,15 @@ export const stages: Stage[] = [
     heading: 'Measure',
     lede: 'How much, and how do you know?',
     paragraphs: [
-      'We identify the financial, operational and clinical measures that matter for your market &mdash; money saved, revenue protected, hours released, appointments freed, errors avoided, readmissions prevented &mdash; and work out which of them you can credibly attribute to your product.',
+      'We identify the financial, operational and clinical measures that matter for your market: money saved, revenue protected, hours released, appointments freed, errors avoided, readmissions prevented. Then we work out which of them you can credibly attribute to your product.',
+      'Length is not evidence. A buyer will not read four pages of narrative to find the number, and a reviewer who has to hunt for it assumes it is not there. We work to figures a finance lead can lift straight into a model: minutes released, money saved, the metric the contract is actually written against.',
       'Attribution is where most value models fall over. We are explicit about assumptions, conservative where the data is thin, and we keep an audit trail so that when an analyst asks where a figure came from, there is an answer.',
     ],
     details: [
       'Metric selection for your market and buyer, not a generic ROI template',
       'Data extraction, and measurement of the gain that is genuinely attributable to you',
       'Modelling with a documented assumptions log and sourced comparators',
-      'Health economic analysis where it is warranted &mdash; and a straight answer when it is not',
+      'Health economic analysis where it is warranted, and a straight answer when it is not',
       'Data gathering at client sites where the evidence has to come from the field',
       'A repeatable flow so evidence keeps refreshing instead of ageing in a slide',
     ],
@@ -64,7 +65,7 @@ export const stages: Stage[] = [
       'We build the assets and the governance around them: where each claim came from, what it can and cannot be used for, and who updates it when the data moves.',
     ],
     details: [
-      'Messaging and claims library &mdash; versioned, sourced and auditable, ready to sit alongside your QMS',
+      'Messaging and claims library: versioned, sourced and auditable, ready to sit alongside your QMS',
       'ROI calculators, from sales-led walkthroughs to short web tools for lead generation',
       'Case studies, business case templates, white papers, briefings and speaker notes',
       'Investor and board materials that connect evidence to the commercial model',
@@ -74,6 +75,12 @@ export const stages: Stage[] = [
     ],
   },
 ];
+
+export const stageImage: Figure = {
+  label: 'A value model on screen. An assumptions log, sourced comparators, a figure with its basis visible next to it. Shot close, legible but not readable.',
+  ratio: '16/9',
+  caption: 'Replace with a real artefact from a live engagement, anonymised.',
+};
 
 export const closing = {
   heading: 'We will tell you when a claim does not hold.',

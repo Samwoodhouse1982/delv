@@ -8,7 +8,8 @@ import Quote from '../components/Quote.astro';
 import Results from '../components/Results.astro';
 import Rule from '../components/Rule.astro';
 import { site } from '../data/site';
-import { claim, cta, hero, meta, problems, stages, table, what } from '../data/home';
+import Figure from '../components/Figure.astro';
+import { claim, cta, hero, meta, problems, stages, table, tableImage, what } from '../data/home';
 import { placement, quoteFor, resultsFor } from '../data/proof';
 
 // Empty until there is proof to publish, and both bands render nothing when
@@ -102,6 +103,7 @@ const jsonLd = {
       <div>
         <h2>{table.heading}</h2>
         <Rule short class="mt-rule" />
+        <Figure figure={tableImage} class="mt-block" />
       </div>
       <div>
         {table.paragraphs.map((paragraph) => <p set:html={paragraph} />)}

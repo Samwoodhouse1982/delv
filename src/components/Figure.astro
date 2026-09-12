@@ -1,0 +1,33 @@
+---
+import type { Figure } from '../data/types';
+
+interface Props {
+  figure: Figure;
+  class?: string;
+}
+const { figure, class: className } = Astro.props;
+
+// The box reserves its space from the ratio whether or not there is an image
+// in it, so dropping a real photograph in later shifts nothing.
+const [w, h] = figure.ratio.split('/').map(Number);
+---
+
+<figure class:list={['figure', className]} style={`--ratio:${w} / ${h}`}>
+  {
+    figure.src ? (
+      <img src={figure.src} alt={figure.alt ?? ''} width={w} height={h} loading="lazy" />
+    ) : (
+      /*
+        A placeholder, and it says so. An empty grey box reads as a broken
+        image; this reads as a brief. Whoever commissions the picture can see
+        what it is for and what shape it has to be.
+      */
+      <div class="figure-slot">
+        <span class="figure-slot-label">Image</span>
+        <p class="figure-slot-brief">{figure.label}</p>
+        <span class="figure-slot-ratio">{figure.ratio.replace('/', ':')}</span>
+      </div>
+    )
+  }
+  {figure.caption && <figcaption class="caption" set:html={figure.caption} />}
+</figure>

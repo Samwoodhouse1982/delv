@@ -5,7 +5,8 @@ import Bios from '../components/Bios.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Quote from '../components/Quote.astro';
 import Rule from '../components/Rule.astro';
-import { bench, cta, different, hero, meta, people } from '../data/who-we-are';
+import Figure from '../components/Figure.astro';
+import { bench, cta, different, hero, meta, people, teamImage } from '../data/who-we-are';
 import { quoteFor } from '../data/proof';
 
 const proofQuote = quoteFor('who-we-are');
@@ -47,7 +48,10 @@ const proofQuote = quoteFor('who-we-are');
   <div class="band">
     <div class="wrap">
       <div class="split">
-        <div><h2>{bench.heading}</h2></div>
+        <div>
+          <h2>{bench.heading}</h2>
+          <Figure figure={teamImage} class="mt-rule" />
+        </div>
         <div>
           {bench.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
           <p class="muted" set:html={bench.muted} />

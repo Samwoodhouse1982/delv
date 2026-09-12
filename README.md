@@ -43,7 +43,7 @@ npx playwright install chromium
 or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to one you already have.
 
 A clean axe run is a floor, not a pass. Axe does not reliably detect
-SC 1.4.11 — focus indicators and form control boundaries — which is precisely
+SC 1.4.11, focus indicators and form control boundaries, which is precisely
 where the prototype was weakest, so check those by hand after any change to
 `--hair-strong`, the focus rules, or the claim demo colours.
 
@@ -68,8 +68,18 @@ opening a component.
 | `src/data/proof.ts` | results and quotes, and which pages show them |
 
 Strings are rendered with `set:html`, so they keep their typographic
-characters — `&rsquo;`, `&mdash;`, `&middot;`, `&ldquo;` — and must stay
-HTML-safe. A bare `<` or `&` will break the page.
+characters (`&rsquo;`, `&middot;`, `&ldquo;`) and must stay HTML-safe. A bare
+`<` or `&` will break the page.
+
+**No em dashes.** Not in copy, not in page titles. Recast rather than
+substituting a hyphen: a colon where it introduces a list or an elaboration, a
+comma where it is parenthetical, a full stop where the clauses stand alone.
+`&middot;` separates the parts of a page title.
+
+**Metrics over narrative** is the voice. Procurement scores what it can count
+and investors discount what they cannot check, so the copy says so. Keep that
+in anything new: a number with a stated basis, not three paragraphs working up
+to one.
 
 Each page file also exports a `meta` object with the `<title>`, the meta
 description and the OG card. Change a heading and the OG card no longer
@@ -91,24 +101,57 @@ the prototype's markup, and hold no copy of their own.
 
 ---
 
+## Imagery
+
+`Figure.astro` renders an image slot sized from an aspect ratio, so dropping a
+real photograph in later shifts nothing on the page.
+
+**No slot has a picture in it yet.** Until one does, each renders the brief for
+the photograph that belongs there: what to shoot, how to frame it, what to
+avoid. That is deliberate. An empty grey box reads as a broken image; a brief
+reads as a commission, and whoever takes the photograph can see what it is for
+and what shape it has to be.
+
+Six slots, defined in each page's data file next to its copy:
+
+| Page | Slot | Ratio |
+| --- | --- | --- |
+| `/` | Procurement scene, in the "side of the table" split | 3:2 |
+| `/what-we-do` | A value model artefact, closing the Measure stage | 16:9 |
+| `/for-startups` | The deliverables as objects | 3:2 |
+| `/how-we-work` | A working session with a client team | 16:9 |
+| `/who-we-are` | Two founder portraits | 4:5 |
+| `/who-we-are` | The founders working, by the bench section | 16:9 |
+
+To fill one, set `src` (a path under `public/`) and `alt` on the figure in its
+data file. It becomes the image in the same space. Portraits are capped at
+240px wide by the stylesheet: a headshot at full column width is 600px of face
+before the reader reaches a word of the bio.
+
+---
+
 ## Placeholder content
 
 Three things are structurally built but have no real content yet: the proof
-results, the client quotes, and the wider bench on `/who-we-are`. All of it
-ships **empty**, and every component renders nothing when its data is, so
-those sections do not appear at all and the live site looks exactly as it did
-before the slots existed.
+results, the client quotes, and the wider bench on `/who-we-are`. Every
+component renders nothing when its data is empty, so a section with no content
+does not appear at all rather than leaving a gap.
 
-That is deliberate rather than unfinished. A consultancy whose argument is
-that unevidenced claims do not survive contact with a buyer cannot ship
-invented ones of its own, and a placeholder testimonial or a placeholder
-colleague on a live site is indistinguishable from a fabricated one to
-everybody reading it.
+The registries themselves are empty. Nothing invented is committed as real
+content: a consultancy whose argument is that unevidenced claims do not
+survive contact with a buyer cannot ship invented ones of its own, and a
+placeholder testimonial or a placeholder colleague is indistinguishable from a
+fabricated one to everybody reading it. What is committed is clearly marked
+sample content, shown only where a flag says to show it.
 
-**Vercel preview deployments show the placeholders automatically.** Every
-branch preview has them filled in so they can be reviewed in place; production
-never does. That is `VERCEL_ENV`, handled in `src/data/preview.ts`, and it
-needs nothing set in the Vercel dashboard.
+**Production currently shows the placeholders too.** That is
+`SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts`, set `true` at
+Sam's request while the site is on a test domain with no traffic. **Set it back
+to `false` before launch** or real visitors will see sample results, sample
+quotes and placeholder colleagues.
+
+Preview deployments show them either way, via `VERCEL_ENV`, with nothing to
+configure in the Vercel dashboard.
 
 Locally:
 
@@ -124,26 +167,10 @@ there.
 
 ### Proof and quotes
 
-`src/data/proof.ts` holds two registries — anonymised `results` and client
-`quotes` — and a `placement` map saying which page shows which. **Both
-registries are empty.** The components render nothing when they are, so the
-proof band and the quote band do not appear at all today and the live site
-looks exactly as it did before the slots existed.
-
-That is deliberate rather than unfinished. A consultancy whose argument is
-that unevidenced claims do not survive contact with a buyer cannot ship
-invented ones of its own, so there is no sample content anywhere in a normal
-build.
-
-To see the design:
-
-```
-npm run dev:preview       # or: npm run build:preview
-```
-
-`PLACEHOLDER_PREVIEW=1` fills both registries with entries marked "Sample" and
-"Placeholder Name". They exist only when that variable is set, so they cannot
-reach a deploy by accident.
+`src/data/proof.ts` holds two registries, anonymised `results` and client
+`quotes`, plus a `placement` map saying which page shows which. **Both
+registries of real content are empty**, and the components render nothing when
+they are, so a band with nothing in it does not appear.
 
 To publish real proof, add entries to `published` / `publishedQuotes` in
 `src/data/proof.ts` and list their ids under the right page in `placement`.
@@ -156,8 +183,8 @@ Where they appear:
 | --- | --- | --- |
 | `/` | 3-up band after the pillars | dim band before the CTA |
 | `/for-startups` | 3-up band before the CTA | dim band before the CTA |
-| `/how-we-work` | — | band before the CTA |
-| `/who-we-are` | — | dim band before the CTA |
+| `/how-we-work` | none | band before the CTA |
+| `/who-we-are` | none | dim band before the CTA |
 
 A `Result` is a figure, the client at whatever level of anonymity they agreed
 to, what the work was, and the basis. **The basis is not optional.** The
@@ -180,8 +207,8 @@ Google's structured data guidelines regardless of what the brief says.
 
 `bench.people` in `src/data/who-we-are.ts`, rendered under "A small core, and
 a wider bench" on `/who-we-are` by `Bench.astro`. This is where specialists
-brought in per engagement go — the health economist and the statistician the
-section's own copy already names — as distinct from the two co-founders above,
+brought in per engagement go: the health economist and the statistician the
+section's own copy already names, as distinct from the two co-founders above,
 whose bios stay in `people`.
 
 A `BenchMember` is `{ name?, role, body }`. **`name` is optional**, and that is
@@ -189,7 +216,7 @@ the useful part: a specialist who has not agreed to be named, or a seat you
 have not filled, is listed by discipline alone. The row is then headed by the
 role instead, which is honest and still tells a buyer the capability is there.
 
-Two placeholders are set up in preview — health economics and product. Moving
+Two placeholders are set up, health economics and product. Moving
 either into the core team is a matter of writing them into `people` as a
 `Person` with `role: 'Co-founder'` or whatever is accurate, and deleting them
 from `bench.people`. Worth thinking about before you do: the section's copy
@@ -206,8 +233,8 @@ at the top, then base, layout, motifs, header, content blocks, form, footer.
 Three things to know before changing it:
 
 **Every colour has one job.** Yale blue carries structure. Pacific blue is
-structural detail only and never text — it does not meet contrast at body
-size. Aquamarine is the evidence colour. Rosy taupe marks the unevidenced
+structural detail only and never text, because it does not meet contrast at
+body size. Aquamarine is the evidence colour. Rosy taupe marks the unevidenced
 claim in the home hero and appears nowhere else. `--error` is for validation
 messages. The one-job rule is what keeps the palette legible; spreading a
 colour is how it stops meaning anything.
@@ -247,7 +274,7 @@ serverless function. Vercel has no equivalent of Netlify Forms, so this is
 the form backend.
 
 **It deliberately picks no vendor.** The function validates the enquiry and
-forwards it as JSON to whatever `CONTACT_WEBHOOK_URL` points at — an email
+forwards it as JSON to whatever `CONTACT_WEBHOOK_URL` points at: an email
 relay, Zapier, Make, a Google Apps Script, HubSpot, a Slack webhook. Set that
 one variable in the Vercel project and the form works. `CONTACT_WEBHOOK_TOKEN`
 is optional and is sent as a bearer token if present.
@@ -258,9 +285,9 @@ everything they typed already in it; without, they land on `/could-not-send`,
 which gives them the email address. Nothing the visitor wrote is lost on any
 path. That is what makes it safe to deploy before the webhook exists.
 
-With JavaScript the form validates inline — each message tied to its field
-with `aria-describedby`, `aria-invalid` set, focus moved to the first field
-that failed — then posts in the background and swaps itself for the
+With JavaScript the form validates inline, tying each message to its field
+with `aria-describedby`, setting `aria-invalid`, and moving focus to the first
+field that failed. It then posts in the background and swaps itself for the
 confirmation panel, so nobody submits twice.
 
 Without JavaScript it submits natively, native constraint validation does the
@@ -269,7 +296,7 @@ validation failure the browser should have caught, `/could-not-send` when the
 failure is ours. Both pages are `noindex` and out of the sitemap.
 
 The status region is rendered on every page load and only its text changes.
-Do not make it `display: none` when empty — an element outside the
+Do not make it `display: none` when empty. An element outside the
 accessibility tree does not announce when a message arrives in it.
 
 **Before pointing `CONTACT_WEBHOOK_URL` at HubSpot, ask Sam.** The pattern, if
@@ -298,7 +325,7 @@ false` and `cleanUrls`.
 `what-we-do/index.html` and every static host resolves `/what-we-do` to it
 without being told. Do not switch to `build.format: 'file'`. That writes a flat
 `what-we-do.html`, which Vercel only serves at `/what-we-do` when `cleanUrls`
-is set — so deleting one line of `vercel.json` 404s every page on the site.
+is set, so deleting one line of `vercel.json` 404s every page on the site.
 That is not hypothetical: it is what the first preview deploy of this branch
 did.
 
@@ -329,14 +356,19 @@ None of these blocks development. All of them block launch.
 - **Privacy notice.** `/privacy` is built but its text is Sam's to supply. The
   page is `noindex` until then; `src/data/privacy.ts` says what to replace.
 - **Contact form delivery.** `CONTACT_WEBHOOK_URL` is not set, so the form
-  cannot deliver yet. It fails honestly rather than silently — see above —
-  but no enquiry reaches an inbox until this is configured.
+  cannot deliver yet. It fails honestly rather than silently, as above, but no
+  enquiry reaches an inbox until this is configured.
 - **Domain.** `delv.health` is a placeholder, set as `site` in
   `astro.config.mjs` and in `public/robots.txt`. Canonicals, Open Graph URLs
   and the sitemap all derive from it, so change it in both places.
 - **Brand punctuation.** The favicon and OG cards use `delv.` with a single
   terminal full stop. `.delv.` and `:delv:` were both in the source material.
   Confirm before these are treated as final.
+- **`SHOW_PLACEHOLDERS_ON_PRODUCTION` is `true`.** The live site serves sample
+  proof, sample quotes and placeholder colleagues. Deliberate, and temporary.
+  Set it to `false` in `src/data/preview.ts` before launch.
+- **Photography.** Six image slots are placed and empty, each showing its own
+  brief. See the Imagery section.
 - **Proof and quotes.** Both registries in `src/data/proof.ts` are empty, so
   four bands across four pages are currently absent.
 - **The wider bench.** `bench.people` in `src/data/who-we-are.ts` is empty, so

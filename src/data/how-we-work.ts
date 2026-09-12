@@ -1,7 +1,7 @@
-import type { CtaBand, Hero, Offer, PageMeta, QaItem, StageRow } from './types';
+import type { CtaBand, Figure, Hero, Offer, PageMeta, QaItem, StageRow } from './types';
 
 export const meta: PageMeta = {
-  title: 'How we work — delv.',
+  title: 'How we work · delv.',
   description:
     'How a delv. engagement runs, the three ways to work with us, and the six tests every deliverable has to pass before it leaves us.',
   ogImage: '/og/how-we-work.png',
@@ -64,12 +64,12 @@ export const tests = {
   heading: 'Six tests for anything we hand over',
   lede: 'We are in this for long relationships, which means the work has to keep earning after the invoice. Every deliverable has to pass the same six tests before it leaves us.',
   items: [
-    '<strong>Impactful</strong> &mdash; it changes a decision someone is about to make',
-    '<strong>Relevant</strong> &mdash; it speaks to your market, not to consultancy in general',
-    '<strong>Demonstrable</strong> &mdash; the evidence behind it can be shown, not just asserted',
-    '<strong>Quantifiable</strong> &mdash; there is a number, with a stated basis',
-    '<strong>Usable</strong> &mdash; your team can pick it up without us in the room',
-    '<strong>Marketable</strong> &mdash; it can go in front of customers and hold up',
+    '<strong>Impactful</strong>: it changes a decision someone is about to make',
+    '<strong>Relevant</strong>: it speaks to your market, not to consultancy in general',
+    '<strong>Demonstrable</strong>: the evidence behind it can be shown, not just asserted',
+    '<strong>Quantifiable</strong>: there is a number, with a stated basis',
+    '<strong>Usable</strong>: your team can pick it up without us in the room',
+    '<strong>Marketable</strong>: it can go in front of customers and hold up',
   ],
 };
 
@@ -108,6 +108,11 @@ export const qa = {
         'Fixed fees for defined deliverables, or a day rate for advisory and embedded work, with specialist input such as health economics priced separately and transparently. You get pricing in the brief, before you commit.',
     },
   ] satisfies QaItem[],
+};
+
+export const workingImage: Figure = {
+  label: 'Working session with a client team. Around a table or a screen, mid-discussion. Should read as an extension of their team, not a consultant presenting.',
+  ratio: '16/9',
 };
 
 export const cta: CtaBand = {

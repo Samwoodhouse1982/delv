@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import DetailList from '../components/DetailList.astro';
 import Rule from '../components/Rule.astro';
-import { closing, hero, meta, stages } from '../data/what-we-do';
+import Figure from '../components/Figure.astro';
+import { closing, hero, meta, stageImage, stages } from '../data/what-we-do';
 ---
 
 <Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
@@ -27,6 +28,7 @@ import { closing, hero, meta, stages } from '../data/what-we-do';
               <p set:html={paragraph} />
             ))}
             <DetailList items={stage.details} />
+            {index === 1 && <Figure figure={stageImage} class="mt-block" />}
           </div>
         </div>
       </div>

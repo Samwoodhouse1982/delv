@@ -198,9 +198,11 @@ One orchestrated moment: the highlighter sweep on the home hero, 750ms, 500ms de
 
 All copy is final and lives in `reference/prototype.html`. Move it into `src/data/*.ts` as typed objects. Rules:
 
-- **Do not rewrite, shorten, expand, or "tighten" any sentence.** Copy is the client's deliverable and has been through review.
+- **Do not rewrite, shorten, expand, or "tighten" any sentence** on your own initiative. Copy is the client's deliverable and has been through review. Sam directs changes to it; this brief does not.
+- **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "Anyone can report the what" band, in the Measure pillar, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new.
 - Preserve UK spelling throughout (organisation, prioritise, recognise).
-- Preserve typographic characters: `&rsquo;` for apostrophes, `&mdash;` for em dashes, `&middot;` in meta strings.
+- Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
+- **No em dashes anywhere.** Sam's instruction, 12 Sep 2026, and it overrides the prototype. Recast each one rather than swapping in a hyphen: a colon where it introduces a list or an elaboration, a comma where it is parenthetical, a full stop where the clauses stand alone. `&middot;` is the separator in page titles. The rendered site is checked for `\u2014` on every build.
 - Flag, don't fix: if you spot a typo or factual inconsistency, list it in the PR description rather than silently editing.
 
 Placeholders in the prototype that need replacing before launch — leave them in place and list them in the README:
@@ -224,7 +226,7 @@ Build these as components and compose the pages from content files.
 
 **How we work** — hero → four-step engagement stage list → dim band with the three-up offer grid (Value Audit / Project / Embedded) → "Six tests" split → dim band Q&A (six items) → **quote band** → dark CTA band.
 
-**Who we are** — hero → two-column bios → dim band "What makes us different" (three items) → "A small core, and a wider bench" split, followed by **the bench list** → **quote band** → dark CTA band.
+**Who we are** — hero → two-column bios with portrait slots → dim band "What makes us different" (three items) → "A small core, and a wider bench" split, followed by **the bench list** → **quote band** → dark CTA band.
 
 **Contact** — hero → split with the form on the left and "What happens next" plus the deadline note on the right.
 
@@ -245,7 +247,23 @@ a real client or a real colleague. A placeholder testimonial or a placeholder
 person on a live site is indistinguishable from a fabricated one to everybody
 reading it.
 
-#### Proof and quotes
+#### Imagery
+
+Added at Sam's request, 12 Sep 2026: the prototype carried no pictures at all
+and reads text-heavy. `Figure.astro` renders an image slot sized from an aspect
+ratio, so a real photograph dropped in later shifts nothing on the page.
+
+Until a photograph exists each slot renders the **brief for the picture that
+belongs there**, not a grey rectangle: what to shoot, how to frame it, what to
+avoid. An empty box reads as a broken image; a brief reads as a commission.
+Six slots are placed, one or two a page, defined in each page's data file
+alongside its copy: two founder portraits at 4:5 on Who we are plus a working
+shot, a procurement scene on Home, a value model artefact on What we do, the
+deliverables on For startups, and a working session on How we work.
+
+Setting `src` and `alt` on a slot turns it into the image, in the same space.
+
+### Proof and quotes
 
 Added after the prototype, at Sam's request, against §13.6. Two components and
 one data file, `src/data/proof.ts`, holding a registry of anonymised results, a
@@ -400,5 +418,7 @@ Not blockers for starting, but all are blockers for launch.
 4. **Email address** for the footer and the `mailto:` fallback.
 5. **Where enquiries go.** `CONTACT_WEBHOOK_URL` in the Vercel project. Until it is set the form cannot deliver; it fails honestly rather than silently, but no enquiry reaches an inbox.
 6. **Privacy notice** text, and whether analytics goes in at launch.
-7. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
-8. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+7. **Placeholders on production.** `SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts` is `true`, so the live site serves sample results, sample quotes and placeholder colleagues. Sam asked for this on 12 Sep 2026 while the site is on a test domain with no traffic. **Set it back to `false` before launch.**
+8. **Photography.** Six image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
+9. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
+10. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.

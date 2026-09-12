@@ -8,7 +8,8 @@ import Quote from '../components/Quote.astro';
 import Results from '../components/Results.astro';
 import Rule from '../components/Rule.astro';
 import StageList from '../components/StageList.astro';
-import { cta, hero, meta, moments, outcome, where } from '../data/for-startups';
+import Figure from '../components/Figure.astro';
+import { cta, hero, meta, moments, outcome, outcomeImage, where } from '../data/for-startups';
 import { placement, quoteFor, resultsFor } from '../data/proof';
 
 const proofResults = resultsFor('for-startups');
@@ -46,6 +47,7 @@ const proofCopy = placement['for-startups'];
       <div>
         <h2>{outcome.heading}</h2>
         <Rule short class="mt-rule" />
+        <Figure figure={outcomeImage} class="mt-block" />
       </div>
       <div>
         <DetailList items={outcome.details} />
