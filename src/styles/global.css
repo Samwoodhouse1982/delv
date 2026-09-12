@@ -401,6 +401,28 @@ footer :focus-visible {
   color: var(--ink);
 }
 
+/*
+ * The highlighter in a heading.
+ *
+ * `.mark` measures its band from the bottom of the inline box, which for
+ * Newsreader at body size lands neatly behind the x-height. EB Garamond's box
+ * is 1.305em tall with 0.298em of that below the baseline, and its x-height is
+ * only 0.40em, so the same band paints the descender space instead of the
+ * word. These stops are measured from the same font: up from just under the
+ * baseline to just over the x-height.
+ */
+h1 .mark,
+h2 .mark,
+h3 .mark {
+  background-image: linear-gradient(
+    to top,
+    transparent 0 0.24em,
+    var(--mark) 0.24em 0.76em,
+    transparent 0.76em
+  );
+  padding: 0 0.08em;
+}
+
 /* The one orchestrated moment on the site: 750ms, once, on load. */
 .mark--sweep {
   background-size: 0% 100%;

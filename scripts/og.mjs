@@ -31,7 +31,7 @@ const wordmark = (await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'u
   .replace('<svg ', '<svg class="logo" ');
 
 const CARDS = [
-  { file: 'home.png', heading: 'Prove the value.\nProve the why.', eyebrow: null },
+  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>,\nprove your why', eyebrow: null },
   { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
   { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'For startups' },
   { file: 'how-we-work.png', heading: 'Fast, hands-on, and\nspecific to your business.', eyebrow: 'How we work' },
@@ -75,6 +75,15 @@ const card = ({ heading, eyebrow }) => `
     letter-spacing: -0.008em; line-height: 1.08;
     white-space: pre-line; max-width: 20ch;
   }
+  /*
+   * The word carries the same colour here, but as ink rather than a wash.
+   * On paper the site washes it, because #16F4D0 as text is 1.31:1 there.
+   * On this ground the opposite holds: aquamarine text on ink is 8.39:1,
+   * while a wash would force the word to ink and invert it out of a line of
+   * white type, which reads as a glitch. The footer strapline already sets
+   * aquamarine on ink the same way.
+   */
+  .mark { color: #16F4D0; }
   .rule {
     height: 13px; margin-top: 44px;
     background-image: repeating-linear-gradient(to right, #2F5870 0 1px, transparent 1px 15px);

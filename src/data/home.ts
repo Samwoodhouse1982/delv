@@ -1,14 +1,18 @@
 import type { CtaBand, Figure, Hero, PageMeta, Pillar } from './types';
 
 export const meta: PageMeta = {
-  title: 'delv. · prove the value, prove the why',
+  title: 'delv. · prove the value, prove your why',
   description:
     'delv. helps healthtech companies define, measure and articulate the value of what they have built, so their claims stand up to procurement, investors and regulators.',
   ogImage: '/og/home.png',
 };
 
 export const hero: Hero = {
-  heading: 'Prove the value.<br>Prove the why.',
+  // `mark` is the site's highlighter: a #16F4D0 wash behind the word, ink text
+  // on top. #16F4D0 as the text colour itself is 1.31:1 on paper, illegible at
+  // any size; this way the word carries the same colour at 8.39:1. Static, not
+  // swept: the one animation on the site belongs to the claim demo below.
+  heading: 'Prove the <span class="mark">value</span>,<br>prove your why',
   sub: 'Your product works. The hard part is showing what it is worth. We help healthtech companies define, measure and articulate value, so the claims on your website survive a procurement review, a data room and a clinical safety officer.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },

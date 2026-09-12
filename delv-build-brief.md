@@ -97,7 +97,7 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 
 | Path | Page | `<title>` |
 | --- | --- | --- |
-| `/` | Home | delv. — prove the value, prove the why |
+| `/` | Home | delv. · prove the value, prove your why |
 | `/what-we-do` | Approach (Define / Measure / Articulate) | What we do — delv. |
 | `/for-startups` | Startups | For startups — delv. |
 | `/how-we-work` | How we work | How we work — delv. |
