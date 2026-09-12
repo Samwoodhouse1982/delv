@@ -84,7 +84,13 @@ const browser = await launchChromium();
 let failures = 0;
 
 for (const width of WIDTHS) {
-  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  // reducedMotion keeps the scroll reveals switched off, so every block is
+  // painted and axe audits the settled page. Without it anything below the
+  // fold sits at opacity 0 and quietly drops out of the contrast checks.
+  const page = await browser.newPage({
+    viewport: { width, height: 900 },
+    reducedMotion: 'reduce',
+  });
 
   for (const path of PAGES) {
     await page.goto(base + path, { waitUntil: 'networkidle' });

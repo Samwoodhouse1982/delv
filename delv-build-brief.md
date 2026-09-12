@@ -193,7 +193,9 @@ Every beat **rests in its finished state and animates from the start**, with `an
 
 `prefers-reduced-motion: reduce` must render the finished state immediately with no animation at all. Verified: at 120ms under reduced motion the strike, the reveal and the sweep all read as complete and `document.getAnimations()` is empty.
 
-**Do not add** scroll-triggered reveals, fade-up-on-enter, parallax, counters, or hover transforms on cards. If a section looks static, that is the design.
+**Reversed 12 Sep 2026, at Sam's request:** scroll reveals are now in. Blocks fade and rise as they enter, three-ups reveal column by column, and the measurement rules draw from the left rather than rising, because a ruler being laid down is the right gesture for the device. Hover is limited to colour, a nav underline that grows from the left, and the list tick marks extending a few pixels. **Still out:** parallax, counters, and hover transforms that move a block.
+
+Every one of these is gated twice: inside `prefers-reduced-motion: no-preference`, and behind a `data-motion` attribute the script only sets when both that query passes and the browser has an `IntersectionObserver`. No JavaScript, an old browser, or reduced motion each get the finished page. **Nothing on the site is ever waiting on an animation to become visible**, and nothing animates a property that affects layout, so none of it can cost a layout shift.
 
 ---
 

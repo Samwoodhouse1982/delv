@@ -14,7 +14,7 @@ const note = form.note.replaceAll('{email}', site.email);
     path keeps native constraint validation.
   */}
   <form id="contactForm" name="contact" method="POST" action="/api/contact">
-    <p class="honeypot">
+    <p class="honeypot" aria-hidden="true">
       <label for="f-bot">Leave this field empty</label>
       <input id="f-bot" name="bot-field" type="text" tabindex="-1" autocomplete="off" />
     </p>
@@ -71,7 +71,7 @@ const note = form.note.replaceAll('{email}', site.email);
   </form>
 
   <div class="form-done" id="formDone" hidden>
-    <h3>{form.success.heading}</h3>
+    <h2 class="as-h3">{form.success.heading}</h2>
     {form.success.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
   </div>
 </div>

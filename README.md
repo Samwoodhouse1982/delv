@@ -273,7 +273,24 @@ claim in the home hero and appears nowhere else. `--error` is for validation
 messages. The one-job rule is what keeps the palette legible; spreading a
 colour is how it stops meaning anything.
 
-**There is one animation**, the claim demo in the home hero. Three beats over
+**Motion is opt-in twice over.** Everything except the claim demo lives inside
+`prefers-reduced-motion: no-preference` *and* behind a `data-motion` attribute
+that the script in `Base.astro` only sets when that query passes and the
+browser has an `IntersectionObserver`. No JavaScript, an old browser, or
+reduced motion each get the finished page. Nothing is ever waiting on an
+animation to become visible, and nothing animates a property that affects
+layout, so none of it can cost a layout shift.
+
+`npm run a11y` runs with reduced motion forced on for the same reason: with
+reveals active, anything below the fold sits at opacity 0 and drops out of
+axe's contrast checks.
+
+What moves: blocks fade and rise as they scroll in, three-ups reveal column by
+column, section rules draw from the left. Hover is colour only, plus a nav
+underline that grows and list tick marks that extend a few pixels. Parallax,
+counters and hover transforms that move a block stay out.
+
+**The hero has its own sequence**, the claim demo. Three beats over
 about two seconds, once on load: the activity claim is struck through, the
 evidenced claim rises in, the highlighter sweeps the number. Nothing else on
 the site moves.

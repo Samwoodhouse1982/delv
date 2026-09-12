@@ -462,6 +462,95 @@ h3 .mark {
   }
 }
 
+/* --------------------------------------------------------------------------
+   Motion
+
+   Everything below is additive and gated twice: the whole block sits inside
+   `prefers-reduced-motion: no-preference`, and none of it applies until the
+   script puts `data-motion` on <html>. So a reader with reduced motion set, a
+   reader with JavaScript off, and a browser without IntersectionObserver all
+   get the finished page with nothing hidden. There is no state in which
+   content waits on an animation to become visible.
+
+   Nothing here animates a property that affects layout, so none of it can
+   move the page or cost a layout shift.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion] .will-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  [data-motion] .will-reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) var(--d, 0ms),
+      transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) var(--d, 0ms);
+  }
+
+  /* The measurement rule draws rather than rises. It is the signature device,
+     and a ruler being laid down is the right gesture for it. */
+  [data-motion] .rule.will-reveal {
+    opacity: 1;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  [data-motion] .rule.will-reveal.is-in {
+    transform: scaleX(1);
+    transition: transform 0.75s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  /* Hover, kept to colour and to the tick marks. The brief rules out hover
+     transforms on cards and that still holds: nothing here moves a block. */
+  .btn {
+    transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease;
+  }
+  nav.main a:not(.btn) {
+    transition: color 0.18s ease;
+  }
+  nav.main a:not(.btn)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: var(--mark-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  nav.main a:not(.btn):hover::after {
+    transform: scaleX(1);
+  }
+  .detail li::before,
+  .problems li::before {
+    transition: width 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .detail li:hover::before {
+    width: 15px;
+  }
+  .problems li:hover::before {
+    width: 26px;
+  }
+  footer a,
+  .foot-nav a {
+    transition:
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+}
+
+/* The underline pseudo-element needs a positioned parent, and the current
+   page keeps its underline whether or not motion is on. */
+nav.main a:not(.btn) {
+  position: relative;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .claim-strike,
   .claim-reveal,

@@ -19,12 +19,13 @@ export default defineConfig({
    * site 404s if that one line is ever removed. It did, on the first preview
    * deploy of this branch. Routing should not depend on a host config flag.
    */
-  // Keep the transactional pages and the 404 out of the sitemap; they are
-  // noindex and only reachable as a form redirect target.
+  // Every page here is noindex, so listing it in the sitemap would send two
+  // contradictory signals. /privacy rejoins once the notice is written and
+  // the noindex comes off.
   integrations: [
     sitemap({
       filter: (page) =>
-        !['/404', '/thank-you', '/could-not-send'].some((path) =>
+        !['/404', '/thank-you', '/could-not-send', '/privacy'].some((path) =>
           page.includes(path),
         ),
     }),

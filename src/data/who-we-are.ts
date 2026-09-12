@@ -44,7 +44,7 @@ export const different = {
   heading: 'What makes us different',
   items: [
     {
-      heading: 'We have been on your side of the table',
+      heading: 'We have defended the number, not just built it',
       body: 'We have carried the number into the meeting and had it questioned. That is a different experience from advising on it.',
     },
     {

@@ -3,7 +3,7 @@ import type { CtaBand, Figure, Hero, PageMeta, Pillar, StageRow } from './types'
 export const meta: PageMeta = {
   title: 'For startups · delv.',
   description:
-    'Early-stage healthtech is judged on evidence long before it has any. How delv. helps founders build the proof before a deal, a raise or an outcomes contract needs it.',
+    'How delv. helps healthtech founders build the proof a stalled deal, a raise or an outcomes contract is about to need.',
   ogImage: '/og/for-startups.png',
 };
 

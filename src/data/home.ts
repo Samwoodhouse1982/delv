@@ -3,7 +3,7 @@ import type { CtaBand, Figure, Hero, PageMeta, Pillar } from './types';
 export const meta: PageMeta = {
   title: 'delv. · prove the value, prove your why.',
   description:
-    'delv. helps healthtech companies define, measure and articulate the value of what they have built, so their claims stand up to procurement, investors and regulators.',
+    'delv. helps healthtech companies define, measure and articulate value, so their claims stand up to procurement, investors and regulators.',
   ogImage: '/og/home.png',
 };
 
@@ -42,7 +42,7 @@ export const what = {
     'Most healthtech companies know this. What they lack is the time, the data plumbing or the internal agreement to fix it, usually while a tender deadline is moving towards them.',
   ],
   muted:
-    'We sit in the space between the economists and the optimists. Not a two-year multi-country study. Not a heroic anecdote from one ward. A defensible number, at the level your buyer actually decides at.',
+    'We sit in the space between the economists and the optimists. Not a two-year multi-country study. Not a heroic anecdote from one ward. A defensible number, at the level your buyer actually makes the decision.',
 };
 
 export const problems = {
@@ -84,7 +84,7 @@ export const stages = {
 export const table = {
   heading: 'We have been on your side of the table',
   paragraphs: [
-    'Between us we have been a practising GP, a medical director inside a fast-scaling digital health company, and the person responsible for making a health tech vendor&rsquo;s value story stand up in NHS procurement.',
+    'Between us we have been a practising GP, a medical director inside a fast-scaling digital health company, and the person responsible for making a healthtech vendor&rsquo;s value story stand up in NHS procurement.',
     'We have written the claim, found the data that did not support it, and had to go back and rebuild it. That is why we are useful early, and why we will tell you when a number does not hold.',
     'The other half of the job is knowing where the number has to land. We know how the NHS buys, who signs a business case off and at what level, and how the same argument has to be rebuilt for a health system in another country.',
   ],
