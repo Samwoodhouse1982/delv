@@ -423,19 +423,49 @@ h3 .mark {
   padding: 0 0.08em;
 }
 
-/* The one orchestrated moment on the site: 750ms, once, on load. */
-.mark--sweep {
-  background-size: 0% 100%;
-  animation: sweep 0.75s cubic-bezier(0.2, 0.7, 0.3, 1) 0.5s forwards;
+/*
+ * The one orchestrated moment on the site, in the home hero's claim demo.
+ * Three beats, about two seconds end to end: the activity claim is struck
+ * through, the evidenced claim rises in behind it, and the highlighter sweeps
+ * across the number.
+ *
+ * Every step rests in its finished state and animates *from* the start with
+ * `backwards` fill. A browser that runs no animation therefore shows the
+ * completed sequence rather than a struck-out nothing, which is the failure
+ * mode of animating towards the end state instead.
+ */
+.claim-strike {
+  animation: strike 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 0.5s backwards;
 }
-@keyframes sweep {
-  to {
-    background-size: 100% 100%;
+@keyframes strike {
+  from {
+    background-size: 0% 100%, 100% 100%;
   }
 }
+
+.claim-reveal {
+  animation: reveal 0.4s cubic-bezier(0.2, 0.7, 0.3, 1) 1s backwards;
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+
+.mark--sweep {
+  animation: sweep 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) 1.3s backwards;
+}
+@keyframes sweep {
+  from {
+    background-size: 0% 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .claim-strike,
+  .claim-reveal,
   .mark--sweep {
-    background-size: 100% 100%;
     animation: none;
   }
   *,
@@ -674,19 +704,41 @@ nav.main a:not(.btn)[aria-current="page"] {
   color: var(--claim-weak);
 }
 .claim-text.weak span {
-  /* Correction (§5): wash dropped from 38% to 30% so the text over it clears
-     4.5:1. Fallback first for browsers without color-mix. */
-  background-image: linear-gradient(
-    to top,
-    rgba(204, 153, 141, 0.3) 0 0.62em,
-    transparent 0.62em
-  );
-  background-image: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--taupe) 30%, transparent) 0 0.62em,
-    transparent 0.62em
-  );
-  background-repeat: no-repeat;
+  /*
+   * Two layers. The strike sits on top and is the one that animates; the
+   * taupe wash underneath is static.
+   *
+   * Correction (§5): wash dropped from 38% to 30% so the text over it clears
+   * 4.5:1. Fallback first for browsers without color-mix.
+   *
+   * The strike band is measured from Newsreader: its box is 1.0em with the
+   * baseline 0.265em up and an x-height of 0.426em, so mid x-height is
+   * 0.478em from the bottom of the box.
+   */
+  background-image:
+    linear-gradient(
+      to top,
+      transparent 0 0.45em,
+      rgba(107, 95, 90, 0.85) 0.45em 0.506em,
+      transparent 0.506em
+    ),
+    linear-gradient(to top, rgba(204, 153, 141, 0.3) 0 0.62em, transparent 0.62em);
+  background-image:
+    linear-gradient(
+      to top,
+      transparent 0 0.45em,
+      color-mix(in srgb, var(--claim-weak) 85%, transparent) 0.45em 0.506em,
+      transparent 0.506em
+    ),
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--taupe) 30%, transparent) 0 0.62em,
+      transparent 0.62em
+    );
+  background-repeat: no-repeat, no-repeat;
+  /* Struck is the resting state, so a browser that runs no animation still
+     shows the finished idea rather than an unmarked claim. */
+  background-size: 100% 100%, 100% 100%;
   padding: 0 0.12em;
 }
 .caption {

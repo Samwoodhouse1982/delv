@@ -187,7 +187,9 @@ Scale, letter-spacing, line-height and `font-stretch` values are all in the prot
 
 ### Motion
 
-One orchestrated moment: the highlighter sweep on the home hero, 750ms, 500ms delay, once on load. Nothing else.
+One orchestrated moment: the claim demo in the home hero, about two seconds, once on load. Three beats, extended from the prototype's single sweep at Sam's request on 12 Sep 2026 to show the shift from the old claim to the new one. The activity claim is struck through, the evidenced claim rises in behind it, then the highlighter sweeps the number. Nothing else on the site moves.
+
+Every beat **rests in its finished state and animates from the start**, with `animation-fill-mode: backwards`. Animating towards the end state instead, as the prototype did, means a browser that runs no animation shows an unmarked claim and no highlight: the story half-told. This way it shows the completed comparison.
 
 `prefers-reduced-motion: reduce` must render the swept state immediately with no animation. This is already implemented in the prototype — keep it.
 

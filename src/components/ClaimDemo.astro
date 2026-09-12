@@ -9,12 +9,20 @@ interface Props {
 const { claim } = Astro.props;
 ---
 
+{/*
+  The one animated moment on the site. Three beats: the activity claim is
+  struck through, the evidenced claim rises in, the highlighter sweeps across
+  the number. Each rests in its finished state, so with animation off the
+  reader sees the completed comparison rather than a half-told story.
+*/}
 <div class="claim">
   <div class="claim-row">
     <span class="claim-tick">{claim.weak.label}</span>
-    <p class="claim-text weak"><span set:html={claim.weak.text} /></p>
+    <p class="claim-text weak">
+      <span class="claim-strike" set:html={claim.weak.text} />
+    </p>
   </div>
-  <div class="claim-row">
+  <div class="claim-row claim-reveal">
     <span class="claim-tick">{claim.strong.label}</span>
     <p class="claim-text">
       <span class="mark mark--sweep" set:html={claim.strong.text} />

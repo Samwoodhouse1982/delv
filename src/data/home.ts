@@ -22,7 +22,7 @@ export const hero: Hero = {
 
 export const claim = {
   weak: {
-    label: 'Today',
+    label: 'Before',
     text: '4,000 clinicians use the platform every week.',
   },
   strong: {
