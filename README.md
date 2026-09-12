@@ -273,9 +273,16 @@ claim in the home hero and appears nowhere else. `--error` is for validation
 messages. The one-job rule is what keeps the palette legible; spreading a
 colour is how it stops meaning anything.
 
-**There is one animation.** The highlighter sweep on the home hero: 750ms,
-500ms delay, once on load, and rendered in its finished state immediately
-under `prefers-reduced-motion: reduce`. Nothing else moves. Scroll-triggered
+**There is one animation**, the claim demo in the home hero. Three beats over
+about two seconds, once on load: the activity claim is struck through, the
+evidenced claim rises in, the highlighter sweeps the number. Nothing else on
+the site moves.
+
+Each beat rests in its **finished** state and animates *from* the start, using
+`animation-fill-mode: backwards`. Animate towards the end state instead and a
+browser that runs no animation shows an unstruck claim with no highlight,
+which is the story half-told. Under `prefers-reduced-motion: reduce` all three
+are switched off and the finished comparison renders immediately. Scroll-triggered
 reveals, fade-ups, counters and hover transforms are all out of scope by
 decision, not by omission.
 

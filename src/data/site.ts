@@ -27,7 +27,7 @@ export const site = {
   name: 'delv.',
   /** Used in <title> suffixes and the OG cards. */
   shortName: 'delv',
-  strapline: 'Prove the value, prove your why',
+  strapline: 'Prove the value, prove your why.',
   blurb:
     'Evidence of value for healthtech companies. We turn what your product does into proof of what it is worth.',
   /** PLACEHOLDER — address unconfirmed, see §13.4 of the brief. */

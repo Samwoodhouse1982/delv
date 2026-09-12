@@ -31,7 +31,7 @@ const wordmark = (await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'u
   .replace('<svg ', '<svg class="logo" ');
 
 const CARDS = [
-  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>,\nprove your why', eyebrow: null },
+  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>,\nprove your why.', eyebrow: null },
   { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
   { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'For startups' },
   { file: 'how-we-work.png', heading: 'Fast, hands-on, and\nspecific to your business.', eyebrow: 'How we work' },

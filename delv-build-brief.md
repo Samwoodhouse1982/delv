@@ -97,7 +97,7 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 
 | Path | Page | `<title>` |
 | --- | --- | --- |
-| `/` | Home | delv. · prove the value, prove your why |
+| `/` | Home | delv. · prove the value, prove your why. |
 | `/what-we-do` | Approach (Define / Measure / Articulate) | What we do — delv. |
 | `/for-startups` | Startups | For startups — delv. |
 | `/how-we-work` | How we work | How we work — delv. |
@@ -191,7 +191,7 @@ One orchestrated moment: the claim demo in the home hero, about two seconds, onc
 
 Every beat **rests in its finished state and animates from the start**, with `animation-fill-mode: backwards`. Animating towards the end state instead, as the prototype did, means a browser that runs no animation shows an unmarked claim and no highlight: the story half-told. This way it shows the completed comparison.
 
-`prefers-reduced-motion: reduce` must render the swept state immediately with no animation. This is already implemented in the prototype — keep it.
+`prefers-reduced-motion: reduce` must render the finished state immediately with no animation at all. Verified: at 120ms under reduced motion the strike, the reveal and the sweep all read as complete and `document.getAnimations()` is empty.
 
 **Do not add** scroll-triggered reveals, fade-up-on-enter, parallax, counters, or hover transforms on cards. If a section looks static, that is the design.
 
