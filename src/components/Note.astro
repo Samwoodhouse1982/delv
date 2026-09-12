@@ -1,0 +1,11 @@
+---
+/** The aquamarine left-rule callout. */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+---
+
+<div class="note">
+  <p set:html={text} />
+</div>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  claim: {
+    weak: { label: string; text: string };
+    strong: { label: string; text: string };
+    caption: string;
+  };
+}
+const { claim } = Astro.props;
+---
+
+<div class="claim">
+  <div class="claim-row">
+    <span class="claim-tick">{claim.weak.label}</span>
+    <p class="claim-text weak"><span set:html={claim.weak.text} /></p>
+  </div>
+  <div class="claim-row">
+    <span class="claim-tick">{claim.strong.label}</span>
+    <p class="claim-text">
+      <span class="mark mark--sweep" set:html={claim.strong.text} />
+    </p>
+  </div>
+  <p class="caption">{claim.caption}</p>
+</div>

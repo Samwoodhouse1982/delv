@@ -1,0 +1,20 @@
+---
+import type { Offer } from '../data/types';
+
+interface Props {
+  items: Offer[];
+}
+const { items } = Astro.props;
+---
+
+<div class="offer">
+  {
+    items.map((offer) => (
+      <div>
+        <h3>{offer.heading}</h3>
+        <span class="meta" set:html={offer.meta} />
+        <p set:html={offer.body} />
+      </div>
+    ))
+  }
+</div>

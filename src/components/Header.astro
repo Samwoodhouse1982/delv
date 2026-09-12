@@ -1,0 +1,38 @@
+---
+import { site } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => path === href;
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="bar">
+      <a class="logo" href="/" aria-label="delv. home">delv<em>.</em></a>
+
+      <button
+        class="menu-toggle ui"
+        id="menuToggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mainnav"
+      >
+        Menu
+      </button>
+
+      <nav class="main" id="mainnav" aria-label="Main">
+        {
+          site.nav.map((item) => (
+            <a
+              href={item.href}
+              class={item.cta ? 'btn btn--sm' : undefined}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,23 @@
+---
+import type { StageRow } from '../data/types';
+
+interface Props {
+  rows: StageRow[];
+  class?: string;
+}
+const { rows, class: className } = Astro.props;
+---
+
+<div class:list={['stage', className]}>
+  {
+    rows.map((row) => (
+      <div class="stage-row">
+        <div>
+          <h3>{row.heading}</h3>
+          <span class="when">{row.when}</span>
+        </div>
+        <p set:html={row.body} />
+      </div>
+    ))
+  }
+</div>

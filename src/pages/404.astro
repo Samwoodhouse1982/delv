@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Rule from '../components/Rule.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Page not found — delv."
+  description="That page does not exist. The four pages of the site are linked below."
+  noindex
+>
+  <div class="wrap hero">
+    <h1>That page is not here.</h1>
+    <p class="sub">
+      The link may be old, or we may have moved something. Everything on the site
+      is one click away below.
+    </p>
+  </div>
+
+  <div class="wrap"><Rule /></div>
+
+  <div class="band">
+    <div class="wrap">
+      <h2>Where you might have been going</h2>
+      <ul class="detail mt-rule" style="max-width:var(--measure)">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Base>

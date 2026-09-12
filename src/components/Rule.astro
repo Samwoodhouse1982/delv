@@ -1,0 +1,10 @@
+---
+interface Props {
+  /** The heading-underline form, 180px wide. */
+  short?: boolean;
+  class?: string;
+}
+const { short = false, class: className } = Astro.props;
+---
+
+<div class:list={['rule', short && 'rule--short', className]} aria-hidden="true"></div>

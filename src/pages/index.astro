@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import ClaimDemo from '../components/ClaimDemo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Pillars from '../components/Pillars.astro';
+import ProblemList from '../components/ProblemList.astro';
+import Rule from '../components/Rule.astro';
+import { site } from '../data/site';
+import { claim, cta, hero, meta, problems, stages, table, what } from '../data/home';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.company.legalName,
+  alternateName: 'delv.',
+  url: Astro.site?.href,
+  logo: new URL('/og/home.png', Astro.site).href,
+  description: site.blurb,
+  email: site.email,
+  ...(site.sameAs.length > 0 ? { sameAs: site.sameAs } : {}),
+};
+---
+
+<Base title={meta.title} description={meta.description} ogImage={meta.ogImage} jsonLd={jsonLd}>
+  <div class="wrap hero">
+    <h1 set:html={hero.heading} />
+    <p class="sub" set:html={hero.sub} />
+    <div class="hero-actions">
+      {
+        hero.actions?.map((action) => (
+          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
+            {action.label}
+          </a>
+        ))
+      }
+    </div>
+    <ClaimDemo claim={claim} />
+  </div>
+
+  <div class="wrap"><Rule /></div>
+
+  <div class="band dark">
+    <div class="wrap split">
+      <div><h2>{what.heading}</h2></div>
+      <div>
+        {what.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+        <p class="muted" set:html={what.muted} />
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:clamp(28px,3vw,44px)">
+        <h2>{problems.heading}</h2>
+        <p class="muted" style="margin:0" set:html={problems.lede} />
+      </div>
+      <ProblemList items={problems.items} />
+    </div>
+  </div>
+
+  <div class="band dim band--tight">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:28px">
+        <h2>{stages.heading}</h2>
+        <p class="muted" style="margin:0" set:html={stages.lede} />
+      </div>
+      <Pillars items={stages.pillars} />
+      <p class="mt-cta">
+        <a class="btn btn--ghost" href={stages.action.href}>{stages.action.label}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap split">
+      <div>
+        <h2>{table.heading}</h2>
+        <Rule short class="mt-rule" />
+      </div>
+      <div>
+        {table.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+        <p>
+          <a class="btn btn--ghost" href={table.action.href}>{table.action.label}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <CtaBand cta={cta} />
+</Base>

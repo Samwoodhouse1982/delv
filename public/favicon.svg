@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="delv.">
+  <rect width="64" height="64" rx="8" fill="#153B50"/>
+  <!-- A 'd' drawn as paths rather than <text>, so the mark does not depend on
+       Archivo being installed wherever the icon is rendered. -->
+  <path d="M38 12h7v40h-7v-4.2a13.6 13.6 0 1 1 0-19.6V12Z
+           M28.4 32.6a7.4 7.4 0 1 0 0 14.8 7.4 7.4 0 0 0 0-14.8Z"
+        fill="#F7F7F3" fill-rule="evenodd"/>
+  <circle cx="53" cy="47.5" r="4.5" fill="#16F4D0"/>
+</svg>

@@ -1,0 +1,20 @@
+---
+import type { Pillar } from '../data/types';
+
+interface Props {
+  items: Pillar[];
+}
+const { items } = Astro.props;
+---
+
+<div class="pillars">
+  {
+    items.map((pillar) => (
+      <div class="pillar">
+        <span class="step">{pillar.step}</span>
+        <h3>{pillar.heading}</h3>
+        <p set:html={pillar.body} />
+      </div>
+    ))
+  }
+</div>

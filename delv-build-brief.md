@@ -169,7 +169,9 @@ Scale, letter-spacing, line-height and `font-stretch` values are all in the prot
 
 1. **Measurement rule** — `repeating-linear-gradient` tick marks with a 1px baseline. Used as section separators and in short form as a heading underline. This is the signature device.
 2. **Highlighter** — `linear-gradient` background sized to `0.62em` from the baseline, applied to evidenced claims only.
-3. **Tick markers** — 9px horizontal hairline in `--mark-deep` as list markers. No bullets, no icons, no numbers except where content is genuinely sequential (the Define / Measure / Articulate stages, and the engagement steps).
+3. **Tick markers** — 9px horizontal hairline in `--brand` as list markers. No bullets, no icons, no numbers except where content is genuinely sequential (the Define / Measure / Articulate stages, and the engagement steps).
+
+   Earlier drafts said `--mark-deep` here, contradicting the colour paragraph above, which gives list markers to pacific blue. Pacific blue wins: it is what the prototype ships and what the one-job-per-colour rule says. Aquamarine stays the evidence colour.
 
 ### Motion
 
@@ -254,6 +256,17 @@ Ask Sam before wiring anything to HubSpot. If he wants it, the pattern is Netlif
 ## 10. Acceptance criteria
 
 The build is done when all of the following are true:
+
+Two defects in the prototype's own CSS were found during the port and fixed;
+they are recorded here so they are not reintroduced.
+
+- `nav.main a` outweighs `.btn` on specificity, so the header's "Start a
+  conversation" button renders graphite on ink (1.96:1), and ink on ink —
+  invisible — on `/contact`, where `aria-current` lands on it. The nav colour
+  rules are scoped `:not(.btn)`.
+- `.claim-tick` on the first claim row is `color-mix(in srgb, var(--taupe)
+  62%, var(--ink))`, which is 4.0:1 at 12px semibold. It is 52% in the build,
+  which is 4.75:1 and keeps the taupe cast.
 
 **Accessibility**
 - Keyboard-navigable end to end, with a visible focus ring on every interactive element: 2px `--ink`, 3px offset, and `--mark` on deep bands. This applies to form fields too. The prototype suppresses the outline on inputs in favour of a 28%-opacity pacific glow, which is 1.3:1 against the page and fails SC 1.4.11 — the ring is not optional there. Keep the glow if you like, underneath the ring.
