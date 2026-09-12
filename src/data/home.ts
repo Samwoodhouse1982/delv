@@ -12,7 +12,9 @@ export const hero: Hero = {
   // on top. #16F4D0 as the text colour itself is 1.31:1 on paper, illegible at
   // any size; this way the word carries the same colour at 8.39:1. Static, not
   // swept: the one animation on the site belongs to the claim demo below.
-  heading: 'Prove the <span class="mark">value</span>,<br>prove your why.',
+  heading:
+    '<span class="hl">Prove the <span class="mark">value</span>,</span>' +
+    '<span class="hl">prove your why.</span>',
   sub: 'Your product works. The hard part is showing what it is worth. We help healthtech companies define, measure and articulate value, so the claims on your website survive a procurement review, a data room and a clinical safety officer.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
