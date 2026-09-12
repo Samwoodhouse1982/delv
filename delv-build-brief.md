@@ -415,7 +415,7 @@ Several of these are likely in phase two. Structure the CSS and components so a 
 Not blockers for starting, but all are blockers for launch.
 
 1. **Domain.** `delv.health` is used as the placeholder. `delv.co.uk` and `delv.com` were unavailable at last check.
-2. **Brand punctuation.** The site uses `delv.` with a single terminal full stop. The source material also used `.delv.` and `:delv:`. Confirm before favicon and OG images are made.
+2. **Brand punctuation.** Settled. A wordmark was supplied on 12 Sep 2026: `delv` in a high-contrast serif with the terminal full stop as an aquamarine dot. It is in `public/brand/`, inlined by `Logo.astro` for the header and footer, and carried through the favicon, the touch icon and all seven OG cards. The `.delv.` and `:delv:` variants are dead.
 3. **Company details** for the trading disclosures strip.
 4. **Email address** for the footer and the `mailto:` fallback.
 5. **Where enquiries go.** `CONTACT_WEBHOOK_URL` in the Vercel project. Until it is set the form cannot deliver; it fails honestly rather than silently, but no enquiry reaches an inbox.

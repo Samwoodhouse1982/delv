@@ -1,4 +1,5 @@
 ---
+import Logo from './Logo.astro';
 import { site } from '../data/site';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -8,7 +9,7 @@ const isCurrent = (href: string) => path === href;
 <header class="site-header">
   <div class="wrap">
     <div class="bar">
-      <a class="logo" href="/" aria-label="delv. home">delv<em>.</em></a>
+      <a class="logo" href="/" aria-label="delv. home"><Logo width={88} /></a>
 
       <button
         class="menu-toggle ui"

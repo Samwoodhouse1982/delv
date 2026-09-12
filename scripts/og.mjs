@@ -11,13 +11,24 @@
  * does not touch the network.
  */
 import { launchChromium } from './browser.mjs';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = resolve(root, 'public/og');
 const fontUrl = (file) => pathToFileURL(resolve(root, 'public/fonts', file)).href;
+
+/*
+ * The real wordmark, inlined with currentColor on the letterforms so it can be
+ * painted white on the ink ground. The supplied file paints them in --ink,
+ * which would be invisible here.
+ */
+const wordmark = (await readFile(resolve(root, 'public/brand/delv-logo.svg'), 'utf-8'))
+  .replace(/<defs>[\s\S]*?<\/defs>/, '')
+  .replace(/class="cls-1"/g, 'fill="currentColor"')
+  .replace(/class="cls-2"/g, 'fill="#16F4D0"')
+  .replace('<svg ', '<svg class="logo" ');
 
 const CARDS = [
   { file: 'home.png', heading: 'Prove the value.\nProve the why.', eyebrow: null },
@@ -48,8 +59,7 @@ const card = ({ heading, eyebrow }) => `
     padding: 72px 80px;
     display: flex; flex-direction: column; justify-content: space-between;
   }
-  .logo { font-size: 40px; font-weight: 700; letter-spacing: -0.04em; }
-  .logo em { font-style: normal; color: #16F4D0; }
+  .logo { width: 168px; height: auto; display: block; color: #fff; }
   .eyebrow {
     font-size: 20px; font-weight: 600; color: #A9C4D2;
     letter-spacing: 0.01em; margin-bottom: 22px;
@@ -65,7 +75,7 @@ const card = ({ heading, eyebrow }) => `
     border-bottom: 1px solid #2F5870;
   }
 </style>
-<div class="logo">delv<em>.</em></div>
+${wordmark}
 <div>
   ${eyebrow ? `<div class="eyebrow">${eyebrow}</div>` : ''}
   <h1>${heading}</h1>

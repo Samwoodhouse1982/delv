@@ -406,17 +406,17 @@ footer :focus-visible {
   height: 66px;
 }
 .logo {
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 23px;
-  letter-spacing: -0.04em;
+  display: flex;
+  align-items: center;
   text-decoration: none;
   padding: 4px 2px;
   flex: 0 0 auto;
+  /* The mark's letterforms take currentColor. */
+  color: var(--ink);
 }
-.logo em {
-  font-style: normal;
-  color: var(--mark-deep);
+.logo-mark {
+  display: block;
+  height: auto;
 }
 
 nav.main {
@@ -1212,17 +1212,9 @@ footer a:hover {
   gap: 18px;
 }
 .footer-logo {
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: -0.04em;
-  color: #fff;
   display: block;
-  margin-bottom: 6px;
-}
-.footer-logo em {
-  font-style: normal;
-  color: var(--mark);
+  margin-bottom: 14px;
+  color: #fff;
 }
 .strapline {
   font-family: var(--font-ui);

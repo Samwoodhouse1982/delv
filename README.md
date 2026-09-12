@@ -99,9 +99,35 @@ matches: re-run `npm run og` and commit the PNGs.
 2. `npm run build && npm run a11y`.
 3. If a heading changed, `npm run og` and commit `public/og/*.png`.
 
-The favicon is `public/favicon.svg`; `favicon.ico` and `apple-touch-icon.png`
-are rasterised from it by `npm run icons`. Edit the SVG, re-run that, commit
-the bitmaps.
+### Brand
+
+`public/brand/` holds the two supplied files: `delv-logo.svg`, the wordmark,
+and `delv-icon.svg`, the square mark.
+
+The wordmark is **inlined** by `src/components/Logo.astro` rather than loaded
+as an `<img>`, for one reason: the supplied file paints the letterforms in
+`--ink`, which is invisible on the site's deep bands. Inline, they take
+`currentColor`, so one file serves the header in ink and the footer in white
+with no second file to keep in step. To change the mark, replace the paths in
+that component and in `public/brand/`.
+
+The dot reads from `--logo-dot`, defaulting to the aquamarine in the supplied
+file. It is faint on paper at header size, around 1.3:1. That is legitimate:
+SC 1.4.3 and 1.4.11 both exempt logotypes, and it is the designer's choice.
+If it ever reads too quiet, `--logo-dot: var(--mark-deep)` is the one-line
+change, and that is what the rest of the site uses for aquamarine on light.
+
+`public/favicon.svg` is a copy of the icon. `favicon.ico` and
+`apple-touch-icon.png` are rasterised from it by `npm run icons`, and the OG
+cards inline the wordmark, so `npm run og` follows any change to it. Edit the
+brand file, re-run both, commit the output.
+
+**Two corrections to the supplied files**, both worth knowing if a new version
+arrives. The icon's white square was `x="1" width="200"` inside a `0 0 200 200`
+viewBox, so it sat one unit right of the frame and overflowed the right edge,
+leaving a transparent stripe down the left. It is squared to the viewBox here.
+And the wordmark is ink-only, with no light variant supplied, which is what the
+inlining solves.
 
 Adding a section means a component in `src/components/` and a block in the
 page file. The components are deliberately thin: they take content and render
