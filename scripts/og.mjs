@@ -1,0 +1,92 @@
+/**
+ * Renders the Open Graph cards into public/og/, one per page, 1200x630.
+ *
+ * Run manually (`npm run og`) and commit the output. Deploys must not depend
+ * on a headless browser being available, and these only change when a page
+ * heading does.
+ *
+ * The cards are drawn in the site's own language: ink ground, the delv.
+ * logotype with its aquamarine full stop, the page heading in Archivo, and
+ * the measurement rule. Fonts are loaded straight off disk, so the render
+ * does not touch the network.
+ */
+import { launchChromium } from './browser.mjs';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const outDir = resolve(root, 'public/og');
+const fontUrl = (file) => pathToFileURL(resolve(root, 'public/fonts', file)).href;
+
+const CARDS = [
+  { file: 'home.png', heading: 'Prove the value.\nProve the why.', eyebrow: null },
+  { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
+  { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'For startups' },
+  { file: 'how-we-work.png', heading: 'Fast, hands-on, and\nspecific to your business.', eyebrow: 'How we work' },
+  { file: 'who-we-are.png', heading: 'We have been\nin your shoes.', eyebrow: 'Who we are' },
+  { file: 'contact.png', heading: 'Start a conversation.', eyebrow: 'Contact' },
+  { file: 'privacy.png', heading: 'Privacy notice.', eyebrow: 'Legal' },
+];
+
+const card = ({ heading, eyebrow }) => `
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: "Archivo";
+    src: url("${fontUrl('archivo-latin.woff2')}") format("woff2");
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1200px; height: 630px;
+    background: #153B50;
+    font-family: "Archivo", sans-serif;
+    color: #fff;
+    padding: 72px 80px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .logo { font-size: 40px; font-weight: 700; letter-spacing: -0.04em; }
+  .logo em { font-style: normal; color: #16F4D0; }
+  .eyebrow {
+    font-size: 20px; font-weight: 600; color: #A9C4D2;
+    letter-spacing: 0.01em; margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 76px; font-weight: 600; font-stretch: 105%;
+    letter-spacing: -0.022em; line-height: 1.06;
+    white-space: pre-line; max-width: 20ch;
+  }
+  .rule {
+    height: 13px; margin-top: 44px;
+    background-image: repeating-linear-gradient(to right, #2F5870 0 1px, transparent 1px 15px);
+    border-bottom: 1px solid #2F5870;
+  }
+</style>
+<div class="logo">delv<em>.</em></div>
+<div>
+  ${eyebrow ? `<div class="eyebrow">${eyebrow}</div>` : ''}
+  <h1>${heading}</h1>
+  <div class="rule"></div>
+</div>
+`;
+
+const browser = await launchChromium();
+const page = await browser.newPage({
+  viewport: { width: 1200, height: 630 },
+  deviceScaleFactor: 1,
+});
+
+await mkdir(outDir, { recursive: true });
+
+for (const spec of CARDS) {
+  await page.setContent(card(spec), { waitUntil: 'load' });
+  await page.evaluate(() => document.fonts.ready);
+  const png = await page.screenshot({ type: 'png' });
+  await writeFile(resolve(outDir, spec.file), png);
+  console.log(`og: ${spec.file} (${png.length} bytes)`);
+}
+
+await browser.close();

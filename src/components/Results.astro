@@ -1,0 +1,30 @@
+---
+import type { Result } from '../data/proof';
+
+interface Props {
+  items: Result[];
+}
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <div class="proof" style={`--proof-cols:${Math.min(items.length, 3)}`}>
+      {items.map((result) => (
+        <div class="proof-item">
+          <span class="proof-client">{result.client}</span>
+          {/*
+            The highlighter marks an evidenced claim, which is exactly what a
+            published result is. No sweep — the one animation on the site
+            belongs to the home hero.
+          */}
+          <p class="proof-figure">
+            <span class="mark" set:html={result.figure} />
+          </p>
+          <p class="proof-what" set:html={result.what} />
+          <p class="proof-basis" set:html={result.basis} />
+        </div>
+      ))}
+    </div>
+  )
+}

@@ -1,0 +1,203 @@
+---
+import { fields, form } from '../data/contact';
+import { site } from '../data/site';
+
+const note = form.note.replaceAll('{email}', site.email);
+---
+
+<div class="form">
+  {/*
+    A real form, posting to the serverless function in api/contact.js. Without
+    JavaScript it submits natively and the function redirects to /thank-you or
+    /could-not-send; with JavaScript we intercept it for inline validation and
+    an in-place success state. `novalidate` is set by the script, so the no-JS
+    path keeps native constraint validation.
+  */}
+  <form id="contactForm" name="contact" method="POST" action="/api/contact">
+    <p class="honeypot">
+      <label for="f-bot">Leave this field empty</label>
+      <input id="f-bot" name="bot-field" type="text" tabindex="-1" autocomplete="off" />
+    </p>
+
+    {
+      fields.map((field) => (
+        <div class="field">
+          <label for={field.id}>{field.label}</label>
+
+          {field.type === 'select' ? (
+            <select
+              id={field.id}
+              name={field.name}
+              aria-describedby={`${field.id}-error`}
+            >
+              <option value="">{field.prompt}</option>
+              {field.options?.map((option) => (
+                <option value={option}>{option}</option>
+              ))}
+            </select>
+          ) : field.type === 'textarea' ? (
+            <textarea
+              id={field.id}
+              name={field.name}
+              required={field.required}
+              placeholder={field.placeholder}
+              aria-describedby={`${field.id}-error`}
+            />
+          ) : (
+            <input
+              id={field.id}
+              name={field.name}
+              type={field.type}
+              required={field.required}
+              autocomplete={field.autocomplete}
+              aria-describedby={`${field.id}-error`}
+            />
+          )}
+
+          <p class="field-error" id={`${field.id}-error`} data-error-for={field.id} />
+        </div>
+      ))
+    }
+
+    <button class="btn" type="submit">{form.submit}</button>
+
+    {/*
+      Rendered on every load, never display:none, so the live region is in the
+      accessibility tree at the moment a message lands in it.
+    */}
+    <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+
+    <p class="form-note" set:html={note} />
+  </form>
+
+  <div class="form-done" id="formDone" hidden>
+    <h3>{form.success.heading}</h3>
+    {form.success.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+  </div>
+</div>
+
+<script>
+  import { fields, form } from '../data/contact';
+  import { site } from '../data/site';
+
+  const el = document.getElementById('contactForm') as HTMLFormElement | null;
+  const done = document.getElementById('formDone');
+  const status = document.getElementById('formStatus');
+
+  if (el && done && status) {
+    // Inline errors replace the browser's own bubbles, so turn those off —
+    // but only now that the script has run, so the no-JS path keeps them.
+    el.noValidate = true;
+
+    const errorFor = (id: string) =>
+      el.querySelector<HTMLElement>(`[data-error-for="${id}"]`);
+
+    const control = (id: string) =>
+      document.getElementById(id) as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | HTMLSelectElement
+        | null;
+
+    const setError = (id: string, message: string | null) => {
+      const field = control(id);
+      const slot = errorFor(id);
+      if (!field || !slot) return;
+      slot.textContent = message ?? '';
+      if (message) field.setAttribute('aria-invalid', 'true');
+      else field.removeAttribute('aria-invalid');
+    };
+
+    const validate = () => {
+      const failed: string[] = [];
+
+      for (const field of fields) {
+        const node = control(field.id);
+        if (!node) continue;
+        const value = node.value.trim();
+
+        if (field.required && !value) {
+          setError(field.id, field.error ?? 'This one is needed.');
+          failed.push(field.id);
+          continue;
+        }
+        // A pragmatic shape check, not an RFC 5322 parser: something, an @,
+        // something, a dot, something. The reply itself is the real test.
+        if (field.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          setError(field.id, form.invalidEmail);
+          failed.push(field.id);
+          continue;
+        }
+        setError(field.id, null);
+      }
+
+      return failed;
+    };
+
+    const composeMailto = () => {
+      const value = (id: string) => control(id)?.value.trim() ?? '';
+      const body = [
+        `Name: ${value('f-name')}`,
+        `Company: ${value('f-company')}`,
+        `Stage: ${value('f-stage')}`,
+        `Email: ${value('f-email')}`,
+        '',
+        value('f-msg'),
+      ].join('\n');
+      const subject = `Enquiry from ${value('f-company') || value('f-name')}`;
+      return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
+
+    const offerMailto = () => {
+      status.textContent = '';
+      status.className = 'status err';
+      status.insertAdjacentHTML(
+        'beforeend',
+        `${form.failure} `,
+      );
+      const link = document.createElement('a');
+      link.href = composeMailto();
+      link.textContent = form.failureAction;
+      status.append(link);
+    };
+
+    el.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const failed = validate();
+      if (failed.length > 0) {
+        status.textContent = '';
+        status.className = 'status';
+        control(failed[0])?.focus();
+        return;
+      }
+
+      status.textContent = 'Sending.';
+      status.className = 'status';
+
+      try {
+        const response = await fetch(el.getAttribute('action') ?? '/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            // Tells the endpoint to answer with JSON rather than redirect us,
+            // which is how it distinguishes this from a native form post.
+            Accept: 'application/json',
+          },
+          body: new URLSearchParams(new FormData(el) as unknown as string[][]).toString(),
+        });
+        if (!response.ok) throw new Error(String(response.status));
+
+        // Swap the form out rather than clearing it, so nobody sends twice.
+        el.hidden = true;
+        done.hidden = false;
+        done.setAttribute('tabindex', '-1');
+        (done as HTMLElement).focus();
+      } catch {
+        // Everything the user typed is still in the form; the mailto: carries
+        // a copy of it so the enquiry is not lost either way.
+        offerMailto();
+      }
+    });
+  }
+</script>

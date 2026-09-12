@@ -1,0 +1,126 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Keeps /404 out of search results without touching robots.txt. */
+  noindex?: boolean;
+  /** JSON-LD, home page only. */
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, ogImage = '/og/home.png', noindex = false, jsonLd } =
+  Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogUrl = new URL(ogImage, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="delv." />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <meta name="theme-color" content="#F7F7F3" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    {/* The two faces used above the fold. The latin-ext subsets are left to
+        load on demand — nothing in the site's own copy needs them. */}
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/newsreader-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {
+      jsonLd && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(jsonLd)}
+        />
+      )
+    }
+  </head>
+
+  <body>
+    <a class="skip ui" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // The mobile nav toggle. This and the contact form are the only two
+      // pieces of JavaScript on the site.
+      const toggle = document.getElementById('menuToggle');
+      const nav = document.getElementById('mainnav');
+
+      if (toggle && nav) {
+        const setOpen = (open: boolean) => {
+          nav.classList.toggle('open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+
+        toggle.addEventListener('click', () => {
+          setOpen(!nav.classList.contains('open'));
+        });
+
+        // Escape closes it and puts focus back where it came from, so a
+        // keyboard user is not stranded inside a closed menu.
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && nav.classList.contains('open')) {
+            setOpen(false);
+            toggle.focus();
+          }
+        });
+
+        // Widening past the breakpoint reveals the desktop nav; the open
+        // class would otherwise linger and leave aria-expanded lying.
+        const wide = window.matchMedia('(min-width: 861px)');
+        wide.addEventListener('change', (event) => {
+          if (event.matches) setOpen(false);
+        });
+      }
+    </script>
+
+    {/* Analytics (§2) is Plausible, cookieless, and goes in once Sam
+        confirms. Nothing is loaded here in the meantime. */}
+  </body>
+</html>

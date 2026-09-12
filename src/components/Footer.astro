@@ -1,0 +1,46 @@
+---
+import { site } from '../data/site';
+
+const { company } = site;
+
+// Companies Act 2006 trading disclosures. Each part is rendered only once it
+// exists, so the strip degrades to what is true rather than showing a blank.
+// All four are required before launch — see §9 of the brief.
+const disclosures = [
+  `© ${new Date().getFullYear()} ${company.legalName}`,
+  company.placeOfRegistration,
+  company.companyNumber ? `Company number ${company.companyNumber}` : null,
+  company.registeredOffice,
+].filter(Boolean) as string[];
+---
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <span class="footer-logo">delv<em>.</em></span>
+        <p class="strapline">{site.strapline}</p>
+        <p class="foot-blurb">{site.blurb}</p>
+      </div>
+
+      {
+        site.footerNav.map((column, index) => (
+          <nav
+            class="foot-nav"
+            aria-label={index === 0 ? 'Services' : 'About and contact'}
+          >
+            {column.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+            {index === 1 && <a href={`mailto:${site.email}`}>{site.email}</a>}
+          </nav>
+        ))
+      }
+    </div>
+
+    <div class="legal">
+      {disclosures.map((line) => <span>{line}</span>)}
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+</footer>

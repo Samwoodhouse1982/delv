@@ -1,0 +1,19 @@
+---
+import type { QaItem } from '../data/types';
+
+interface Props {
+  items: QaItem[];
+}
+const { items } = Astro.props;
+---
+
+<div class="qa">
+  {
+    items.map((item) => (
+      <div class="qa-item">
+        <h3 set:html={item.question} />
+        <p set:html={item.answer} />
+      </div>
+    ))
+  }
+</div>

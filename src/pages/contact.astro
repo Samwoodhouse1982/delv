@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import DetailList from '../components/DetailList.astro';
+import Note from '../components/Note.astro';
+import { hero, meta, next } from '../data/contact';
+---
+
+<Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
+  <div class="wrap hero" style="padding-bottom:20px">
+    <h1>{hero.heading}</h1>
+    <p class="sub" set:html={hero.sub} />
+  </div>
+
+  <div class="band band--tight">
+    <div class="wrap split">
+      <div>
+        <ContactForm />
+      </div>
+      <div>
+        {/*
+          h2, not the prototype's h3: it sits directly under the page h1, so
+          h3 would skip a level. `as-h3` keeps the prototype's type size.
+        */}
+        <h2 class="as-h3">{next.heading}</h2>
+        <DetailList items={next.items} class="mt-rule" />
+        <Note text={next.note} />
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,35 @@
+{
+  "name": "delv-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Marketing site for delv. — DELV Consulting Ltd",
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "dev:preview": "PLACEHOLDER_PREVIEW=1 astro dev",
+    "build": "astro build",
+    "build:preview": "PLACEHOLDER_PREVIEW=1 astro build",
+    "preview": "astro preview",
+    "check": "astro check && npm run a11y",
+    "check:preview": "PLACEHOLDER_PREVIEW=1 astro build && npm run a11y",
+    "a11y": "node scripts/a11y.mjs",
+    "fonts:metrics": "node scripts/font-metrics.mjs",
+    "og": "node scripts/og.mjs",
+    "icons": "node scripts/icons.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@capsizecss/metrics": "^4.2.0",
+    "@capsizecss/unpack": "^4.0.1",
+    "axe-core": "^4.13.0",
+    "playwright": "^1.63.0",
+    "typescript": "^5.9.3"
+  }
+}

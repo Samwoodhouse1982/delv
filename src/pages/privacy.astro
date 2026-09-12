@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Rule from '../components/Rule.astro';
+import { hero, meta, placeholder } from '../data/privacy';
+---
+
+<Base title={meta.title} description={meta.description} ogImage={meta.ogImage} noindex>
+  <div class="wrap hero">
+    <h1>{hero.heading}</h1>
+    <p class="sub" set:html={hero.sub} />
+  </div>
+
+  <div class="wrap"><Rule /></div>
+
+  {/*
+    PLACEHOLDER — the notice itself is Sam's to supply (§4). When it arrives,
+    add a `sections` array to src/data/privacy.ts, render it here, delete this
+    block and drop `noindex` from the layout call above.
+  */}
+  <div class="band">
+    <div class="wrap">
+      <h2>{placeholder.heading}</h2>
+      <div class="body-max mt-rule">
+        {placeholder.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+      </div>
+    </div>
+  </div>
+</Base>

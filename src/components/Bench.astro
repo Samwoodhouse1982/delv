@@ -1,0 +1,28 @@
+---
+import type { BenchMember } from '../data/who-we-are';
+
+interface Props {
+  members: BenchMember[];
+}
+const { members } = Astro.props;
+---
+
+{
+  members.length > 0 && (
+    <div class="stage bench">
+      {members.map((member) => (
+        <div class="stage-row">
+          <div>
+            {/*
+              h3 under the section's h2. A member with no name is headed by
+              their discipline, so the row never renders an empty heading.
+            */}
+            <h3>{member.name ?? member.role}</h3>
+            {member.name && <span class="when">{member.role}</span>}
+          </div>
+          <p set:html={member.body} />
+        </div>
+      ))}
+    </div>
+  )
+}

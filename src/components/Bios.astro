@@ -1,0 +1,25 @@
+---
+import type { Person } from '../data/types';
+
+interface Props {
+  people: Person[];
+}
+
+// h2, not h3: the bios sit directly under the page h1 with no section heading
+// between, so h3 would skip a level. `as-h3` keeps the prototype's type size.
+const { people } = Astro.props;
+---
+
+<div class="people">
+  {
+    people.map((person) => (
+      <div class="person">
+        <h2 class="as-h3">{person.name}</h2>
+        <span class="role">{person.role}</span>
+        {person.paragraphs.map((paragraph) => (
+          <p set:html={paragraph} />
+        ))}
+      </div>
+    ))
+  }
+</div>
