@@ -10,6 +10,11 @@
  * The dot reads from --logo-dot, so its colour is a one-line change. It
  * defaults to the aquamarine in the supplied file.
  *
+ * The viewBox crops the supplied file's left side bearing, 28.9 units of
+ * empty space before the 'd'. Left in, it pushed the painted mark about 6px
+ * right of the page's left margin, which is visible against the text below it.
+ * The right bearing stays: nothing aligns to that edge.
+ *
  * Decorative here: the link or heading around it carries the accessible name.
  */
 interface Props {
@@ -22,9 +27,9 @@ const { width = 96, class: className } = Astro.props;
 
 <svg
   class:list={['logo-mark', className]}
-  viewBox="0 0 468.85 200"
+  viewBox="28.9 0 439.95 200"
   width={width}
-  height={Math.round((width * 200) / 468.85)}
+  height={Math.round((width * 200) / 439.95)}
   role="presentation"
   aria-hidden="true"
   focusable="false"

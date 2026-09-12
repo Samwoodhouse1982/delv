@@ -409,7 +409,8 @@ footer :focus-visible {
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding: 4px 2px;
+  /* No horizontal padding: the mark's left edge is the page's left margin. */
+  padding: 4px 0;
   flex: 0 0 auto;
   /* The mark's letterforms take currentColor. */
   color: var(--ink);
@@ -541,7 +542,7 @@ nav.main a:not(.btn)[aria-current="page"] {
    -------------------------------------------------------------------------- */
 
 .hero {
-  padding: clamp(52px, 7vw, 96px) 0 clamp(36px, 4vw, 56px);
+  padding-block: clamp(52px, 7vw, 96px) clamp(36px, 4vw, 56px);
 }
 .hero h1 {
   max-width: 16ch;
