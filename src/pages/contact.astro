@@ -12,7 +12,8 @@ import { hero, meta, next } from '../data/contact';
     <p class="sub" set:html={hero.sub} />
   </div>
 
-  <div class="band band--tight">
+  {/* No background dots on this page: see the --coral note in global.css. */}
+  <div class="band band--tight contact-page">
     <div class="wrap split">
       <div>
         <ContactForm />

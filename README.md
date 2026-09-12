@@ -266,6 +266,20 @@ at the top, then base, layout, motifs, header, content blocks, form, footer.
 
 Three things to know before changing it:
 
+**The dot is the background graphic.** The brand mark is a full stop, so
+oversized discs and rings, cropped by the band edge, sit behind the content.
+`overflow: clip` on each band means one wider than the viewport can never
+scroll the page sideways, and every tint is capped where text stays legible
+if a line runs across it.
+
+**Coral (`--coral`, #FF5E5B) is for those graphics and nothing else.** It is
+2.79:1 on paper, so it fails as text *and* fails the 3:1 floor for a marker or
+a focus ring. It cannot be a tick, a rule or a button. It is also kept off
+Contact, where `--error` lives: two warm reds side by side, one decorative and
+one meaning "you got that wrong", is a signal worth protecting. Use
+`--coral-deep` if it has to be text. Fill it on light grounds and stroke it on
+dark ones, because a translucent coral fill over ink composites to plum.
+
 **Every colour has one job.** Yale blue carries structure. Pacific blue is
 structural detail only and never text, because it does not meet contrast at
 body size. Aquamarine is the evidence colour. Rosy taupe marks the unevidenced

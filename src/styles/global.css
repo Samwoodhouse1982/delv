@@ -145,6 +145,34 @@
   /* Correction (§8): in the prototype but not in its palette. Validation
      messages only. */
   --error: #9b2c1e;
+  /*
+   * Accent for the small structural labels: stage names, timings, roles,
+   * offer meta. Aquamarine deepened 30% towards ink, which is the point at
+   * which it still reads as teal and clears 4.5:1 on all three light grounds
+   * (paper 5.28, paper-dim 4.75, paper-mint 5.13). --mark-deep does not: it
+   * is 4.28 on paper-dim, so it stays a marker colour and never becomes text.
+   */
+  --teal: #157276;
+  /* A third band ground, so the rhythm is not only linen and ink. */
+  --paper-mint: #e7f7f1;
+  /*
+   * Coral. Background graphics only, and that is a hard limit rather than a
+   * preference: at full strength it is 2.79:1 on paper, 2.51 on paper-dim,
+   * 2.71 on mint. That fails text (4.5:1) and it also fails the 3:1 floor for
+   * a marker or a focus ring, so it cannot be a tick, a rule or a button
+   * either. White on coral is 3.0 and ink on coral 3.95, so it cannot carry a
+   * button label at body size.
+   *
+   * It is also kept off the contact page. --error #9B2C1E sits there on the
+   * validation messages, and two warm reds a few centimetres apart, one
+   * decorative and one meaning "you have made a mistake", is a signal worth
+   * protecting.
+   *
+   * Text that wants to be coral uses --coral-deep, which is the same hue
+   * carried to ink until it clears 4.5:1 on every light ground.
+   */
+  --coral: #ff5e5b;
+  --coral-deep: #a15057;
   /* Correction (§5): the prototype's #8E7E79 is 3.3:1 on paper and 2.5:1
      under the taupe wash, and the line is below the large-text threshold on
      any viewport under ~860px. This is 5.7:1 and 4.6:1. */
@@ -358,6 +386,161 @@ footer :focus-visible {
 }
 .mt-tight {
   margin-top: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   The dot
+
+   The brand mark is a full stop, so the full stop is the background graphic.
+   Oversized, cropped by the band edge, and always behind the content.
+
+   Two rules make it safe. `overflow: clip` on the band means an element wider
+   than the viewport can never scroll the page sideways. And the tints are
+   capped where text remains legible even if a line runs across one: the
+   lightest band ground still gives ink 10.7:1, and the dark-band lift still
+   gives --on-brand 5.6:1. So a dot can sit under a paragraph without
+   quietly costing contrast.
+   -------------------------------------------------------------------------- */
+
+.band,
+.cta-band,
+.hero {
+  position: relative;
+  overflow: clip;
+}
+.band > .wrap,
+.cta-band > .wrap,
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+.band::before,
+.band::after,
+.cta-band::before,
+.hero::before {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Home hero: a soft disc off the right edge, in the space the measure leaves. */
+.hero::before {
+  width: clamp(340px, 46vw, 720px);
+  right: -14%;
+  top: -26%;
+  background: color-mix(in srgb, var(--coral) 11%, transparent);
+}
+/* A mint disc riding under the coral one, so the two brand colours meet in
+   the one place the eye lands first. */
+.hero::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(150px, 20vw, 320px);
+  right: 26%;
+  top: 34%;
+  background: color-mix(in srgb, var(--mark) 13%, transparent);
+}
+
+/* Linen bands: a disc low right, with a ring riding off it. */
+.band.dim::before {
+  width: clamp(300px, 40vw, 620px);
+  right: -12%;
+  bottom: -34%;
+  background: color-mix(in srgb, var(--mark) 13%, transparent);
+}
+.band.dim::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(180px, 22vw, 340px);
+  left: -6%;
+  top: -22%;
+  border: 2px solid color-mix(in srgb, var(--coral) 42%, transparent);
+}
+
+/* Mint bands: the ring leads, the disc supports. */
+.band.mint {
+  background: var(--paper-mint);
+}
+.band.mint::before {
+  width: clamp(260px, 34vw, 520px);
+  right: -10%;
+  top: -30%;
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  background: none;
+}
+.band.mint::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(120px, 14vw, 210px);
+  right: 12%;
+  bottom: -16%;
+  background: color-mix(in srgb, var(--coral) 16%, transparent);
+}
+
+/* Deep bands: the lift is small, because white type sits on them. */
+.band.dark::before {
+  width: clamp(320px, 42vw, 660px);
+  right: -14%;
+  top: -30%;
+  background: color-mix(in srgb, var(--mark) 6%, transparent);
+}
+.band.dark::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(160px, 20vw, 300px);
+  left: 4%;
+  bottom: -26%;
+  border: 2px solid color-mix(in srgb, var(--coral) 52%, transparent);
+}
+.cta-band::before {
+  width: clamp(300px, 40vw, 620px);
+  right: -10%;
+  bottom: -40%;
+  background: color-mix(in srgb, var(--mark) 7%, transparent);
+}
+/*
+ * Coral is filled on the light grounds and outlined on the deep ones. A
+ * translucent coral fill over ink composites to plum and reads as a stain
+ * rather than an accent; a stroke keeps the hue because it is not asked to
+ * carry a tint at all.
+ */
+.cta-band::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(120px, 15vw, 230px);
+  right: 26%;
+  top: -18%;
+  border: 2px solid color-mix(in srgb, var(--coral) 62%, transparent);
+}
+
+/* Contact keeps its restraint: --error lives on this page. The class sits on
+   the band itself, not around it. */
+.band.contact-page::before,
+.band.contact-page::after {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -861,7 +1044,7 @@ nav.main a:not(.btn)[aria-current="page"] {
   font-family: var(--font-ui);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--graphite);
+  color: var(--teal);
   display: block;
   margin-bottom: 14px;
 }
@@ -982,7 +1165,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 .offer .meta {
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--graphite);
+  color: var(--teal);
   margin-bottom: 14px;
   display: block;
 }
@@ -1013,7 +1196,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 .person .role {
   font-family: var(--font-ui);
   font-size: 14px;
-  color: var(--graphite);
+  color: var(--teal);
   margin-bottom: 16px;
   display: block;
 }
@@ -1037,7 +1220,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 .stage-row .when {
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--graphite);
+  color: var(--teal);
   margin-top: 6px;
   display: block;
 }
@@ -1060,7 +1243,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 .stage-label {
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--graphite);
+  color: var(--teal);
   display: block;
   margin-bottom: 10px;
 }
@@ -1170,7 +1353,7 @@ nav.main a:not(.btn)[aria-current="page"] {
   font-family: var(--font-ui);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--graphite);
+  color: var(--teal);
   display: block;
   margin-bottom: 14px;
 }

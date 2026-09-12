@@ -135,6 +135,10 @@ Port these verbatim from the prototype. Do not "improve" the palette or the scal
 --hair-strong:  #7F909C;  /* form control boundaries — the one hairline that must meet 3:1 */
 --on-brand:     #A9C4D2;  /* secondary text on deep bands */
 --on-brand-dim: #8FADBE;  /* footer legal strip */
+--teal:         #157276;  /* structural labels: stage names, timings, roles, offer meta */
+--paper-mint:   #E7F7F1;  /* third band ground */
+--coral:        #FF5E5B;  /* background graphics only — see below */
+--coral-deep:   #A15057;  /* the same hue where it has to be text */
 --error:        #9B2C1E;  /* form validation messages, and nothing else */
 ```
 
@@ -147,6 +151,18 @@ Nothing in this palette is yellow. Earlier drafts of this brief described the `N
 `--hair-strong` exists because WCAG 2.2 SC 1.4.11 requires 3:1 for the boundary of a user interface component. `--hair` on white is 1.35:1, so a form field drawn with it has no perceptible edge. `--hair-strong` is 3.3:1 on white and 3.1:1 on paper. Use it for `input`, `textarea` and `select` borders **only**. Every other rule on the site stays `--hair`.
 
 One further correction to the prototype: `.claim-text.weak` is `#8E7E79`, which is 3.3:1 on paper and 2.5:1 where the taupe wash sits behind it. Both fail, and the line is below the large-text threshold on any viewport under about 860px. Use **`#6B5F5A`** for the weak claim text and take the taupe wash from 38% down to **30%**. That gives 5.7:1 on paper and 4.6:1 over the wash, and keeps the device intact. See §10.
+
+**Colour, added 12 Sep 2026.** The site read as too austere, so three tokens joined the palette and each has a job like the rest.
+
+`--teal` carries the small structural labels: stage names, timings, roles, offer meta. It is aquamarine deepened 30% towards ink, which is the point at which it still reads as teal and clears 4.5:1 on paper (5.28), paper-dim (4.75) and paper-mint (5.13). `--mark-deep` was tried first and rejected: it is 4.28 on paper-dim, so it stays a marker colour and never becomes text.
+
+`--paper-mint` is a third band ground, so the rhythm is not only linen and ink.
+
+`--coral` is **background graphics only, and that is a limit rather than a preference.** At full strength it is 2.79:1 on paper, 2.51 on paper-dim, 2.71 on mint. That fails text at 4.5:1 and it also fails the 3:1 floor for a marker, a rule or a focus ring, so it cannot be a tick or a button. White on coral is 3.0 and ink on coral 3.95, so it cannot carry a button label either. It is also kept off Contact: `--error` lives there, and two warm reds a few centimetres apart, one decorative and one meaning &ldquo;you have made a mistake&rdquo;, is a signal worth protecting. Text that wants to be coral uses `--coral-deep`.
+
+Coral is **filled on light grounds and outlined on deep ones.** A translucent coral fill over ink composites to plum and reads as a stain; a stroke keeps the hue because it is not asked to carry a tint.
+
+**The dot.** The brand mark is a full stop, so the full stop is the background graphic: oversized discs and rings, cropped by the band edge, always behind the content. Two rules keep them safe. `overflow: clip` on the band means a graphic wider than the viewport can never scroll the page sideways. And every tint is capped where text stays legible if a line runs across it, so a dot can sit under a paragraph without quietly costing contrast.
 
 **No decorative gradients.** The palette was supplied with gradient variants; they are not used and should not be introduced. Flat colour and hairlines are the system. The two `linear-gradient` declarations that build the measurement rule and the highlighter are structural motifs, not decoration &mdash; they stay.
 
