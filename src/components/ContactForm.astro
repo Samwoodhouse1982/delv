@@ -7,21 +7,13 @@ const note = form.note.replaceAll('{email}', site.email);
 
 <div class="form">
   {/*
-    A real form, posting to Netlify. Without JavaScript this submits natively
-    and Netlify renders its own confirmation; with JavaScript we intercept it
-    for inline validation and an in-place success state. `novalidate` is set
-    by the script, so the no-JS path keeps native constraint validation.
+    A real form, posting to the serverless function in api/contact.js. Without
+    JavaScript it submits natively and the function redirects to /thank-you or
+    /could-not-send; with JavaScript we intercept it for inline validation and
+    an in-place success state. `novalidate` is set by the script, so the no-JS
+    path keeps native constraint validation.
   */}
-  <form
-    id="contactForm"
-    name="contact"
-    method="POST"
-    action="/contact"
-    data-netlify="true"
-    netlify-honeypot="bot-field"
-  >
-    <input type="hidden" name="form-name" value="contact" />
-
+  <form id="contactForm" name="contact" method="POST" action="/api/contact">
     <p class="honeypot">
       <label for="f-bot">Leave this field empty</label>
       <input id="f-bot" name="bot-field" type="text" tabindex="-1" autocomplete="off" />
@@ -184,9 +176,14 @@ const note = form.note.replaceAll('{email}', site.email);
       status.className = 'status';
 
       try {
-        const response = await fetch(el.getAttribute('action') ?? '/', {
+        const response = await fetch(el.getAttribute('action') ?? '/api/contact', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            // Tells the endpoint to answer with JSON rather than redirect us,
+            // which is how it distinguishes this from a native form post.
+            Accept: 'application/json',
+          },
           body: new URLSearchParams(new FormData(el) as unknown as string[][]).toString(),
         });
         if (!response.ok) throw new Error(String(response.status));

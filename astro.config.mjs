@@ -12,6 +12,15 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'file' },
-  integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
+  // Keep the transactional pages and the 404 out of the sitemap; they are
+  // noindex and only reachable as a form redirect target.
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !['/404', '/thank-you', '/could-not-send'].some((path) =>
+          page.includes(path),
+        ),
+    }),
+  ],
   compressHTML: true,
 });

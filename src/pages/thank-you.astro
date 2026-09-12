@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import Rule from '../components/Rule.astro';
+import { form, next } from '../data/contact';
+import DetailList from '../components/DetailList.astro';
+
+// Where a submission without JavaScript lands. With JavaScript the form is
+// replaced in place and this page is never reached.
+---
+
+<Base
+  title="Thank you — delv."
+  description="Your message has reached us. We reply within two working days."
+  noindex
+>
+  <div class="wrap hero">
+    <h1>{form.success.heading}</h1>
+  </div>
+
+  <div class="wrap"><Rule /></div>
+
+  <div class="band">
+    <div class="wrap split">
+      <div>
+        <h2 class="as-h3">{next.heading}</h2>
+        <DetailList items={next.items} class="mt-rule" />
+      </div>
+      <div>
+        {form.success.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+        <p class="mt-cta"><a class="btn btn--ghost" href="/">Back to the site</a></p>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -14,7 +14,7 @@ export const hero: Hero = {
 
 export interface Field {
   id: string;
-  /** Netlify form field name. */
+  /** Form field name, as the endpoint and the webhook payload see it. */
   name: string;
   label: string;
   type: 'text' | 'email' | 'select' | 'textarea';
@@ -84,12 +84,30 @@ export const form = {
   submit: 'Send it',
   /** Rendered as prose under the button. */
   note: 'Prefer to write directly? <a href="mailto:{email}">{email}</a>',
-  /** Replaces the form on a successful submission. */
+  /**
+   * Replaces the form on a successful submission, and is the whole of
+   * /thank-you, which is where a no-JavaScript submission lands.
+   */
   success: {
     heading: 'Thank you — that has reached us.',
     paragraphs: [
       'We reply within two working days, from a real person. The first step is a 30-minute call to understand the problem, with no deck.',
       'If there is a fit, you will get a short written brief with deliverables and pricing. If there is not, we will tell you, and point you somewhere better if we can.',
+    ],
+  },
+  /**
+   * /could-not-send, where a no-JavaScript submission lands if the endpoint
+   * fails. With JavaScript this case is handled in place and never navigates,
+   * because the form still holds everything the visitor typed.
+   *
+   * Telling someone their enquiry arrived when it did not is the one failure
+   * this site cannot afford, so the path exists even though it is rare.
+   */
+  couldNotSend: {
+    heading: 'That did not send.',
+    paragraphs: [
+      'Something went wrong at our end, not yours. We would rather tell you than leave you waiting on a reply that was never coming.',
+      'Email us directly at <a href="mailto:{email}">{email}</a> and we will pick it up from there, with the same two working day reply.',
     ],
   },
   /** Shown if the POST fails; the mailto: composer is offered alongside. */

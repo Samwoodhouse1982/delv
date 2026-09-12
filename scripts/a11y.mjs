@@ -25,6 +25,8 @@ const PAGES = [
   '/how-we-work',
   '/who-we-are',
   '/contact',
+  '/thank-you',
+  '/could-not-send',
   '/privacy',
   '/404',
 ];

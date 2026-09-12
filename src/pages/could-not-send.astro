@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Rule from '../components/Rule.astro';
+import { form } from '../data/contact';
+import { site } from '../data/site';
+
+// Where a submission without JavaScript lands if the endpoint fails. With
+// JavaScript this is handled in place, because the form still holds
+// everything the visitor typed.
+const paragraphs = form.couldNotSend.paragraphs.map((paragraph) =>
+  paragraph.replaceAll('{email}', site.email),
+);
+---
+
+<Base
+  title="That did not send — delv."
+  description="Something went wrong sending your message. Email us directly and we will pick it up."
+  noindex
+>
+  <div class="wrap hero">
+    <h1>{form.couldNotSend.heading}</h1>
+  </div>
+
+  <div class="wrap"><Rule /></div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="body-max">
+        {paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+        <p class="mt-cta">
+          <a class="btn" href={`mailto:${site.email}`}>Email us</a>
+          <a class="btn btn--ghost" href="/contact">Try the form again</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>

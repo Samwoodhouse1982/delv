@@ -235,42 +235,67 @@ the shipped woff2 files and the real Arial and Georgia metrics from
 
 ## The contact form
 
-`src/components/ContactForm.astro`. It posts to Netlify Forms, with a
-honeypot and no CAPTCHA.
+`src/components/ContactForm.astro` posts to `api/contact.js`, a Vercel
+serverless function. Vercel has no equivalent of Netlify Forms, so this is
+the form backend.
 
-Without JavaScript it submits natively and Netlify renders its own
-confirmation. With JavaScript it validates inline — each message tied to its
-field with `aria-describedby`, `aria-invalid` set, focus moved to the first
-field that failed — then posts in the background and swaps itself for the
-confirmation panel.
+**It deliberately picks no vendor.** The function validates the enquiry and
+forwards it as JSON to whatever `CONTACT_WEBHOOK_URL` points at — an email
+relay, Zapier, Make, a Google Apps Script, HubSpot, a Slack webhook. Set that
+one variable in the Vercel project and the form works. `CONTACT_WEBHOOK_TOKEN`
+is optional and is sent as a bearer token if present.
 
-If the post fails, nothing the user typed is lost: the form stays filled and
-the status region offers a `mailto:` with the whole message pre-composed.
+**Until that variable is set the form does not deliver**, and says so rather
+than pretending. With JavaScript the visitor gets the `mailto:` composer with
+everything they typed already in it; without, they land on `/could-not-send`,
+which gives them the email address. Nothing the visitor wrote is lost on any
+path. That is what makes it safe to deploy before the webhook exists.
+
+With JavaScript the form validates inline — each message tied to its field
+with `aria-describedby`, `aria-invalid` set, focus moved to the first field
+that failed — then posts in the background and swaps itself for the
+confirmation panel, so nobody submits twice.
+
+Without JavaScript it submits natively, native constraint validation does the
+checking, and the function redirects: `/thank-you` on success, `/contact` on a
+validation failure the browser should have caught, `/could-not-send` when the
+failure is ours. Both pages are `noindex` and out of the sitemap.
 
 The status region is rendered on every page load and only its text changes.
 Do not make it `display: none` when empty — an element outside the
 accessibility tree does not announce when a message arrives in it.
 
-**Before wiring this to HubSpot, ask Sam.** The pattern, if he wants it, is
-Netlify Forms for storage plus a serverless function posting to the HubSpot
-Forms API, so a CRM outage never loses an enquiry.
+**Before pointing `CONTACT_WEBHOOK_URL` at HubSpot, ask Sam.** The pattern, if
+he wants it, is store-then-forward rather than a direct post, so a CRM outage
+cannot lose an enquiry.
 
 ---
 
 ## Deployment
 
-Netlify, building from `main`. `netlify.toml` holds the configuration:
+Vercel, building from `main`, with preview deployments per branch.
+`vercel.json` holds the configuration:
 
 ```
-npm ci --omit=dev && npm run build   →   dist/
+npm ci --omit=dev   →   npm run build   →   dist/
 ```
 
-`--omit=dev` keeps Playwright out of the deploy image; it is only needed for
-`npm run og` and `npm run a11y`, which run locally.
+`--omit=dev` matters: without it Vercel installs Playwright on every build and
+downloads a Chromium nobody uses. Playwright is only needed for `npm run og`,
+`npm run icons` and `npm run a11y`, all of which run locally.
 
-Cloudflare Pages works too, with the same command and output directory — but
-the contact form posts to Netlify Forms, so moving hosts means moving the form
-backend as well.
+`vercel.json` also carries the cache and security headers, and `cleanUrls` so
+`/what-we-do.html` redirects to `/what-we-do`, matching the canonicals.
+
+Environment variables to set in the Vercel project:
+
+| Variable | Purpose |
+| --- | --- |
+| `CONTACT_WEBHOOK_URL` | Where enquiries go. Until it is set, the form tells visitors it could not send. |
+| `CONTACT_WEBHOOK_TOKEN` | Optional. Sent as `Authorization: Bearer` if present. |
+
+Moving host again means revisiting two things: `vercel.json`, and
+`api/contact.js`, which uses the Vercel Node function signature.
 
 ---
 
@@ -288,6 +313,9 @@ None of these blocks development. All of them block launch.
   fallback.
 - **Privacy notice.** `/privacy` is built but its text is Sam's to supply. The
   page is `noindex` until then; `src/data/privacy.ts` says what to replace.
+- **Contact form delivery.** `CONTACT_WEBHOOK_URL` is not set, so the form
+  cannot deliver yet. It fails honestly rather than silently — see above —
+  but no enquiry reaches an inbox until this is configured.
 - **Domain.** `delv.health` is a placeholder, set as `site` in
   `astro.config.mjs` and in `public/robots.txt`. Canonicals, Open Graph URLs
   and the sitemap all derive from it, so change it in both places.

@@ -27,8 +27,8 @@ Where the prototype and this brief disagree, this brief wins. Where the brief is
 | Framework | **Astro 5** (static output) | Six content pages, zero app state. Ships no JS by default, which is the point. |
 | Styling | **Plain CSS with custom properties**, one global stylesheet plus scoped component styles | The design depends on hairline rules, tick gradients and precise optical spacing already expressed as CSS variables. Porting to Tailwind means re-deriving all of it for no gain. |
 | Content | Typed data files in `src/data/` (one `.ts` per page) | Sam edits copy often. Copy should never require touching a component. Not `src/content/` &mdash; that name carries content-collection semantics in Astro, and these are plain typed objects, not a collection. |
-| Forms | **Netlify Forms** (or Formspree if hosting elsewhere) with a `mailto:` fallback | See §8. |
-| Hosting | **Netlify** or **Cloudflare Pages**, deploy on push to `main` | Either is fine. Pick one and document it in the README. |
+| Forms | **A Vercel serverless function** forwarding to a configurable webhook, with a `mailto:` fallback | See §8. Netlify Forms was the original choice; the repo deploys to Vercel, which has no equivalent. |
+| Hosting | **Vercel**, deploy on push to `main`, preview per branch | Decided: Sam no longer uses Netlify. `vercel.json` holds the config; `public/_headers` and `netlify.toml` are gone. |
 | Analytics | **Plausible** (self-hosted or cloud) | Cookieless, so no consent banner in most readings of PECR. Confirm with Sam before adding anything that sets a cookie. |
 | Package manager | `npm` | No preference, just be consistent. |
 
@@ -41,6 +41,8 @@ Do not add: a CMS, React/Vue/Svelte, a component library, an animation library, 
 ```
 delv-site/
   reference/prototype.html        # read-only; do not edit
+  vercel.json                     # deploy config, headers, clean URLs
+  api/contact.js                  # contact form endpoint (serverless)
   scripts/og.mjs                  # renders the OG images; run manually, output committed
   src/
     layouts/Base.astro            # html shell, head, header, footer, skip link
@@ -75,6 +77,8 @@ delv-site/
       who-we-are.astro
       contact.astro
       privacy.astro
+      thank-you.astro
+      could-not-send.astro
       404.astro
     styles/global.css
   public/
@@ -101,6 +105,8 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 | `/contact` | Contact | Start a conversation — delv. |
 | `/privacy` | Privacy notice | Privacy — delv. |
 | `/404` | Not found | — |
+| `/thank-you` | Form success, no-JavaScript redirect target | Thank you — delv. |
+| `/could-not-send` | Form failure, no-JavaScript redirect target | That did not send — delv. |
 
 Nav labels stay exactly as the prototype: What we do · For startups · How we work · Who we are · [Start a conversation]. Note the prototype's internal routes were `/approach` and `/startups`; the public URLs are `/what-we-do` and `/for-startups` to match the labels. Page files, data files and component props all use the public names. The prototype was never published, so no redirects from the old hash routes are needed.
 
@@ -286,19 +292,23 @@ Fields: name (required), company, email (required, valid), stage (select: Pre-se
 
 The stage select needs a non-selectable placeholder option as its default. The prototype defaults to &ldquo;Pre-seed or seed&rdquo;, so anyone who skips the field is silently recorded as pre-seed &mdash; worse than leaving it blank. The field itself stays optional.
 
-Use a real `<form>` element. The prototype is a `<div>` with a `type="button"`, which is why it has no Enter-to-submit and no native validation. Netlify's build-time form detection also needs the real element in the static output.
+Use a real `<form>` element. The prototype is a `<div>` with a `type="button"`, which is why it has no Enter-to-submit and no native validation, and why a submission without JavaScript goes nowhere.
 
 Behaviour:
 
 1. Client-side validation on submit. Inline errors against each field, in the interface's voice — say what is missing and how to fix it. No apologies, no red banner at the top. Tie each error to its field with `aria-describedby` and set `aria-invalid`, and move focus to the first field that failed.
-2. POST to Netlify Forms with a honeypot field. Add `data-netlify="true"` and a hidden `form-name`.
+2. POST to `/api/contact`, a Vercel serverless function, with a honeypot field checked server-side.
 3. On success, replace the form with a confirmation that repeats what happens next and the reply window (two working days).
 4. On failure, keep the user's input and offer the `mailto:` fallback with the message pre-filled — the prototype's `mailto:` composer is the model for this.
 5. No CAPTCHA unless spam becomes a real problem.
 6. Render the status region on every page load and toggle its text, not its `display`. The prototype's `.status` is `display:none` until it has a message, which takes it out of the accessibility tree at the moment the message arrives and makes the announcement unreliable.
 7. The error colour is `#9B2C1E`. It is in the prototype but not in the §5 palette; treat it as an eighth job for an eighth colour and add it to the token list as `--error`.
 
-Ask Sam before wiring anything to HubSpot. If he wants it, the pattern is Netlify Forms for storage plus a serverless function posting to the HubSpot Forms API, so a CRM outage never loses an enquiry.
+The endpoint picks no vendor. It validates, then forwards the enquiry as JSON to whatever `CONTACT_WEBHOOK_URL` is set to &mdash; an email relay, Zapier, Make, a Google Apps Script, a Slack webhook. Until that variable is set the form does not deliver **and says so**: with JavaScript the visitor gets the `mailto:` composer carrying everything they typed, without it they land on `/could-not-send`. Nothing a visitor writes is lost on any path, which is what makes it safe to deploy ahead of the webhook.
+
+Two extra routes exist only as redirect targets for a submission made without JavaScript: `/thank-you` and `/could-not-send`. Both are `noindex` and excluded from the sitemap. A validation failure redirects back to `/contact` rather than to `/could-not-send`, because telling someone the failure was ours when it was a missing field is its own small dishonesty.
+
+Ask Sam before pointing `CONTACT_WEBHOOK_URL` at HubSpot. If he wants it, the pattern is store-then-forward rather than a direct post, so a CRM outage never loses an enquiry.
 
 ---
 
@@ -384,7 +394,8 @@ Not blockers for starting, but all are blockers for launch.
 1. **Domain.** `delv.health` is used as the placeholder. `delv.co.uk` and `delv.com` were unavailable at last check.
 2. **Brand punctuation.** The site uses `delv.` with a single terminal full stop. The source material also used `.delv.` and `:delv:`. Confirm before favicon and OG images are made.
 3. **Company details** for the trading disclosures strip.
-4. **Email address** for the form recipient and the footer.
-5. **Privacy notice** text, and whether analytics goes in at launch.
-6. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
-7. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+4. **Email address** for the footer and the `mailto:` fallback.
+5. **Where enquiries go.** `CONTACT_WEBHOOK_URL` in the Vercel project. Until it is set the form cannot deliver; it fails honestly rather than silently, but no enquiry reaches an inbox.
+6. **Privacy notice** text, and whether analytics goes in at launch.
+7. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
+8. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
