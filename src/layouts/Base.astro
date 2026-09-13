@@ -80,6 +80,17 @@ const ogUrl = new URL(ogImage, Astro.site).href;
        * who should not see it. Three ways out: already seen this session,
        * reduced motion, or storage unavailable.
        *
+       * REPLAY_EVERY_VISIT is Sam's, 13 Sep 2026: while the site is on a test
+       * domain with no traffic he wants the animation on every load rather
+       * than once a session. SET IT BACK TO false BEFORE LAUNCH. It is the
+       * only thing that changes; Intro.astro still records the visit on every
+       * play, so flipping this one boolean restores the original behaviour
+       * exactly, with no other edit anywhere.
+       *
+       * Reduced motion is not part of it and never will be. That is an
+       * accessibility guarantee, not a preference about how often to show a
+       * brand animation.
+       *
        * The timeout is a dead man's switch: this attribute also locks body
        * scroll, so if the module script never arrives the page would be stuck.
        * The component takes ownership of it the moment the animation actually
@@ -87,18 +98,21 @@ const ogUrl = new URL(ogImage, Astro.site).href;
        * waits on the font. On a slow connection the two drift apart and this
        * would otherwise cut the animation off part-way through.
        */
+      var REPLAY_EVERY_VISIT = true; /* SET TO false BEFORE LAUNCH */
+
       try {
-        if (
-          sessionStorage.getItem('delv:intro') !== 'seen' &&
-          !matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) {
+        var seen =
+          !REPLAY_EVERY_VISIT &&
+          sessionStorage.getItem('delv:intro') === 'seen';
+
+        if (!seen && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           document.documentElement.setAttribute('data-intro', 'play');
           window.__delvIntroGuard = setTimeout(function () {
             document.documentElement.removeAttribute('data-intro');
           }, 8000);
         }
       } catch (e) {
-        /* Storage blocked. The intro simply does not play. */
+        /* Storage or matchMedia unavailable. The intro simply does not play. */
       }
     </script>
 

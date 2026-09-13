@@ -379,6 +379,15 @@ head, not in the component, because deciding any later means a returning
 visitor sees a frame of the overlay before it is removed. `sessionStorage`
 means it replays in a new tab; `localStorage` would make it once-ever.
 
+**Suspended 13 Sep 2026 at Sam's request** while the site is on a test domain
+with no traffic: `REPLAY_EVERY_VISIT` in that head script is `true`, so the
+animation plays on every page load. Nothing else changed. `Intro.astro` still
+records the visit on every play, so setting the flag back to `false` restores
+the once-a-session behaviour exactly, with no other edit. It is a launch
+blocker (§13.13). Reduced motion is deliberately outside the flag: skipping
+the overlay there is an accessibility guarantee, not a preference about how
+often to show a brand animation.
+
 **Reduced motion skips it entirely.** The overlay is never rendered at all,
 rather than rendered and hurried.
 
@@ -622,4 +631,5 @@ Not blockers for starting, but all are blockers for launch.
 9. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
 10. **The Value Incubator and the Value Due Diligence Framework.** Both are named offers in the business plan and neither is on the site. If they are real, they belong on How we work next to the Value Audit; if they were working titles, this brief should stop citing them.
 11. **Investors as an audience.** The plan gives them a full proposition. The site gives them two mentions and a line in the contact form. A page, or a section on For startups, is a scope call.
-12. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+12. **The intro plays on every load.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `true`, so the 5.5-second animation runs on every page view rather than once a session. Sam asked for this on 13 Sep 2026 while the site is on a test domain. **Set it back to `false` before launch**, or every internal page click costs a visitor five and a half seconds. Nothing else has to change with it.
+13. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
