@@ -31,7 +31,7 @@ export const stages: Stage[] = [
     ],
     details: [
       'Audit of current messaging, claims and proof points, including the ones nobody can source',
-      'Hypotheses for the claims that would actually move deals, ranked by what it would cost to prove them',
+      'Hypotheses for the claims that would move deals, ranked by what it would cost to prove them',
       'A shift from inward-looking product language to statements the market recognises',
       'Baselining whatever real-world or research data already exists',
       'A review of what your product captures today, and what it would need to capture',
@@ -49,7 +49,7 @@ export const stages: Stage[] = [
     ],
     details: [
       'Metric selection for your market and buyer, not a generic ROI template',
-      'Data extraction, and measurement of the gain that is genuinely attributable to you',
+      'Data extraction, and measurement of the gain that is attributable to you',
       'Modelling with a documented assumptions log and sourced comparators',
       'Health economic analysis where it is warranted, and a straight answer when it is not',
       'Data gathering at client sites where the evidence has to come from the field',
@@ -66,7 +66,7 @@ export const stages: Stage[] = [
       'One piece of evidence, built properly, has more than one job. The same finding becomes the value proposition your sales team leads with, the narrative in an investor update, an abstract or a conference poster, the numbers inside an ROI tool, a year of content, and the training that gets a new starter saying it correctly. You are not buying a report. You are buying the asset everything else is built from.',
     ],
     details: [
-      'A Value Library holding every claim you make: versioned, sourced and auditable, ready to sit alongside your QMS',
+      'A Value Library holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request',
       'ROI calculators, from sales-led walkthroughs to short web tools for lead generation',
       'Case studies, business case templates, white papers, briefings and speaker notes',
       'Investor and board materials that connect evidence to the commercial model',

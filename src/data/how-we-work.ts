@@ -90,7 +90,7 @@ export const offers = {
 
 export const next = {
   heading: 'Where it goes next',
-  lede: 'What most engagements become once the first piece has told us what is actually needed.',
+  lede: 'What most engagements become once the first piece has told us what is needed.',
   marks: ['evidenced', 'measured'] as const satisfies readonly MarkKind[],
   items: [
     {
@@ -112,7 +112,7 @@ export const tests = {
   items: [
     '<strong>Impactful</strong>: it changes a decision someone is about to make',
     '<strong>Relevant</strong>: it speaks to your market, not to consultancy in general',
-    '<strong>Demonstrable</strong>: the evidence behind it can be shown, not just asserted',
+    '<strong>Demonstrable</strong>: the evidence behind it can be produced on request',
     '<strong>Quantifiable</strong>: there is a number, with a stated basis',
     '<strong>Usable</strong>: your team can pick it up without us in the room',
     '<strong>Marketable</strong>: it can go in front of customers and hold up',
@@ -130,13 +130,13 @@ export const qa = {
     {
       question: 'Can we trust you to speak to our customers directly?',
       answer:
-        'Yes, and we have done it with organisations around the world. We are explicit about who we are, what we are asking and why, and we work to your rules on how your customers are approached. We turn up as part of your team, not as a third party running research on them.',
+        'Yes, and we have done it with organisations around the world. We are explicit about who we are, what we are asking and why, and we work to your rules on how your customers are approached. We turn up as part of your team, and your customers are told exactly that.',
     },
     {
       question:
         'We already have a value-based agreement in place. Does that change things?',
       answer:
-        'It raises the stakes. Value-based agreements tie revenue to demonstrable health economic or operational outcomes, so evidence is a contractual obligation rather than a marketing nicety. Absence of evidence puts the contract and the revenue at risk, and it is usually recoverable if you start early enough.',
+        'It raises the stakes. Value-based agreements tie revenue to demonstrable health economic or operational outcomes, so evidence becomes a contractual obligation. That puts the contract and the revenue at risk. The position is usually recoverable if you start early enough.',
     },
     {
       question: 'Who do you usually work with?',

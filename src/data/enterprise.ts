@@ -12,7 +12,7 @@ import type {
  * Enterprise. The Articulate page.
  *
  * Startups is Define, scale-ups is Measure, and this one is Articulate: at
- * scale the problem is rarely a shortage of proof, it is four defensible
+ * scale the problem is rarely a shortage of proof, it is four credible
  * versions of the same number with nobody empowered to choose between them.
  *
  * The Value Library is the headline deliverable here and a supporting one
@@ -28,7 +28,7 @@ export const meta: PageMeta = {
 
 export const hero: Hero = {
   heading: 'You have the evidence. It does not agree with itself.',
-  sub: 'At scale the problem is rarely a shortage of proof. It is four defensible versions of the same number, in four places, with nobody empowered to choose between them. We build the single version, and the rules that keep it true.',
+  sub: 'At scale the problem is rarely a shortage of proof. It is four credible versions of the same number, in four places, with nobody empowered to choose between them. We build the single version, and the rules that keep it true.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
     { label: 'See what we do', href: '/what-we-do', ghost: true },
@@ -40,7 +40,7 @@ export const moments = {
   rows: [
     {
       heading: 'The same claim, four different numbers',
-      when: 'Found during a legal or QMS review',
+      when: 'Found during a legal or quality review',
       body: 'Sales say thirty per cent. The website says a third. The last case study said twenty-eight, and nobody has seen the working behind any of them. Each version was reasonable when it was written. One of them is the one a customer will eventually quote back at you.',
     },
     {
@@ -51,14 +51,14 @@ export const moments = {
     {
       heading: 'One product, four evidence bars',
       when: 'Wherever the second and third markets are',
-      body: 'A German sickness fund, a US integrated delivery network and an Australian state health service each want the same argument rebuilt around a different payer, a different budget and a different standard of proof. Rebuilding it locally, every time, is how the versions diverged in the first place.',
+      body: 'A German sickness fund, a US integrated delivery network and an Australian state health service each want the same argument rebuilt around their own payer and their own standard of proof. Rebuilding it locally, every time, is how the versions diverged in the first place.',
     },
   ] satisfies StageRow[],
 };
 
 export const version = {
   heading: 'What one version of the number means',
-  lede: 'Standardising value communication is three pieces of work, not a document.',
+  lede: 'Standardising value communication takes three pieces of work.',
   marks: [
     'evidenced',
     'measured',
@@ -68,7 +68,7 @@ export const version = {
     {
       step: 'One',
       heading: 'One repository',
-      body: 'Every claim you make in market, in one place, versioned and sourced, with the evidence attached and an owner against it. Built to sit alongside your QMS rather than beside it in a shared drive.',
+      body: 'Every claim you make in market, in one place, versioned and sourced, with the evidence attached and an owner against it.',
     },
     {
       step: 'Two',
@@ -87,7 +87,7 @@ export const changes = {
   heading: 'What changes',
   details: [
     'A Value Library holding every claim you make, versioned, sourced and owned',
-    'One ROI calculator engine with market variants, built off that library rather than beside it',
+    'One ROI calculator, with the versions each market needs built from the same method',
     'A single value methodology your markets apply consistently',
     'Market-specific versions of the same argument, rebuilt around the payer and evidence bar in each',
     'Usage rules and disclaimers, so no claim can travel further than the evidence behind it',
@@ -109,16 +109,16 @@ export const changesImage: Figure = {
 export const library = {
   heading: 'The Value Library',
   paragraphs: [
-    'One place holding every claim your business makes, with the evidence attached to it. Not a slide, not a folder, and not a document somebody owns until they leave. A maintained system with an owner against each entry, a review date, and rules about where each claim is allowed to go.',
+    'One place holding every claim your business makes, with the evidence attached to it. Something maintained, with an owner against each entry, a review date, and rules about where each claim is allowed to go. A slide does none of that, and neither does a shared folder, or a document that leaves when the person who built it does.',
     'Most of what it prevents is invisible. A bid writer stops improvising, a new market stops inventing its own version, and legal stops finding out about a claim at the point it has already been published.',
   ],
   spec: [
     'Every claim, versioned, with its source and the working behind it',
-    'An owner and a review date against each entry, so nothing ages quietly into being wrong',
+    'An owner and a review date against each entry, so somebody is accountable for each one staying true',
     'Usage rules per claim: which markets, which audiences, which materials, with what disclaimer',
     'Market variants held against the parent claim rather than as separate untracked copies',
-    'A route for adding new evidence as deployments mature, without a consultant',
-    'Built to sit alongside your QMS, and to be handed to an auditor without preparation',
+    'A route for adding new evidence as deployments mature, which your team runs',
+    'Ready to hand to an auditor, or to a customer&rsquo;s reviewer, without preparation',
   ],
 };
 
@@ -134,7 +134,7 @@ export const calculator = {
   heading: 'One calculator, not five',
   paragraphs: [
     'Somewhere in most enterprises there are several ROI calculators, built by different teams in different years, all sincerely trying to prove the same product. They do not agree, and the first customer to see two of them will ask why.',
-    'We build one engine off the Value Library, then market variants on top of it: different payer, different cost base, different evidence bar, same underlying method. When a claim changes in the library, the calculators change with it rather than drifting apart again.',
+    'We build one model with the library behind it, then work up the versions each market needs: local payer, local cost base, local evidence bar, one underlying method. When a claim changes, every version is updated from the same source, so they cannot drift apart again.',
   ],
 };
 

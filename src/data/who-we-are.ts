@@ -44,16 +44,16 @@ export const different = {
   heading: 'What makes us different',
   items: [
     {
-      heading: 'We have defended the number, not just built it',
+      heading: 'We have defended the number in the room',
       body: 'We have carried the number into the meeting and had it questioned. That is a different experience from advising on it.',
     },
     {
-      heading: 'We get into the data, not just the strategy',
+      heading: 'We work in the data itself',
       body: 'We do not hand over a set of recommendations and leave. We sit with your analysts, work in the actual numbers, and give back things your team can use on Monday.',
     },
     {
       heading: 'We know how health systems buy',
-      body: 'Evidence that convinces a clinician does not always convince a commissioner. What clears an NHS business case is not what clears a German sickness fund or a US integrated delivery network. We build for the system you are selling into, and we know where the approval actually sits.',
+      body: 'Evidence that convinces a clinician does not always convince a commissioner. What clears an NHS business case is not what clears a German sickness fund or a US integrated delivery network. We build for the system you are selling into, and we know where the approval sits.',
     },
     {
       heading: 'We do not need the data to be tidy',
@@ -108,7 +108,7 @@ export const teamImage: Figure = {
 export const bench = {
   heading: 'A small core, and a wider bench',
   paragraphs: [
-    'We keep the core team small on purpose. You get the people you met, not a team you have never spoken to. When a piece of work needs a health economist, a statistician or a specialist from your own part of the market, we bring them in and say what they cost.',
+    'We keep the core team small on purpose. You get the people you met. When a piece of work needs a health economist, a statistician or a specialist from your own part of the market, we bring them in and say what they cost.',
   ],
   muted:
     'We would rather tell you a piece of work is outside our range than stretch to fill it.',

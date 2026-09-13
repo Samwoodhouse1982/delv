@@ -55,7 +55,7 @@ export const where = {
        */
       step: 'Series B and scale',
       heading: 'Standardise it',
-      body: 'One claims library, one model, consistent numbers across markets and reps. Fewer legal surprises, faster procurement, and a repeatable way to add new evidence as it arrives.',
+      body: 'One claims library, one model, consistent numbers across markets and reps. Procurement moves faster, and new evidence slots in without a rebuild.',
       action: { label: 'More on this', href: '/scale-ups' },
     },
   ] satisfies Pillar[],

@@ -44,7 +44,7 @@ export const what = {
     'Most healthtech companies know this. What they lack is the time, the data plumbing or the internal agreement to fix it, usually while a tender deadline is moving towards them.',
   ],
   muted:
-    'We sit in the space between the economists and the optimists. Not a two-year multi-country study. Not a heroic anecdote from one ward. A defensible number, at the level your buyer actually makes the decision.',
+    'We sit between the economists and the optimists. A two-year multi-country study is more than you need. A heroic anecdote from one ward is less. What works is a number your buyer can defend, at the level the decision gets made.',
 };
 
 export const problems = {
@@ -56,7 +56,7 @@ export const problems = {
     'You are raising, and the deck says &ldquo;proven&rdquo; where the data room says &ldquo;pilot&rdquo;.',
     'You signed an outcomes-based or value-based agreement and now have to evidence delivery to get paid.',
     'Sales, product, data and clinical each describe your value differently, and all of them are a bit right.',
-    'The product generates plenty of data. None of it was designed to answer &ldquo;so what?&rdquo;',
+    'The product generates plenty of data. None of it was set up to prove anything.',
   ],
 };
 
