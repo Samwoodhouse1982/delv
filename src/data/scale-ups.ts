@@ -97,7 +97,7 @@ export const outcome = {
     'The baseline you should have captured at go-live, reconstructed as far as the data allows',
     'A second-market version of the same argument, rebuilt around that payer and budget holder',
     'An ROI calculator your sales team walks a prospect through, using that prospect&rsquo;s own numbers',
-    'A Value Library holding the claims you can now make and the sourcing behind each one',
+    'A claims and evidence library holding the claims you can now make and the sourcing behind each one',
     'A measurement plan so the next twelve months of deployments produce evidence by design',
   ],
   note: 'What we will not do: reconstruct a baseline the data cannot support, pick the comparator that flatters the result, or hand back a model only we know how to update. If the honest number is smaller than the one in your deck, you will hear it from us before a customer finds it.',

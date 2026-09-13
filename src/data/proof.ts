@@ -77,13 +77,13 @@ const sampleResults: Result[] = [
     figure: '1.4 hours returned per clinician per week',
     client: 'Sample: a UK EPR vendor',
     what: 'A value model built from twelve months of deployment data at one trust, and the business case template that carried it into procurement.',
-    basis: 'Time-and-motion baseline, 240 clinicians, assumptions log published with the model.',
+    basis: 'Time-and-motion baseline across 240 clinicians at one trust, with the assumptions log published alongside the model.',
   },
   {
     id: 'sample-2',
     figure: 'Procurement cycle cut from nine months to five',
     client: 'Sample: a symptom assessment company',
-    what: 'One Value Library replacing four inconsistent decks, with sourcing and usage rules attached to every claim.',
+    what: 'One claims and evidence library replacing four inconsistent decks, with sourcing and usage rules attached to every claim.',
     basis: 'Median time from first meeting to signature, eleven trusts, before and after.',
   },
   {

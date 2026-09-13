@@ -112,7 +112,7 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 
 | Path | Page | `<title>` |
 | --- | --- | --- |
-| `/` | Home | delv. · prove the value, prove your why. |
+| `/` | Home | delv. · Prove the value. Prove your why. |
 | `/what-we-do` | Approach (Define / Measure / Articulate) | What we do — delv. |
 | `/for-startups` | Startups | For startups — delv. |
 | `/scale-ups` | Scale-ups | Scale-ups · delv. |
@@ -333,6 +333,9 @@ All copy is final and lives in `reference/prototype.html`. Move it into `src/dat
 - Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
 - **No em dashes anywhere.** Sam's instruction, 12 Sep 2026, and it overrides the prototype. Recast each one rather than swapping in a hyphen: a colon where it introduces a list or an elaboration, a comma where it is parenthetical, a full stop where the clauses stand alone. `&middot;` is the separator in page titles. The rendered site is checked for `\u2014` on every build.
 - Flag, don't fix: if you spot a typo or factual inconsistency, list it in the PR description rather than silently editing.
+- **The brand line is "Prove the value. Prove your why."** Settled 13 Sep 2026. Two sentences, not a comma splice, and it keeps "your". It sets the home `h1`, the home `<title>`, `site.strapline` in the footer of every page, and the home OG card, and the headline's measured fit constant moved with it (§5). The `.delv.` and comma-joined variants are dead.
+- **"Minutes, money and metrics do." is a deliberate refrain**, confirmed 13 Sep 2026, and appears on Home and on Startups on purpose. It is not a duplication to be varied. Leave it.
+- **The library is not a proper noun.** "Value Library" was capitalised as a product name; it is now "a claims and evidence library", lower case, everywhere. A capitalised noun naming an artefact reads as something you license, and delv. sells the work rather than the thing. The engagement names stay capitalised, because Value Audit, Value Model Build and Claims and Evidence Review are pieces of work. `/for-startups` keeps the shorter "claims library", which is the same artefact under a shorter descriptive name.
 - **Copy amends pass, 13 Sep 2026.** A site-wide pass against a separate amends brief, applied to `src/data/*.ts` only. It removed every QMS reference, took the software vocabulary out of the Enterprise deliverables (engine, variants, maintained system, "without a consultant"), and cut the site's most-repeated rhetorical move, the "X, not Y" contrastive negation, from 25 instances to 7. Copy is now materially ahead of `reference/prototype.html`: 34% of substantial strings still match it verbatim, and the two newest pages share none of it. **The prototype is no longer the copy source of truth**, only the design one, and §13.15 tracks the decision to retire it as a copy reference.
 
 Placeholders in the prototype that need replacing before launch — leave them in place and list them in the README:
@@ -391,7 +394,7 @@ alongside its copy: two founder portraits at 4:5 on Who we are plus a working
 shot, a procurement scene on Home, a value model artefact on What we do, the
 deliverables on Startups, a working session on How we work, and on the two new
 audience pages a value model beside a printed business case, a claims
-repository beside a bid response, and the Value Library in use.
+record beside a bid response, and the claims and evidence library in use.
 
 Setting `src` and `alt` on a slot turns it into the image, in the same space.
 
@@ -558,7 +561,7 @@ The entry offers are engagements. These two are what clients remember buying,
 and both are named on the pages so a reader can see there is something concrete
 at the end.
 
-**The Value Library.** One place holding every claim the business makes,
+**The claims and evidence library.** One place holding every claim the business makes,
 versioned and sourced, with the evidence attached, an owner against each entry,
 and usage rules saying where it can be used. Built to sit alongside a QMS.
 Offered on all three pages and sized very differently: a startup gets a working
@@ -578,7 +581,7 @@ this is the likeliest place for the pages to start repeating themselves.
 | --- | --- | --- |
 | Startups | Short public web tool | A modelled scenario with visible assumptions |
 | Scale-ups | Sales-led, walked through live | Your real deployment data |
-| Enterprise | A governed estate, one engine | The Value Library, with market variants |
+| Enterprise | One method across every market | The library, with a version per market |
 
 ### What changed on the pages that already existed
 
@@ -692,6 +695,9 @@ Three more on 13 Sep 2026, all of them specificity, all of them silent.
 None of the three would have shown up in a typecheck, a build or an axe run.
 The reduced-motion one was found by asserting the resting state in a browser,
 which is the only thing that does find them.
+
+**The worked example**
+- The home page's illustrative claim is the site's own evidenced claim, so its arithmetic has to survive a reader doing it. The two lines share a denominator and the caption shows the working: 15,000 consultations a week at two minutes each is 500 clinician hours a week, at one trust. Settled 13 Sep 2026, after the previous pair (4,000 clinicians platform-wide against 92 working days a month at one trust) turned out not to reconcile on any basis, and to invite exactly the multiplication that exposes it. If either figure changes, change both and re-check the caption.
 
 **Accessibility**
 - Keyboard-navigable end to end, with a visible focus ring on every interactive element: 2px `--ink`, 3px offset, and `--mark` on deep bands. This applies to form fields too. The prototype suppresses the outline on inputs in favour of a 28%-opacity pacific glow, which is 1.3:1 against the page and fails SC 1.4.11 — the ring is not optional there. Keep the glow if you like, underneath the ring.

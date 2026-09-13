@@ -1229,16 +1229,22 @@ nav.main .nav-panel a[aria-current="page"] {
   max-width: 16ch;
 }
 /*
- * The home headline breaks after the comma or not at all.
+ * The home headline is two sentences, one per line, or nothing.
  *
  * Each half is its own nowrap block, so no half can ever wrap into a third
  * line. That on its own would overflow a narrow screen, so the font size is
  * also capped against the space actually available: the viewport less both
- * gutters, divided by the longest half's width-per-pixel-of-font-size
- * (6.45, measured). The 0.87 is headroom for the fallback face, which sets
- * this line about 17px wider at 320px: with 0.92 that left 6px of margin,
- * which is not margin. The cap only bites below about 344px; above that the
- * clamp wins and the scale is untouched.
+ * gutters, divided by the longest half's width-per-pixel-of-font-size.
+ *
+ * 6.24, remeasured 13 Sep 2026 when the line became "Prove the value. Prove
+ * your why." and the longest half changed from "prove your why." to "Prove
+ * your why." It was 6.45 against the old comma-joined halves, which is why
+ * this number is measured and not guessed.
+ *
+ * The 0.87 is headroom for the fallback face, which measures 6.666 against
+ * the real face's 6.24 and so sets this line about 17px wider at 320px: with
+ * 0.92 that leaves 5px of margin, which is not margin. The cap only bites
+ * below about 348px; above that the clamp wins and the scale is untouched.
  */
 .hero h1.h1-lockup .hl {
   display: block;
@@ -1247,7 +1253,7 @@ nav.main .nav-panel a[aria-current="page"] {
 .hero h1.h1-lockup {
   font-size: min(
     clamp(43px, 7.2vw, 83px),
-    calc((100vw - 2 * var(--gutter)) / 6.45 * 0.87)
+    calc((100vw - 2 * var(--gutter)) / 6.24 * 0.87)
   );
 }
 .hero .sub {

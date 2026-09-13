@@ -66,7 +66,7 @@ export const stages: Stage[] = [
       'One piece of evidence, built properly, has more than one job. The same finding becomes the value proposition your sales team leads with, the narrative in an investor update, an abstract or a conference poster, the numbers inside an ROI tool, a year of content, and the training that gets a new starter saying it correctly. You are not buying a report. You are buying the asset everything else is built from.',
     ],
     details: [
-      'A Value Library holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request',
+      'A claims and evidence library holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request',
       'ROI calculators, from sales-led walkthroughs to short web tools for lead generation',
       'Case studies, business case templates, white papers, briefings and speaker notes',
       'Investor and board materials that connect evidence to the commercial model',

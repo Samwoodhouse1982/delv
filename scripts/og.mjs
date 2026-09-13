@@ -11,7 +11,7 @@
  * does not touch the network.
  */
 import { launchChromium } from './browser.mjs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -45,9 +45,11 @@ const wordmark = logoSvg
  * is reworded: check them against src/data/*.ts when you change an h1.
  */
 const CARDS = [
-  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>,\nprove your why.', eyebrow: null },
+  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>.\nProve your why.', eyebrow: null },
   { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
-  { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'For startups' },
+  { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'Startups' },
+  { file: 'scale-ups.png', heading: 'The proof is already in\nyour deployment data.', eyebrow: 'Scale-ups' },
+  { file: 'enterprise.png', heading: 'You have the evidence.\nIt does not agree with itself.', eyebrow: 'Enterprise' },
   { file: 'how-we-work.png', heading: 'Priced before we start.\nUseful after we leave.', eyebrow: 'How we work' },
   { file: 'who-we-are.png', heading: 'We have been\nin your shoes.', eyebrow: 'Who we are' },
   { file: 'contact.png', heading: 'Start a conversation.', eyebrow: 'Contact' },
@@ -129,3 +131,32 @@ for (const spec of CARDS) {
 }
 
 await browser.close();
+
+/*
+ * Every card in public/og/ has to come from CARDS.
+ *
+ * On 13 Sep 2026 scale-ups.png and enterprise.png sat in public/og/ for a day
+ * with no entry here: a bad revert took their CARDS lines out and nobody
+ * noticed, because the two files were already committed and every page still
+ * had an image to point at. The next person to run this script would have
+ * regenerated seven cards and left two stale ones behind, which is a failure
+ * that shows up months later on somebody's LinkedIn preview.
+ */
+const rendered = new Set(CARDS.map((spec) => spec.file));
+const orphans = (await readdir(outDir))
+  .filter((file) => file.endsWith('.png') && !rendered.has(file))
+  .sort();
+
+if (orphans.length > 0) {
+  console.error(
+    [
+      '',
+      `og: ${orphans.length} card(s) in public/og/ with no entry in CARDS:`,
+      ...orphans.map((file) => `  ${file}`),
+      '',
+      'Add them to CARDS, or delete them if the route has gone.',
+      '',
+    ].join('\n'),
+  );
+  process.exitCode = 1;
+}

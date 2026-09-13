@@ -15,14 +15,15 @@ import type {
  * scale the problem is rarely a shortage of proof, it is four credible
  * versions of the same number with nobody empowered to choose between them.
  *
- * The Value Library is the headline deliverable here and a supporting one
- * elsewhere, which is why it gets a section of its own rather than a bullet.
+ * The claims and evidence library is the headline deliverable here and a
+ * supporting one elsewhere, which is why it gets a section of its own
+ * rather than a bullet.
  */
 
 export const meta: PageMeta = {
   title: 'Enterprise · delv.',
   description:
-    'How delv. helps multi-market healthtech companies hold one version of the number: a single claims repository, one methodology, and governance that keeps it true.',
+    'How delv. helps multi-market healthtech companies hold one version of the number: a single claims record, one methodology, and governance that keeps it true.',
   ogImage: '/og/enterprise.png',
 };
 
@@ -67,7 +68,7 @@ export const version = {
   pillars: [
     {
       step: 'One',
-      heading: 'One repository',
+      heading: 'One record',
       body: 'Every claim you make in market, in one place, versioned and sourced, with the evidence attached and an owner against it.',
     },
     {
@@ -86,7 +87,7 @@ export const version = {
 export const changes = {
   heading: 'What changes',
   details: [
-    'A Value Library holding every claim you make, versioned, sourced and owned',
+    'A claims and evidence library holding every claim you make, versioned, sourced and owned',
     'One ROI calculator, with the versions each market needs built from the same method',
     'A single value methodology your markets apply consistently',
     'Market-specific versions of the same argument, rebuilt around the payer and evidence bar in each',
@@ -99,7 +100,7 @@ export const changes = {
 
 export const changesImage: Figure = {
   label:
-    'A claims repository open on screen beside a printed bid response. Ordered, in use, mid-work.',
+    'The claims and evidence library open on screen beside a printed bid response. Ordered, in use, mid-work.',
   ratio: '3/2',
   caption:
     'Replace with a real anonymised artefact from a live engagement before launch.',
@@ -107,7 +108,7 @@ export const changesImage: Figure = {
 
 /** The centrepiece of this page, and a supporting deliverable on the other two. */
 export const library = {
-  heading: 'The Value Library',
+  heading: 'The claims and evidence library',
   paragraphs: [
     'One place holding every claim your business makes, with the evidence attached to it. Something maintained, with an owner against each entry, a review date, and rules about where each claim is allowed to go. A slide does none of that, and neither does a shared folder, or a document that leaves when the person who built it does.',
     'Most of what it prevents is invisible. A bid writer stops improvising, a new market stops inventing its own version, and legal stops finding out about a claim at the point it has already been published.',

@@ -1,7 +1,7 @@
 import type { CtaBand, Figure, Hero, PageMeta, Pillar } from './types';
 
 export const meta: PageMeta = {
-  title: 'delv. · prove the value, prove your why.',
+  title: 'delv. · Prove the value. Prove your why.',
   description:
     'delv. helps healthtech companies define, measure and articulate value, so their claims stand up to procurement, investors and regulators.',
   ogImage: '/og/home.png',
@@ -13,8 +13,8 @@ export const hero: Hero = {
   // any size; this way the word carries the same colour at 8.39:1. Static, not
   // swept: the one animation on the site belongs to the claim demo below.
   heading:
-    '<span class="hl">Prove the <span class="mark">value</span>,</span>' +
-    '<span class="hl">prove your why.</span>',
+    '<span class="hl">Prove the <span class="mark">value</span>.</span>' +
+    '<span class="hl">Prove your why.</span>',
   sub: 'Your product works. The hard part is showing what it is worth. We help healthtech companies define, measure and articulate value, so the claims on your website survive a procurement review, a data room and a clinical safety officer.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
@@ -25,14 +25,14 @@ export const hero: Hero = {
 export const claim = {
   weak: {
     label: 'Before',
-    text: '4,000 clinicians use the platform every week.',
+    text: '15,000 consultations a week run through the platform.',
   },
   strong: {
     label: 'After',
-    text: '1.4 hours returned per clinician per week: releasing 92 working days a month, at one trust.',
+    text: 'Two minutes back on each one: 500 clinician hours a week, at one trust.',
   },
   caption:
-    'Illustrative. The first line is activity. The second is the one a finance director can put in a business case.',
+    'Illustrative, and both lines are the same trust and the same week: 15,000 consultations at two minutes each is 500 hours. The first is activity. The second is the one a finance director can put in a business case.',
 };
 
 export const what = {

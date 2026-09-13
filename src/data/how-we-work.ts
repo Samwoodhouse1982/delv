@@ -96,7 +96,7 @@ export const next = {
     {
       heading: 'Project',
       meta: 'Fixed fee &middot; scoped deliverables',
-      body: 'A defined build: a Value Library, an ROI calculator or calculator estate, a business case pack, an investor evidence narrative.',
+      body: 'A defined build: a claims and evidence library, an ROI calculator or calculator estate, a business case pack, an investor evidence narrative.',
     },
     {
       heading: 'Embedded',
