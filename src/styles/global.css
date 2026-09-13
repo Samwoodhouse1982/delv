@@ -747,6 +747,25 @@ h3 .mark {
   }
 }
 
+/*
+ * Hold all three beats while the intro overlay is up.
+ *
+ * They are timed from page load and finish by about two seconds; the intro
+ * runs for five and a half. Without this the site's one orchestrated moment
+ * plays out behind a full-screen overlay and nobody ever sees it. Pausing
+ * them means the clock starts when the overlay goes, whether that is the end
+ * of the animation, a key, a click, or the dead man's switch.
+ *
+ * The attribute only exists when the intro is actually playing, so reduced
+ * motion and a page with no JavaScript are untouched: there is nothing to
+ * wait for and the beats run as they always did.
+ */
+[data-intro="play"] .claim-strike,
+[data-intro="play"] .claim-reveal,
+[data-intro="play"] .mark--sweep {
+  animation-play-state: paused;
+}
+
 /* --------------------------------------------------------------------------
    Motion
 
@@ -1066,35 +1085,79 @@ nav.main a:not(.btn)[aria-current="page"] {
   margin-top: clamp(44px, 6vw, 72px);
   padding-top: 26px;
 }
-.claim-row {
+/*
+ * Two columns, side by side, so the weak claim and the strong one land in one
+ * glance. That is the comparison the block exists to make, and stacked it was
+ * two separate readings.
+ *
+ * The dashed rule that used to run between the rows becomes the rule between
+ * the columns, in the same pattern the pillars use: the border goes on the
+ * second column and both sides pay half the gutter, so the rule sits centred
+ * in the space rather than hard against the text.
+ */
+.claim-pair {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 16px;
-  align-items: baseline;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.claim-col {
   padding: 14px 0;
 }
-.claim-row + .claim-row {
-  border-top: 1px dashed var(--hair);
+.claim-col:first-child {
+  padding-right: clamp(22px, 3vw, 46px);
+}
+.claim-col + .claim-col {
+  border-left: 1px dashed var(--hair);
+  padding-left: clamp(22px, 3vw, 46px);
 }
 .claim-tick {
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 600;
   color: var(--graphite);
-  padding-top: 6px;
   white-space: nowrap;
+  display: block;
+  margin-bottom: 12px;
 }
 /* 52%, not the prototype's 62%: at 12px semibold that was 4.0:1 on paper.
    This is 4.75:1 and keeps the taupe cast that marks the weaker claim. */
-.claim-row:first-child .claim-tick {
+.claim-col:first-child .claim-tick {
   color: #746c70;
   color: color-mix(in srgb, var(--taupe) 52%, var(--ink));
 }
 .claim-text {
-  font-size: clamp(19px, 1.4vw + 12px, 27px);
+  /*
+   * A shade smaller than the stacked version, because each claim now has half
+   * the width. The measure is the column, not a ch cap: at this size 26ch left
+   * a third of every column empty and the two blocks stopped reading as a
+   * pair.
+   */
+  font-size: clamp(18px, 0.85vw + 12.5px, 23px);
   line-height: 1.34;
   letter-spacing: -0.012em;
-  max-width: 26ch;
+  /* The global paragraph margin is what sets each column's height here, so
+     leaving it on pushed the dividing rule a line and a bit past the text it
+     is meant to divide. */
+  margin: 0;
+}
+
+/* Back to one column before the display type is down to four words a line. */
+@media (max-width: 700px) {
+  .claim-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .claim-col:first-child {
+    padding-right: 0;
+    padding-bottom: 18px;
+  }
+  .claim-col + .claim-col {
+    border-left: 0;
+    border-top: 1px dashed var(--hair);
+    padding-left: 0;
+    padding-top: 18px;
+  }
+  .claim-text {
+    max-width: 30ch;
+  }
 }
 .claim-text.weak {
   color: var(--claim-weak);

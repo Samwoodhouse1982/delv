@@ -29,7 +29,7 @@ export const claim = {
   },
   strong: {
     label: 'After',
-    text: '1.4 hours returned per clinician per week: 92 working days a month, at one trust.',
+    text: '1.4 hours returned per clinician per week: releasing 92 working days a month, at one trust.',
   },
   caption:
     'Illustrative. The first line is activity. The second is the one a finance director can put in a business case.',

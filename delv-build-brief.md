@@ -272,7 +272,13 @@ Three deliberate divergences from the handoff, each for a stated reason:
 
 ### Motion
 
-One orchestrated moment: the claim demo in the home hero, about two seconds, once on load. Three beats, extended from the prototype's single sweep at Sam's request on 12 Sep 2026 to show the shift from the old claim to the new one. The activity claim is struck through, the evidenced claim rises in behind it, then the highlighter sweeps the number. Nothing else on the site moves.
+One orchestrated moment: the claim demo in the home hero, about two seconds, once on load. Three beats, extended from the prototype's single sweep at Sam's request on 12 Sep 2026 to show the shift from the old claim to the new one. The activity claim is struck through, the evidenced claim rises in behind it, then the highlighter sweeps the number.
+
+**Laid out in two columns from 13 Sep 2026**, at Sam's request: before on the left, after on the right, with the dashed rule that used to separate the rows now separating the columns. The comparison is the point of the block and two columns put both halves in one glance. Below 700px they stack again. The type comes down from a 27px ceiling to 23px, because each claim now has half the width; that also takes the line permanently below the large-text threshold, which simplifies its contrast requirement rather than complicating it (see §10).
+
+**The three beats are held while the intro overlay is up.** They are timed from page load and finish inside two seconds; the intro runs for five and a half, so without the hold the site's one orchestrated moment plays out behind a full-screen overlay and nobody sees it. A single rule pauses them under `[data-intro="play"]`, so the clock starts when the overlay goes, by any of the four routes it can go by. The attribute only exists while the intro is actually playing, so reduced motion and a page without JavaScript are untouched.
+
+Nothing else on the site moves except the section graphics above.
 
 Every beat **rests in its finished state and animates from the start**, with `animation-fill-mode: backwards`. Animating towards the end state instead, as the prototype did, means a browser that runs no animation shows an unmarked claim and no highlight: the story half-told. This way it shows the completed comparison.
 
@@ -519,7 +525,7 @@ the prototype's, and both recorded for the same reason.
 - The skip link's target carries `tabindex="-1"` so focus actually lands on `<main>`.
 - Working skip link.
 - Every page has exactly one `h1` and no skipped heading levels.
-- Body text meets WCAG AA (4.5:1), including the de-emphasised claim line in the hero. That line is **not** large text: it is `clamp(19px, 1.4vw + 12px, 27px)` at weight 350, so it only clears the 24px large-text threshold above roughly an 860px viewport, and on every phone it is normal text needing 4.5:1. The prototype's `#8E7E79` on `#F7F7F3` is 3.3:1, and 2.5:1 where the taupe wash sits behind it. Ship `#6B5F5A` with the wash at 30%, per §5. Do not lighten it back.
+- Body text meets WCAG AA (4.5:1), including the de-emphasised claim line in the hero. That line is **never** large text: since the two-column layout of 13 Sep 2026 it is `clamp(18px, 0.85vw + 12.5px, 23px)` at weight 350, so it needs 4.5:1 at every viewport, with no threshold to reason about. The prototype's `#8E7E79` on `#F7F7F3` is 3.3:1, and 2.5:1 where the taupe wash sits behind it. `#6B5F5A` with the wash at 30% is 5.7:1 on paper and 4.57:1 through the wash, both recomputed at the new size. Do not lighten it back.
 - Form inputs have real `<label>` elements, and errors are announced via `role="status"` or `aria-live`.
 - Axe DevTools reports zero violations. Automate this rather than checking it once: `@axe-core/cli` against the built output, wired into `npm run check`, so the criterion stays true as the site changes. A clean Axe run is a floor, not a pass — the contrast and focus items above are outside what it detects.
 

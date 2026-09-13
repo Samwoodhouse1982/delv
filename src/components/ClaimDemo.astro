@@ -14,19 +14,27 @@ const { claim } = Astro.props;
   struck through, the evidenced claim rises in, the highlighter sweeps across
   the number. Each rests in its finished state, so with animation off the
   reader sees the completed comparison rather than a half-told story.
+
+  Side by side rather than stacked, at Sam's request on 13 Sep 2026. Two
+  columns put the weak claim and the strong one in the same glance, which is
+  the comparison the block exists to make; stacked, the reader met one and
+  then the other. Below 700px they stack again, because at that width two
+  columns of display type are four words a line.
 */}
 <div class="claim">
-  <div class="claim-row">
-    <span class="claim-tick">{claim.weak.label}</span>
-    <p class="claim-text weak">
-      <span class="claim-strike" set:html={claim.weak.text} />
-    </p>
-  </div>
-  <div class="claim-row claim-reveal">
-    <span class="claim-tick">{claim.strong.label}</span>
-    <p class="claim-text">
-      <span class="mark mark--sweep" set:html={claim.strong.text} />
-    </p>
+  <div class="claim-pair">
+    <div class="claim-col">
+      <span class="claim-tick">{claim.weak.label}</span>
+      <p class="claim-text weak">
+        <span class="claim-strike" set:html={claim.weak.text} />
+      </p>
+    </div>
+    <div class="claim-col claim-reveal">
+      <span class="claim-tick">{claim.strong.label}</span>
+      <p class="claim-text">
+        <span class="mark mark--sweep" set:html={claim.strong.text} />
+      </p>
+    </div>
   </div>
   <p class="caption">{claim.caption}</p>
 </div>
