@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { site } from '../data/site';
+import { isGroup, site } from '../data/site';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => path === href;
@@ -23,15 +23,80 @@ const isCurrent = (href: string) => path === href;
 
       <nav class="main" id="mainnav" aria-label="Main">
         {
-          site.nav.map((item) => (
-            <a
-              href={item.href}
-              class={item.cta ? 'btn btn--sm' : undefined}
-              aria-current={isCurrent(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          ))
+          site.nav.map((entry) =>
+            isGroup(entry) ? (
+              /*
+               * A disclosure button and a panel, not a menu. "Who we help" has
+               * no page of its own, and a parent link that goes nowhere is the
+               * usual way this pattern fails: a keyboard user tabs to it, and
+               * activating it either does nothing or navigates somewhere
+               * pointless.
+               *
+               * Same markup at both sizes. On the desktop bar the panel floats
+               * under the button and pointer hover opens it; inside the mobile
+               * menu it is an accordion in the flow. `hidden` is the closed
+               * state in the markup, so a page whose script never arrives
+               * shows the button with nothing under it rather than a panel
+               * that cannot be closed. The footer carries the same three links
+               * for exactly that case.
+               */
+              <div
+                class="nav-group"
+                data-nav-group
+                data-current={
+                  entry.children.some((child) => isCurrent(child.href))
+                    ? ''
+                    : undefined
+                }
+              >
+                <button
+                  type="button"
+                  class="nav-group-toggle"
+                  aria-expanded="false"
+                  aria-controls={entry.id}
+                >
+                  {entry.label}
+                  <svg
+                    class="nav-group-chevron"
+                    viewBox="0 0 10 6"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M1 1 5 5 9 1"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <div class="nav-panel" id={entry.id} hidden>
+                  {entry.children.map((child) => (
+                    <a
+                      href={child.href}
+                      aria-current={isCurrent(child.href) ? 'page' : undefined}
+                    >
+                      <span class="nav-panel-label">{child.label}</span>
+                      {child.descriptor && (
+                        <span class="nav-panel-note">{child.descriptor}</span>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <a
+                href={entry.href}
+                class={entry.cta ? 'btn btn--sm' : undefined}
+                aria-current={isCurrent(entry.href) ? 'page' : undefined}
+              >
+                {entry.label}
+              </a>
+            ),
+          )
         }
       </nav>
     </div>

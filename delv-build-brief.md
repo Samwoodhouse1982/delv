@@ -77,7 +77,8 @@ delv-site/
         Mark.astro                # 06, the vocabulary at list size
     lib/scatter.ts                # the two deterministic mark fields, build time
     data/
-      home.ts  what-we-do.ts  for-startups.ts  how-we-work.ts  who-we-are.ts  contact.ts
+      home.ts  what-we-do.ts  how-we-work.ts  who-we-are.ts  contact.ts
+      for-startups.ts  scale-ups.ts  enterprise.ts   # the Who we help group
       site.ts                     # nav, footer, company details, email, strapline
       proof.ts                    # results and quotes registries, and placement
       preview.ts                  # the PLACEHOLDER_PREVIEW flag, shared
@@ -85,6 +86,8 @@ delv-site/
       index.astro
       what-we-do.astro
       for-startups.astro
+      scale-ups.astro
+      enterprise.astro
       how-we-work.astro
       who-we-are.astro
       contact.astro
@@ -112,6 +115,8 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 | `/` | Home | delv. · prove the value, prove your why. |
 | `/what-we-do` | Approach (Define / Measure / Articulate) | What we do — delv. |
 | `/for-startups` | Startups | For startups — delv. |
+| `/scale-ups` | Scale-ups | Scale-ups · delv. |
+| `/enterprise` | Enterprise | Enterprise · delv. |
 | `/how-we-work` | How we work | How we work — delv. |
 | `/who-we-are` | Who we are | Who we are — delv. |
 | `/contact` | Contact | Start a conversation — delv. |
@@ -120,7 +125,21 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 | `/thank-you` | Form success, no-JavaScript redirect target | Thank you — delv. |
 | `/could-not-send` | Form failure, no-JavaScript redirect target | That did not send — delv. |
 
-Nav labels are the prototype's, plus a Home link added 12 Sep 2026 at Sam's request: Home &middot; What we do · For startups · How we work · Who we are · [Start a conversation]. Note the prototype's internal routes were `/approach` and `/startups`; the public URLs are `/what-we-do` and `/for-startups` to match the labels. Page files, data files and component props all use the public names. The prototype was never published, so no redirects from the old hash routes are needed.
+Nav labels are the prototype's, plus a Home link added 12 Sep 2026 at Sam's request. Note the prototype's internal routes were `/approach` and `/startups`; the public URLs are `/what-we-do` and `/for-startups` to match the labels. Page files, data files and component props all use the public names. The prototype was never published, so no redirects from the old hash routes are needed.
+
+**Restructured 13 Sep 2026** for the audience group: Home &middot; What we do &middot; **Who we help** &middot; How we work &middot; Who we are &middot; [Start a conversation].
+
+"Who we help" is a group, not a page. It has no landing route and does not need one, so it is a disclosure button and a panel rather than an anchor: a parent link that goes nowhere is the usual way this pattern fails a keyboard user. Each child carries a one-line descriptor.
+
+| Child | Descriptor | Route |
+| --- | --- | --- |
+| Startups | Traction, and no proof yet | `/for-startups` |
+| Scale-ups | Live deployments, scattered evidence | `/scale-ups` |
+| Enterprise | Multiple markets, multiple versions | `/enterprise` |
+
+The startups **label** becomes "Startups" so it reads as a sibling; the **slug** stays `/for-startups`, with no rename and no redirect.
+
+On the desktop bar the panel floats and hover opens it, with `aria-expanded` set by the same handler so what a screen reader is told and what is on screen never disagree. Hover peeks and a click holds it open: with a plain toggle, a pointer user hovers, sees it open, clicks the thing they are pointing at and it shuts in their face. Inside the mobile menu it is an accordion in the flow. `hidden` is the closed state in the markup, so a page whose script never runs shows the button with nothing under it rather than a panel that cannot be closed, and the footer carries the same three links for exactly that case.
 
 `/privacy` is new and not in the prototype. Build the page and layout; Sam supplies the text. Do not draft a privacy notice yourself.
 
@@ -354,10 +373,12 @@ ratio, so a real photograph dropped in later shifts nothing on the page.
 Until a photograph exists each slot renders the **brief for the picture that
 belongs there**, not a grey rectangle: what to shoot, how to frame it, what to
 avoid. An empty box reads as a broken image; a brief reads as a commission.
-Six slots are placed, one or two a page, defined in each page's data file
+Nine slots are placed, one or two a page, defined in each page's data file
 alongside its copy: two founder portraits at 4:5 on Who we are plus a working
 shot, a procurement scene on Home, a value model artefact on What we do, the
-deliverables on For startups, and a working session on How we work.
+deliverables on Startups, a working session on How we work, and on the two new
+audience pages a value model beside a printed business case, a claims
+repository beside a bid response, and the Value Library in use.
 
 Setting `src` and `alt` on a slot turns it into the image, in the same space.
 
@@ -447,6 +468,81 @@ Promoting one to the core team means writing them into `people` and removing
 them from `bench.people` &mdash; but note that the section promises a *small*
 core and every bio is currently titled Co-founder, so a third full bio implies
 a standing that may not be intended.
+
+---
+
+## 7a. The Who we help group
+
+Added 13 Sep 2026 from a separate brief. Three audience pages under one nav
+parent. `/for-startups` already existed and was edited, not rebuilt.
+
+### The spine that keeps them distinct
+
+Three pages about evidence is the point at which overlap becomes the main risk.
+The thing that stops them collapsing is that each leans on a different one of
+the three stages.
+
+| Page | Dominant stage | The problem in one line | Entry offer |
+| --- | --- | --- | --- |
+| Startups | **Define** | The evidence does not exist yet | Value Audit |
+| Scale-ups | **Measure** | The evidence exists in the data and nobody has gone to get it | Value Model Build |
+| Enterprise | **Articulate** | The evidence exists several times over and none of the versions agree | Claims and Evidence Review |
+
+Hold that line. If a section on one page could be lifted onto another without
+anyone noticing, it is written at the wrong level and should be cut rather than
+reworded. Same for the entry offers: one per page, no sharing. Checked
+mechanically at build time as well as by eye, and the only block of copy the
+three pages share is the site-wide footer blurb.
+
+### The two artefacts
+
+The entry offers are engagements. These two are what clients remember buying,
+and both are named on the pages so a reader can see there is something concrete
+at the end.
+
+**The Value Library.** One place holding every claim the business makes,
+versioned and sourced, with the evidence attached, an owner against each entry,
+and usage rules saying where it can be used. Built to sit alongside a QMS.
+Offered on all three pages and sized very differently: a startup gets a working
+spreadsheet, an enterprise gets a governed system with review cycles and market
+variants. It is the headline deliverable on Enterprise and gets a band of its
+own there.
+
+It is now the product name, so `/what-we-do` and the symptom assessment proof
+card were brought into line. `/for-startups` still says "claims library" in two
+places and that is accepted rather than a reason to reopen a page the brief
+says not to touch.
+
+**ROI calculators.** On all three pages and a different tool each time, because
+this is the likeliest place for the pages to start repeating themselves.
+
+| Page | Shape | Built from |
+| --- | --- | --- |
+| Startups | Short public web tool | A modelled scenario with visible assumptions |
+| Scale-ups | Sales-led, walked through live | Your real deployment data |
+| Enterprise | A governed estate, one engine | The Value Library, with market variants |
+
+### What changed on the pages that already existed
+
+- **Startups.** Two changes only, both forced by the siblings arriving rather
+  than by preference: the nav label, and a single "More on this" link under the
+  "Series B and scale" card, which now describes work with its own page. Copy
+  untouched.
+- **How we work.** "Three ways to work with us" became **Where to start** (the
+  three entry offers, one per audience page, each linking to it) and **Where it
+  goes next** (Project and Embedded). Five undifferentiated cards read as a
+  menu; this reads as a path.
+- **Contact.** The stage select mirrors the nav exactly: Startup, Scale-up,
+  Enterprise, Investor. The previous list mixed funding stages with company
+  types, so a Series A scale-up and an established enterprise could each
+  plausibly pick two different options.
+
+### Deliberately out of scope
+
+Investors are the fourth segment in the 101 overview: portfolio value audits,
+value due diligence, backing the right horse. They stay off all three pages. A
+different buyer with a different purchase, and folding them in would dilute
+whichever page took them. Still §13.11.
 
 ---
 
@@ -633,9 +729,10 @@ Not blockers for starting, but all are blockers for launch.
 5. **Where enquiries go.** `CONTACT_WEBHOOK_URL` in the Vercel project. Until it is set the form cannot deliver; it fails honestly rather than silently, but no enquiry reaches an inbox.
 6. **Privacy notice** text, and whether analytics goes in at launch.
 7. **Placeholders on production.** `SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts` is `true`, so the live site serves sample results, sample quotes and placeholder colleagues. Sam asked for this on 12 Sep 2026 while the site is on a test domain with no traffic. **Set it back to `false` before launch.**
-8. **Photography.** Six image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
+8. **Photography.** Nine image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
 9. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
 10. **The Value Incubator and the Value Due Diligence Framework.** Both are named offers in the business plan and neither is on the site. If they are real, they belong on How we work next to the Value Audit; if they were working titles, this brief should stop citing them.
 11. **Investors as an audience.** The plan gives them a full proposition. The site gives them two mentions and a line in the contact form. A page, or a section on For startups, is a scope call.
-12. **The intro plays on every load.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `true`, so the 5.5-second animation runs on every page view rather than once a session. Sam asked for this on 13 Sep 2026 while the site is on a test domain. **Set it back to `false` before launch**, or every internal page click costs a visitor five and a half seconds. Nothing else has to change with it.
-13. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+12. **The Enterprise proof card.** The band is built and deliberately empty, and it stays empty even in placeholder preview. The card that fits the page is the symptom assessment one, "procurement cycle cut from nine months to five", which is this page's thesis almost word for word. It already runs on Home and on Startups, and Startups is not being reopened. Running one card on three pages, or inventing a fourth to avoid that, is exactly what this site argues against. What to look for: a multi-market or multi-business-unit vendor where consolidating the claims or the calculators produced a measurable commercial result, written to the same pattern with the basis line underneath.
+13. **The intro plays on every load.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `true`, so the 5.5-second animation runs on every page view rather than once a session. Sam asked for this on 13 Sep 2026 while the site is on a test domain. **Set it back to `false` before launch**, or every internal page click costs a visitor five and a half seconds. Nothing else has to change with it.
+14. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.

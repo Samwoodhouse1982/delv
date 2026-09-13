@@ -213,6 +213,87 @@ const ogUrl = new URL(ogImage, Astro.site).href;
         document.documentElement.setAttribute('data-motion', '');
       }
 
+      /*
+       * The Who we help group: a disclosure button and a panel.
+       *
+       * Pointer hover opens it on the desktop bar and the script sets
+       * aria-expanded when it does, so what a screen reader is told and what is
+       * on screen never disagree. Inside the mobile menu the panel is in the
+       * flow and hover is meaningless, so the pointer handlers check the
+       * breakpoint rather than being bound only once.
+       */
+      const wideNav = window.matchMedia('(min-width: 861px)');
+
+      for (const group of document.querySelectorAll<HTMLElement>(
+        '[data-nav-group]',
+      )) {
+        const button = group.querySelector<HTMLButtonElement>(
+          '.nav-group-toggle',
+        );
+        const panel = group.querySelector<HTMLElement>('.nav-panel');
+        if (!button || !panel) continue;
+
+        /*
+         * Hover peeks, a click holds it open. Without the distinction the two
+         * fight: a pointer user hovers, the panel opens, they click the thing
+         * they are pointing at, and a plain toggle reads the panel as already
+         * open and shuts it in their face.
+         */
+        let pinned = false;
+
+        const setOpen = (open: boolean) => {
+          panel.hidden = !open;
+          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+        const close = () => {
+          pinned = false;
+          setOpen(false);
+        };
+
+        button.addEventListener('click', () => {
+          if (wideNav.matches) {
+            pinned = !pinned;
+            setOpen(pinned);
+          } else {
+            setOpen(panel.hidden);
+          }
+        });
+
+        // Escape closes and puts focus back on the button, so a keyboard user
+        // is never left inside a panel that is no longer visible.
+        group.addEventListener('keydown', (event) => {
+          if (event.key !== 'Escape' || panel.hidden) return;
+          close();
+          button.focus();
+        });
+
+        // Tabbing out of the group closes it. focusout fires before the new
+        // element is focused, so the check is deferred a tick.
+        group.addEventListener('focusout', () => {
+          setTimeout(() => {
+            if (!group.contains(document.activeElement)) close();
+          }, 0);
+        });
+
+        group.addEventListener('mouseenter', () => {
+          if (wideNav.matches && !pinned) setOpen(true);
+        });
+        group.addEventListener('mouseleave', () => {
+          if (wideNav.matches && !pinned) setOpen(false);
+        });
+
+        // A click anywhere else closes it, which is what a pointer user
+        // expects and what keyboard users get from focusout.
+        document.addEventListener('click', (event) => {
+          if (panel.hidden) return;
+          if (!group.contains(event.target as Node)) close();
+        });
+
+        // Crossing the breakpoint with the panel open would leave an accordion
+        // expanded inside a closed menu, or a floating panel with no anchor.
+        wideNav.addEventListener('change', close);
+      }
+
       // The mobile nav toggle.
       const toggle = document.getElementById('menuToggle');
       const nav = document.getElementById('mainnav');
@@ -238,8 +319,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
 
         // Widening past the breakpoint reveals the desktop nav; the open
         // class would otherwise linger and leave aria-expanded lying.
-        const wide = window.matchMedia('(min-width: 861px)');
-        wide.addEventListener('change', (event) => {
+        wideNav.addEventListener('change', (event) => {
           if (event.matches) setOpen(false);
         });
       }

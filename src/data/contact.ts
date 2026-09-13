@@ -60,13 +60,13 @@ export const fields: Field[] = [
     label: 'Where you are',
     type: 'select',
     prompt: 'Select one',
-    options: [
-      'Pre-seed or seed',
-      'Series A',
-      'Series B or later',
-      'Established business',
-      'Investor',
-    ],
+    /*
+     * These mirror the Who we help nav exactly, so a submission is traceable
+     * to the page that produced it. The previous list mixed funding stages
+     * with company types, which meant a Series A scale-up and an established
+     * enterprise could both plausibly pick two different options.
+     */
+    options: ['Startup', 'Scale-up', 'Enterprise', 'Investor'],
   },
   {
     id: 'f-msg',

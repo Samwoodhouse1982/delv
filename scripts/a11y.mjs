@@ -22,6 +22,8 @@ const PAGES = [
   '/',
   '/what-we-do',
   '/for-startups',
+  '/scale-ups',
+  '/enterprise',
   '/how-we-work',
   '/who-we-are',
   '/contact',

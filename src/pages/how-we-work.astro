@@ -9,7 +9,17 @@ import Rule from '../components/Rule.astro';
 import StageList from '../components/StageList.astro';
 import Figure from '../components/Figure.astro';
 import EngagementFlow from '../components/graphics/EngagementFlow.astro';
-import { cta, engagement, hero, meta, offers, qa, tests, workingImage } from '../data/how-we-work';
+import {
+  cta,
+  engagement,
+  hero,
+  meta,
+  next,
+  offers,
+  qa,
+  tests,
+  workingImage,
+} from '../data/how-we-work';
 import { quoteFor } from '../data/proof';
 
 const proofQuote = quoteFor('how-we-work');
@@ -38,7 +48,13 @@ const proofQuote = quoteFor('how-we-work');
         <h2>{offers.heading}</h2>
         <p class="muted" style="margin:0" set:html={offers.lede} />
       </div>
-      <OfferGrid items={offers.items} />
+      <OfferGrid items={offers.items} marks={offers.marks} />
+
+      <div class="split offer-next">
+        <h2 class="as-h3">{next.heading}</h2>
+        <p class="muted" style="margin:0" set:html={next.lede} />
+      </div>
+      <OfferGrid items={next.items} marks={next.marks} />
     </div>
   </div>
 

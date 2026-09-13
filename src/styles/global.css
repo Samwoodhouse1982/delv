@@ -1036,6 +1036,149 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 
 /* --------------------------------------------------------------------------
+   The Who we help group
+
+   A disclosure button and a panel, not an ARIA menu. The group has no page of
+   its own, so there is no parent link, and a menu/menuitem pattern would
+   promise keyboard behaviour (arrow keys, type-ahead, a focus trap) that a
+   five-item site navigation has no business implementing badly.
+
+   The same markup serves both sizes. On the desktop bar the panel floats under
+   its button and hovering opens it; inside the mobile menu it is an accordion
+   in the flow. `hidden` is the closed state in both, so nothing is on screen
+   that the script has not opened, and a page with no JavaScript shows the
+   button without a panel rather than a panel that will not close.
+   -------------------------------------------------------------------------- */
+
+.nav-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav-group-toggle {
+  /* Matched to `nav.main a:not(.btn)` by hand: a <button> shares none of an
+     anchor's inherited type, so every one of these has to be restated. */
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--graphite);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 6px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.nav-group-toggle:hover {
+  color: var(--ink);
+}
+/* The parent carries the current-page marker when one of its children is the
+   page, so a reader on Scale-ups can see where they are from the top bar. */
+.nav-group[data-current] > .nav-group-toggle {
+  color: var(--ink);
+  border-bottom-color: var(--mark-deep);
+}
+.nav-group-chevron {
+  width: 10px;
+  height: 6px;
+  flex: none;
+}
+
+.nav-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: -18px;
+  z-index: 30;
+  min-width: 280px;
+  background: var(--paper);
+  border: 1px solid var(--hair);
+  border-radius: 3px;
+  padding: 8px;
+  box-shadow: 0 14px 34px rgba(21, 59, 80, 0.11);
+}
+/* A hover target has to reach the panel, or the pointer crosses dead space on
+   the way down and the panel closes under it. */
+.nav-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -12px;
+  height: 12px;
+}
+nav.main .nav-panel a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 2px;
+  border-bottom: 0;
+  white-space: normal;
+}
+nav.main .nav-panel a:hover {
+  background: var(--paper-dim);
+}
+.nav-panel-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.nav-panel-note {
+  display: block;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--graphite);
+  margin-top: 2px;
+}
+nav.main .nav-panel a[aria-current="page"] {
+  background: var(--paper-dim);
+  box-shadow: inset 2px 0 0 var(--mark-deep);
+}
+
+@media (max-width: 860px) {
+  /* An accordion inside the menu panel. Nothing floats, nothing overlays, and
+     the whole nav stays one scrollable column. */
+  .nav-group {
+    display: block;
+    width: 100%;
+  }
+  .nav-group-toggle {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .nav-group[data-current] > .nav-group-toggle {
+    border-bottom-color: var(--mark-deep);
+  }
+  .nav-group-toggle[aria-expanded="true"] .nav-group-chevron {
+    transform: rotate(180deg);
+  }
+  .nav-panel {
+    position: static;
+    min-width: 0;
+    border: 0;
+    border-bottom: 1px solid var(--hair);
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+    padding: 6px 0 12px 14px;
+  }
+  .nav-panel::before {
+    display: none;
+  }
+  nav.main .nav-panel a {
+    padding: 9px 10px;
+  }
+  .nav-panel-label {
+    font-size: 16.5px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Hero and claim demo
    -------------------------------------------------------------------------- */
 
@@ -1206,6 +1349,11 @@ nav.main a:not(.btn)[aria-current="page"] {
   color: var(--graphite);
   margin-top: 14px;
 }
+/* Graphite on ink is 1.97:1. --on-brand is 5.6:1 and is what every other
+   secondary line on a deep band already uses. */
+.dark .caption {
+  color: var(--on-brand);
+}
 
 /* --------------------------------------------------------------------------
    Content blocks
@@ -1318,6 +1466,10 @@ nav.main a:not(.btn)[aria-current="page"] {
 .detail li:last-child {
   border-bottom: 0;
 }
+/* The light hairline on a deep band is louder than the text it separates. */
+.dark .detail li {
+  border-bottom-color: var(--hair-dark);
+}
 
 .qa {
   border-top: 1px solid var(--hair);
@@ -1361,8 +1513,29 @@ nav.main a:not(.btn)[aria-current="page"] {
   line-height: 1.5;
   margin: 0;
 }
+/* Two cards, not three, for the continuation offers. `auto-fit` would stretch
+   them across the full width and lose the alignment with the three above. */
+.offer--pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.offer-action,
+.pillar-action {
+  margin: 14px 0 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+.offer-action a,
+.pillar-action a {
+  color: var(--teal);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.offer-next {
+  margin: clamp(36px, 4.5vw, 60px) 0 26px;
+}
 @media (max-width: 800px) {
-  .offer {
+  .offer,
+  .offer--pair {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -1913,7 +2086,8 @@ figure.figure:not([class*="mt-"]) {
 /* Where the small marks land: at the head of an offer card, and above the
    stage label on What we do. */
 .offer-mark,
-.stage-mark {
+.stage-mark,
+.pillar-mark {
   margin-bottom: 14px;
 }
 
@@ -2591,16 +2765,31 @@ footer a {
 footer a:hover {
   border-bottom-color: var(--mark);
 }
+/* Four columns now: the blurb, then The work, Who we help, About. */
 .foot-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns:
+    minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr)
+    minmax(0, 1fr);
   gap: 32px;
   align-items: start;
 }
-@media (max-width: 800px) {
+@media (max-width: 980px) {
+  .foot-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .foot-grid > :first-child {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+  }
+}
+@media (max-width: 620px) {
   .foot-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
+  }
+  .foot-grid > :first-child {
+    margin-bottom: 0;
   }
 }
 .foot-nav {
@@ -2609,6 +2798,16 @@ footer a:hover {
   gap: 9px;
   font-family: var(--font-ui);
   font-size: 14.5px;
+}
+.foot-nav-heading {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  /* --on-brand is 5.6:1 on ink; the dimmer variant is for large text only, so
+     a 12px heading keeps the brighter one. */
+  color: var(--on-brand);
+  margin-bottom: 3px;
 }
 .foot-nav a {
   border: 0;

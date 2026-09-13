@@ -25,7 +25,20 @@ export interface Pillar {
   step: string;
   heading: string;
   body: string;
+  /** Optional link under the card, for a pillar that now has its own page. */
+  action?: { label: string; href: string };
 }
+
+/**
+ * The five shapes in the section-graphic vocabulary, at list size. See
+ * src/components/graphics/Mark.astro.
+ */
+export type MarkKind =
+  | 'unclosed'
+  | 'evidenced'
+  | 'activity'
+  | 'measured'
+  | 'restated';
 
 export interface StageRow {
   heading: string;
@@ -37,6 +50,8 @@ export interface Offer {
   heading: string;
   meta: string;
   body: string;
+  /** Optional link out of the card, to the audience page the offer belongs to. */
+  action?: { label: string; href: string };
 }
 
 export interface QaItem {

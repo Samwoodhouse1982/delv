@@ -55,6 +55,8 @@ type PageKey =
   | 'home'
   | 'what-we-do'
   | 'for-startups'
+  | 'scale-ups'
+  | 'enterprise'
   | 'how-we-work'
   | 'who-we-are';
 
@@ -81,7 +83,7 @@ const sampleResults: Result[] = [
     id: 'sample-2',
     figure: 'Procurement cycle cut from nine months to five',
     client: 'Sample: a symptom assessment company',
-    what: 'One claims library replacing four inconsistent decks, with sourcing and usage rules attached to every claim.',
+    what: 'One Value Library replacing four inconsistent decks, with sourcing and usage rules attached to every claim.',
     basis: 'Median time from first meeting to signature, eleven trusts, before and after.',
   },
   {
@@ -122,6 +124,20 @@ const sampleQuotes: Quote[] = [
     role: 'Medical Director',
     company: 'Placeholder Health',
   },
+  {
+    id: 'sample-scale-ups',
+    text: 'We had three years of usage data and no idea what it proved. What came back was a number our own finance team could not pull apart, which is what made it useful.',
+    name: 'Placeholder Name',
+    role: 'Chief Commercial Officer',
+    company: 'Placeholder Health',
+  },
+  {
+    id: 'sample-enterprise',
+    text: 'Four business units had four versions of the same number and all four were arguably right. Having one of them chosen, sourced and written down took an argument off the table for good.',
+    name: 'Placeholder Name',
+    role: 'Global Marketing Director',
+    company: 'Placeholder Health',
+  },
 ];
 
 export const results: Result[] = isPreview ? sampleResults : published;
@@ -149,6 +165,25 @@ export const placement: Record<
     heading: 'What it has been worth to founders',
     results: isPreview ? ['sample-2', 'sample-3'] : [],
     quote: isPreview ? 'sample-startups' : null,
+  },
+  'scale-ups': {
+    heading: 'What it has been worth',
+    results: isPreview ? ['sample-1'] : [],
+    quote: isPreview ? 'sample-scale-ups' : null,
+  },
+  /*
+   * `results` stays empty even in preview, and that is the point rather than an
+   * oversight. The card that fits this page is sample-2, the symptom assessment
+   * one, and it already runs on the home page and on Startups. Running it on a
+   * third page would be the same evidence doing three jobs, and inventing a
+   * fourth card to avoid that is exactly what this site argues against. The
+   * band renders nothing until a real engagement is chosen for it. §13 of the
+   * brief tracks it.
+   */
+  enterprise: {
+    heading: 'What it has been worth',
+    results: [],
+    quote: isPreview ? 'sample-enterprise' : null,
   },
   'how-we-work': {
     results: [],

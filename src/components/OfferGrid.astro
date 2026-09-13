@@ -1,30 +1,29 @@
 ---
-import type { Offer } from '../data/types';
+import type { MarkKind, Offer } from '../data/types';
 import Mark from './graphics/Mark.astro';
 
 interface Props {
   items: Offer[];
+  /** Graphic 06, one mark per offer, in the order the offers are written. */
+  marks?: readonly MarkKind[];
+  class?: string;
 }
-const { items } = Astro.props;
-
-/*
- * Graphic 06, one mark per offer, in the order the offers are written. An
- * audit measures what is there; a project closes one claim and puts evidence
- * in it; embedded work is the same finding restated for whoever is asking
- * this month. Three text-only cards in a bordered grid, and this is the only
- * thing that gives them a face.
- */
-const kinds = ['measured', 'evidenced', 'restated'] as const;
+const { items, marks, class: className } = Astro.props;
 ---
 
-<div class="offer">
+<div class:list={['offer', items.length === 2 && 'offer--pair', className]}>
   {
     items.map((offer, index) => (
       <div>
-        {kinds[index] && <Mark kind={kinds[index]} class="offer-mark" />}
+        {marks?.[index] && <Mark kind={marks[index]} class="offer-mark" />}
         <h3>{offer.heading}</h3>
         <span class="meta" set:html={offer.meta} />
         <p set:html={offer.body} />
+        {offer.action && (
+          <p class="offer-action">
+            <a href={offer.action.href}>{offer.action.label}</a>
+          </p>
+        )}
       </div>
     ))
   }

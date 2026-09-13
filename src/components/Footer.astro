@@ -25,15 +25,15 @@ const disclosures = [
       </div>
 
       {
-        site.footerNav.map((column, index) => (
-          <nav
-            class="foot-nav"
-            aria-label={index === 0 ? 'Services' : 'About and contact'}
-          >
-            {column.map((item) => (
+        site.footerNav.map((column) => (
+          <nav class="foot-nav" aria-label={column.heading}>
+            <span class="foot-nav-heading">{column.heading}</span>
+            {column.items.map((item) => (
               <a href={item.href}>{item.label}</a>
             ))}
-            {index === 1 && <a href={`mailto:${site.email}`}>{site.email}</a>}
+            {column.heading === 'About' && (
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            )}
           </nav>
         ))
       }

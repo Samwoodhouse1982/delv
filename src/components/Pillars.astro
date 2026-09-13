@@ -1,30 +1,45 @@
 ---
-import type { Pillar } from '../data/types';
+import type { MarkKind, Pillar } from '../data/types';
+import Mark from './graphics/Mark.astro';
 import StageMark from './graphics/StageMark.astro';
 
 interface Props {
   items: Pillar[];
   /**
-   * Graphic 03. One shape per pillar, on a shared cycle: a boundary closes, a
-   * scale is laid across it, and it resolves into a claim with two smaller
+   * Graphic 03, the large stage shapes. Home only: a boundary closes, a scale
+   * is laid across it, and it resolves into a claim with two smaller
    * restatements. The shapes carry no words of their own, because the pillar
    * underneath each one already has the words.
    */
-  marks?: boolean;
+  shapes?: boolean;
+  /**
+   * Graphic 06, the same vocabulary at list size, one per pillar. Passed
+   * explicitly rather than derived, because which shape belongs over which
+   * column is a reading of the copy and not something to infer from an index.
+   */
+  marks?: readonly MarkKind[];
 }
-const { items, marks = false } = Astro.props;
+const { items, shapes = false, marks } = Astro.props;
 
-const kinds = ['define', 'measure', 'articulate'] as const;
+const stages = ['define', 'measure', 'articulate'] as const;
 ---
 
 <div class="pillars">
   {
     items.map((pillar, index) => (
       <div class="pillar">
-        {marks && kinds[index] && <StageMark kind={kinds[index]} />}
+        {shapes && stages[index] && <StageMark kind={stages[index]} />}
+        {!shapes && marks?.[index] && (
+          <Mark kind={marks[index]} class="pillar-mark" />
+        )}
         <span class="step">{pillar.step}</span>
         <h3>{pillar.heading}</h3>
         <p set:html={pillar.body} />
+        {pillar.action && (
+          <p class="pillar-action">
+            <a href={pillar.action.href}>{pillar.action.label}</a>
+          </p>
+        )}
       </div>
     ))
   }

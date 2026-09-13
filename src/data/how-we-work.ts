@@ -1,9 +1,18 @@
-import type { CtaBand, Figure, Hero, Offer, PageMeta, QaItem, StageRow } from './types';
+import type {
+  CtaBand,
+  Figure,
+  Hero,
+  MarkKind,
+  Offer,
+  PageMeta,
+  QaItem,
+  StageRow,
+} from './types';
 
 export const meta: PageMeta = {
   title: 'How we work · delv.',
   description:
-    'How a delv. engagement runs, the three ways to work with us, and the six tests every deliverable has to pass before it leaves us.',
+    'How a delv. engagement runs, where to start for a startup, a scale-up or an enterprise, and the six tests every deliverable has to pass before it leaves us.',
   ogImage: '/og/how-we-work.png',
 };
 
@@ -38,19 +47,56 @@ export const engagement = {
   ] satisfies StageRow[],
 };
 
+/*
+ * Split in two, because three entry offers plus Project plus Embedded is five
+ * undifferentiated cards and that reads as a menu rather than a path. The
+ * first group is one entry offer per audience page, in the order the nav puts
+ * them; the second is where the work goes once it has started.
+ *
+ * The marks are the same vocabulary as the section graphics. The three entry
+ * offers carry the three stages, because that is exactly what they are: a
+ * Value Audit defines, a Value Model Build measures, a Claims and Evidence
+ * Review reconciles what is already being said.
+ */
 export const offers = {
-  heading: 'Three ways to work with us',
-  lede: 'Most startups begin with the first. Fees are fixed and agreed before we start, unless you would rather buy days.',
+  heading: 'Where to start',
+  lede: 'One entry point per audience, each a fixed fee agreed before we start. Every one of them ends with something you own whether or not you carry on with us.',
+  marks: [
+    'unclosed',
+    'measured',
+    'restated',
+  ] as const satisfies readonly MarkKind[],
   items: [
     {
       heading: 'Value Audit',
       meta: 'Fixed fee &middot; about three weeks',
-      body: 'Where your claims stand, what your data can support, and a ranked list of what to fix first. Ends with a claims-and-evidence map you own. Investors run the same audit over a company before backing it.',
+      body: 'Where your claims stand, what your data can support, and a ranked list of what to fix first.',
+      action: { label: 'For startups', href: '/for-startups' },
     },
+    {
+      heading: 'Value Model Build',
+      meta: 'Fixed fee &middot; six to eight weeks',
+      body: 'One defensible number built from your live deployment data, with the assumptions log and the business case template that carries it.',
+      action: { label: 'For scale-ups', href: '/scale-ups' },
+    },
+    {
+      heading: 'Claims and Evidence Review',
+      meta: 'Fixed fee &middot; four to six weeks',
+      body: 'Every claim you make in market, reconciled against its evidence, with a ranked remediation and retirement list.',
+      action: { label: 'For enterprise', href: '/enterprise' },
+    },
+  ] satisfies Offer[],
+};
+
+export const next = {
+  heading: 'Where it goes next',
+  lede: 'What most engagements become once the first piece has told us what is actually needed.',
+  marks: ['evidenced', 'measured'] as const satisfies readonly MarkKind[],
+  items: [
     {
       heading: 'Project',
       meta: 'Fixed fee &middot; scoped deliverables',
-      body: 'A defined piece of work: a value model, an ROI calculator, a claims library, a business case pack, an investor evidence narrative.',
+      body: 'A defined build: a Value Library, an ROI calculator or calculator estate, a business case pack, an investor evidence narrative.',
     },
     {
       heading: 'Embedded',

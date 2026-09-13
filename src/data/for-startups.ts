@@ -48,9 +48,15 @@ export const where = {
       body: 'Convert live deployments into defensible proof points. A first real value model, a business case your buyers can reuse internally, and an investor narrative that matches the data room.',
     },
     {
+      /*
+       * Copy unchanged. This card now describes work that has a page of its
+       * own, so it gains a link and nothing else: a Series B reader who
+       * recognises themselves in it should be one click from Scale-ups.
+       */
       step: 'Series B and scale',
       heading: 'Standardise it',
       body: 'One claims library, one model, consistent numbers across markets and reps. Fewer legal surprises, faster procurement, and a repeatable way to add new evidence as it arrives.',
+      action: { label: 'More on this', href: '/scale-ups' },
     },
   ] satisfies Pillar[],
 };
