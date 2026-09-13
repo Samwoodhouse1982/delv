@@ -822,3 +822,86 @@ Not blockers for starting, but all are blockers for launch.
 13. **The intro plays on every load.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `true`, so the 5.5-second animation runs on every page view rather than once a session. Sam asked for this on 13 Sep 2026 while the site is on a test domain. **Set it back to `false` before launch**, or every internal page click costs a visitor five and a half seconds. Nothing else has to change with it.
 14. **Retire the prototype as the copy reference.** `reference/prototype.html` is 34% verbatim against the data files after the 13 Sep amends pass, and `/scale-ups` and `/enterprise` share none of it. It is still the reference for layout, spacing and the motifs. Someone reading it for wording will be reading an old draft.
 15. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
+
+---
+
+## 13a. Open editorial decisions
+
+From the copy amends brief of 13 Sep 2026. Its Tier 1 finds are applied; these
+are the Tier 2 items, which are Sam's editorial call rather than fixes. None
+blocks a deploy. Counts below are measured against the rendered site, not
+against the amends brief, because the Tier 1 pass moved several of them.
+
+**Accuracy, and the one that matters most**
+
+1. **The ITU/WHO credential on Who we are.** Currently "co-chaired the ITU/WHO
+   focus group working group on clinical evaluation of AI for health". "Focus
+   group working group" reads as a duplication. The body is the ITU/WHO **Focus
+   Group on Artificial Intelligence for Health (FG-AI4H)**, which has topic and
+   working groups beneath it, so the accurate construction is probably closer
+   to "co-chaired a working group of the ITU/WHO Focus Group on AI for Health,
+   on the clinical evaluation of AI". **Confirm the exact body and role with
+   Shubs before anyone touches it.** Getting an evidence consultancy's own
+   credential wrong is the worst available error on this site.
+
+**Cross-page repetition, all three audience pages**
+
+Each of these is a good line. Three of them in the same position is a
+template, and a reader who visits two of the three pages will see it.
+
+2. **"Three moments when X call us"**, on all three, same heading and same
+   three-card structure. Vary at least two, and consider whether one page can
+   run two cards or four.
+3. **The refusal paragraph**, on all three, always as the last paragraph of the
+   deliverables list. Keep the construction on one page and let the refusal
+   arrive differently, or in a different position, on the other two.
+4. **The ownership reassurance in the CTA**, now four instances: the three
+   audience pages plus How we work. Vary two.
+5. **The differing-market anaphora**, down from four instances to three
+   (Scale-ups, Enterprise, How we work). Reduce to one.
+
+**Repeated vocabulary**
+
+6. **"defensible"**, three instances against a target of two: Startups,
+   Enterprise, How we work. Down from eight.
+7. **"a sceptical analyst"**, near-identical phrasing on Home and Startups.
+   Vary one.
+8. **Two meta descriptions still open "How delv."** (Startups, Enterprise).
+   Scale-ups was recast in the Tier 1 pass. Defensible as a pattern; worth a
+   look if the other two are ever regenerated.
+
+**Single lines, each optional**
+
+9. **"Sound familiar?"** on Home. The only weak heading on the page.
+   Alternatives: "If two or more of these are true", or "Where this usually
+   bites".
+10. **List saturation on What we do.** Two six-item parallel lists in close
+    succession with a triple anaphora between them. The proposal is to trim the
+    first list to four and break its uniform rhythm: "money saved, hours
+    released, appointments freed, and the readmissions that did not happen".
+    The second list earns its length.
+11. **The six tests on How we work.** Six labelled adjectives with colon
+    definitions is a recognisable consultancy-deck shape, and the list does not
+    spell anything. Four may land harder. Relevant and Marketable overlap.
+    There is a reasonable case for leaving it.
+12. **"the asset everything else is built from"** on What we do. The README
+    lists it as core positioning and the line is good; "the asset" is the only
+    word in it that leans product.
+13. **"A repeatable flow"** on What we do. "Flow" and "refreshing" suggest an
+    automated pipeline. "A way of refreshing the evidence that your team can
+    repeat, so it does not age in a slide" puts a person in it.
+14. **"One calculator, not five"** on Enterprise. A contrastive negation in a
+    heading, which is where it is most visible, but it is a good heading.
+15. **The abstract triplet in Shubs' bio**: "He works at the join between
+    clinical credibility, regulatory expectation and commercial reality." The
+    most consultant-flavoured line in either bio. Bios tolerate more than
+    marketing copy does.
+
+**Two the amends brief did not list**
+
+16. **Enterprise carries three contrastive negations** against a threshold of
+    one: the designated keeper "not in the maths", the protected "a decision,
+    not an analysis", and an unlisted third in a Value Library bullet, "held
+    against the parent claim rather than as separate untracked copies".
+17. **Who we are carries an unlisted second**, in the bench section: "survive
+    an HTA reviewer rather than a sales meeting".
