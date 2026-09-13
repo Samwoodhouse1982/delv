@@ -1,0 +1,73 @@
+---
+/**
+ * Graphic 06, Repeating marks. The same vocabulary as the section graphics,
+ * at the size a list item can carry.
+ *
+ * Five shapes: a claim not yet closed, a claim with evidence in it,
+ * undifferentiated activity, something measured, and one finding restated at
+ * the size each audience needs. Static, decorative, and the only job they do
+ * is give a text-only card a face.
+ *
+ * The measured mark trims its rules to the chord of the circle rather than
+ * clipping them, so nothing here carries a document id that would repeat once
+ * per instance.
+ */
+interface Props {
+  kind: 'unclosed' | 'evidenced' | 'activity' | 'measured' | 'restated';
+  class?: string;
+}
+const { kind, class: className } = Astro.props;
+---
+
+<svg
+  class:list={['gfx-mark', `gfx-mark--${kind}`, className]}
+  viewBox="0 0 48 48"
+  aria-hidden="true"
+  focusable="false"
+>
+  {kind === 'unclosed' && <circle class="gfx-mark-ring" cx="24" cy="24" r="18" stroke-dasharray="98 15" />}
+
+  {
+    kind === 'evidenced' && (
+      <g>
+        <circle class="gfx-mark-ring" cx="24" cy="24" r="18" />
+        <circle class="gfx-mark-point" cx="24" cy="24" r="5" />
+      </g>
+    )
+  }
+
+  {
+    kind === 'activity' && (
+      <g class="gfx-mark-scatter">
+        <circle cx="14" cy="16" r="4" />
+        <circle cx="27" cy="11" r="3" />
+        <circle cx="34" cy="22" r="4.5" />
+        <circle cx="17" cy="31" r="3.5" />
+        <circle cx="29" cy="35" r="4" />
+      </g>
+    )
+  }
+
+  {
+    kind === 'measured' && (
+      <g>
+        <circle class="gfx-mark-ring gfx-mark-ring--ghost" cx="24" cy="24" r="18" />
+        <g class="gfx-mark-scale">
+          <line x1="8.82" y1="17" x2="39.18" y2="17" />
+          <line x1="7.65" y1="27" x2="40.35" y2="27" />
+          <line x1="12.95" y1="37" x2="35.05" y2="37" />
+        </g>
+      </g>
+    )
+  }
+
+  {
+    kind === 'restated' && (
+      <g>
+        <circle class="gfx-mark-disc" cx="14" cy="24" r="10" />
+        <circle class="gfx-mark-ring" cx="32" cy="24" r="6" />
+        <circle class="gfx-mark-ring" cx="43" cy="24" r="3.5" />
+      </g>
+    )
+  }
+</svg>

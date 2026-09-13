@@ -120,8 +120,9 @@
 
    Every colour has one job. Yale blue carries structure. Pacific blue is
    structural detail only, never text — it does not meet contrast at body
-   size. Aquamarine is the evidence colour. Rosy taupe marks the unevidenced
-   claim in the home hero and appears nowhere else.
+   size. Aquamarine is the evidence colour. Rosy taupe is the unevidenced
+   claim: the struck-through line in the home hero, and every scattered mark
+   in the section graphics.
    -------------------------------------------------------------------------- */
 
 :root {
@@ -352,9 +353,17 @@ footer :focus-visible {
   grid-template-columns: minmax(0, 7fr) minmax(0, 11fr);
   gap: clamp(24px, 4vw, 64px);
 }
+/*
+ * Every single-column stack below is `minmax(0, 1fr)`, never a bare `1fr`.
+ * A bare `1fr` floors the track at its content's min-content size, and a box
+ * with an aspect ratio and a min-height reports a min-content width of the
+ * two multiplied together. One section graphic in a column was enough to
+ * widen the whole column to 833px at phone width, with only the band's
+ * `overflow: clip` hiding it.
+ */
 @media (max-width: 800px) {
   .split {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 22px;
   }
 }
@@ -1176,7 +1185,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 @media (max-width: 800px) {
   .pillars {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .pillar {
     border-right: 0;
@@ -1291,7 +1300,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 @media (max-width: 800px) {
   .offer {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1302,7 +1311,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 @media (max-width: 800px) {
   .people {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 .person h2 {
@@ -1344,7 +1353,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 @media (max-width: 800px) {
   .stage-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 }
@@ -1371,8 +1380,21 @@ nav.main a:not(.btn)[aria-current="page"] {
    the brief for the picture that belongs in it rather than a grey rectangle.
    -------------------------------------------------------------------------- */
 
+/*
+ * `margin-block-end` and `margin-inline`, not the `margin` shorthand. A
+ * <figure> carries UA margins on all four sides and they have to go, but the
+ * shorthand also sets margin-top, which put this rule at the same specificity
+ * as the `.mt-*` spacing utilities and later in the file. Every
+ * `<Figure class="mt-block">` on the site was therefore rendering flush
+ * against whatever sat above it. Leaving margin-top alone lets the utility do
+ * its job, and the reset below supplies the zero when there is no utility.
+ */
 .figure {
-  margin: 0;
+  margin-block-end: 0;
+  margin-inline: 0;
+}
+figure.figure:not([class*="mt-"]) {
+  margin-top: 0;
 }
 .figure img {
   display: block;
@@ -1437,6 +1459,827 @@ nav.main a:not(.btn)[aria-current="page"] {
 .person .figure {
   margin-bottom: 20px;
   max-width: 240px;
+}
+
+/* --------------------------------------------------------------------------
+   Section graphics
+
+   Six graphics from the design handoff in reference/design_handoff_delv_
+   graphics/. They are conceptual, not evidential: no figures, no axes, nothing
+   that could be read as a result. All six are built from the same small
+   vocabulary, and it is the vocabulary the copy already uses. A field of marks
+   is undifferentiated activity. A ring is a claim. A scale laid across it is
+   measurement. One filled point is the thing worth counting.
+
+   Three rules hold the set together.
+
+   Every band that holds `cqw` units is its own size container. That is the
+   handoff's one engineering rule and it is structural, not stylistic: the
+   focal geometry has to shrink with the band, because below about 700px the
+   band hits its height floor and stops shrinking vertically while anything
+   sized in px does not. Discs then collide with labels and rings clip past the
+   edge. The design width is 1180px, so 1cqw is 11.8px at full size and any
+   value taken from the handoff is that value over 11.8.
+
+   Every graphic's resting state is its finished state. The animation is
+   additive, gated behind `data-motion` exactly like everything in the Motion
+   section above, and a reader with reduced motion, with JavaScript off, or on
+   a browser without container query units sees the argument in one static
+   frame rather than a blank box. Nothing here is ever waiting to appear.
+
+   Nothing animates a property that affects layout. The handoff wipes graphic
+   03's scale in by animating `width` on a wrapper; that is the one place this
+   port diverges, and it draws each rule with `stroke-dashoffset` instead. Same
+   window, same easing, no layout.
+
+   All six are decorative: they restate the copy beside them, they do not add
+   to it. They are `aria-hidden` and out of the tab order.
+   -------------------------------------------------------------------------- */
+
+.gfx {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.gfx--band {
+  container-type: inline-size;
+  aspect-ratio: 1180 / 340;
+  min-height: 240px;
+  /*
+   * Not cosmetic. An aspect ratio transfers a definite min-height back through
+   * itself as a minimum *width*: 240px at 1180/340 is a floor of 833px. Inside
+   * a one-column grid, whose track floor is its content's min-content size,
+   * that silently widens the column to 833px at every viewport below the
+   * breakpoint. On What we do, at 375px, the whole right-hand column blew out
+   * to 833px and only the page band's `overflow: clip` hid it.
+   */
+  min-width: 0;
+}
+/*
+ * A phone gets a shorter band, not the same band with smaller marks in it. The
+ * geometry is sized in cqw and shrinks with the width; the height floor does
+ * not, so 240px at 335px wide is a mostly empty box with dust in it. 168px is
+ * the point below which graphic 04's three containers stop fitting.
+ */
+@media (max-width: 760px) {
+  .gfx--band {
+    min-height: 168px;
+  }
+}
+.gfx--linen {
+  background: var(--paper-dim);
+}
+.gfx--ink {
+  background: var(--ink);
+}
+
+/* Every circular element in the set is placed by its centre, so a percentage
+   position means the same thing whatever the element's size. */
+.gfx-dot,
+.gfx-ring,
+.gfx-point,
+.gfx-core,
+.gfx-ripple,
+.gfx-source,
+.gfx-parcel {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  margin-left: calc(var(--s) / -2);
+  margin-top: calc(var(--s) / -2);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.gfx-dot {
+  background: var(--taupe);
+  opacity: var(--o);
+}
+/* Graphic 02 splits the mark in two: the outer element carries the drift, the
+   inner one travels. One element cannot do both, because the travel is a
+   transform and so is the drift. */
+.gfx-dot--drift {
+  background: none;
+  opacity: 1;
+}
+.gfx-dot-body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--taupe);
+  opacity: var(--o);
+}
+.gfx-ring {
+  border: 1px solid var(--brand);
+  opacity: var(--o);
+}
+.gfx-point,
+.gfx-core,
+.gfx-source,
+.gfx-parcel {
+  background: var(--mark);
+}
+.gfx-ripple {
+  border: 1px solid var(--mark);
+  opacity: 0;
+}
+/* The parcels only exist in flight. */
+.gfx-parcel {
+  opacity: 0;
+}
+
+/* 02: the cloud is its own containing block, so the marks' percentages
+   resolve against it rather than the band. That is what lets the field be
+   held clear of the labels on a short band without transforming it: a
+   transform would scale the travel distances the script measures in screen
+   pixels, and every mark would fall short of the core. */
+.gfx-cloud {
+  position: absolute;
+  inset: 0;
+}
+
+/* 02: the two labels. 0.82 alpha on Yale Blue is 7.2:1, which is why the
+   handoff sets it there and says not to dial it back. */
+.gfx-absorb-labels {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 28px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(14px, 1.86cqw, 22px);
+  line-height: 1;
+  color: rgba(236, 235, 228, 0.82);
+}
+/* On a short band the field reaches down into the labels. */
+@media (max-width: 760px) {
+  .gfx-cloud {
+    bottom: 30px;
+  }
+  .gfx-absorb-labels {
+    bottom: 12px;
+    padding: 0 16px;
+  }
+}
+
+/* 04: three containers, three shapes, no labels. Naming them would turn a
+   picture of an argument into a diagram somebody has to read. */
+.gfx-vessel {
+  position: absolute;
+  left: 78%;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(236, 235, 228, 0.55);
+  border-radius: 1.4cqw;
+  padding: 0.6cqw;
+}
+.gfx-vessel--a {
+  top: calc(50% - 7cqw);
+  width: 7cqw;
+  height: 9.5cqw;
+  margin-left: -3.5cqw;
+  margin-top: -4.75cqw;
+}
+.gfx-vessel--b {
+  top: calc(50% + 3.25cqw);
+  width: 13cqw;
+  height: 7cqw;
+  margin-left: -6.5cqw;
+  margin-top: -3.5cqw;
+}
+.gfx-vessel--c {
+  top: calc(50% + 10.25cqw);
+  width: 11cqw;
+  height: 3cqw;
+  margin-left: -5.5cqw;
+  margin-top: -1.5cqw;
+  border-radius: 1.7cqw;
+  padding: 0.5cqw;
+}
+.gfx-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.9cqw;
+  background: var(--mark);
+}
+.gfx-vessel--c .gfx-fill {
+  border-radius: 1.2cqw;
+}
+
+/* 05: a four-node horizontal flow cannot usefully compress to a phone, so
+   below 620px it scrolls rather than collapsing into sub-pixel strokes. The
+   last line runs off the right edge on purpose: the page's argument is that
+   the work keeps going after we leave, so it is never cropped back. */
+.gfx-flow {
+  /* No padding on the right. The last line runs to the edge of the viewBox,
+     so a right gutter would stop it short and undo the one detail the handoff
+     asks not to crop. */
+  padding: clamp(28px, 3.5vw, 40px) 0 clamp(28px, 3.5vw, 40px)
+    clamp(16px, 2vw, 24px);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.gfx-flow > svg {
+  display: block;
+  width: 100%;
+  min-width: 620px;
+  height: auto;
+}
+.gfx-flow-lines {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+}
+.gfx-flow-line {
+  stroke-dasharray: 100;
+}
+.gfx-flow-line--a {
+  stroke-width: 2.5;
+  stroke-dasharray: 7 9;
+}
+.gfx-flow-line--b {
+  stroke-width: 2.5;
+}
+.gfx-flow-line--c {
+  stroke-width: 3.5;
+}
+.gfx-flow-line--d {
+  stroke-width: 3.5;
+  stroke-opacity: 0.45;
+}
+.gfx-flow-node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.gfx-flow-ring {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+.gfx-flow-ring--open {
+  stroke-dasharray: 26 14;
+}
+.gfx-flow-ring--ghost {
+  opacity: 0.3;
+}
+.gfx-flow-scale {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+.gfx-flow-disc {
+  fill: var(--ink);
+}
+.gfx-flow-point {
+  fill: var(--mark);
+}
+
+/* 03: one shape per stage, at the head of its own pillar. The handoff draws
+   these as positioned divs on a 200px box; they are redrawn on a 200x200
+   viewBox so one width scales the whole shape, and so the two clipped groups
+   need no `clipPath` element and therefore no document id repeated per use. */
+.gfx-stage {
+  display: block;
+  width: clamp(88px, 10vw, 124px);
+  height: auto;
+  margin-bottom: 18px;
+  /*
+   * Each shape sits inside its 200-unit box, so left-aligning the box leaves
+   * the circle visibly indented against the pillar's left rule. These shift
+   * each one by its own inset, so the circles line up with the text below
+   * them. Define's stray mark is then outside the column, which is the one
+   * thing about it that is meant to be true.
+   */
+  overflow: visible;
+}
+.gfx-stage--define,
+.gfx-stage--measure {
+  transform: translateX(-13.4%);
+}
+.gfx-stage--articulate {
+  transform: translateX(-9%);
+}
+.gfx-stage-outside {
+  fill: var(--taupe);
+}
+.gfx-stage-boundary {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 452;
+}
+.gfx-stage-ghost {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  opacity: 0.28;
+}
+.gfx-stage-scale {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.gfx-stage-scale line {
+  stroke-dasharray: 100;
+}
+.gfx-stage-claim {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.gfx-stage-fill {
+  fill: var(--ink);
+}
+.gfx-stage-point {
+  fill: var(--mark);
+}
+.gfx-stage-echo {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+/* 06: the same vocabulary at the size a list item can carry. Static. */
+.gfx-mark {
+  display: block;
+  width: 34px;
+  height: 34px;
+}
+.gfx-mark-ring {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+.gfx-mark-ring--ghost {
+  opacity: 0.3;
+}
+.gfx-mark-point {
+  fill: var(--mark);
+}
+.gfx-mark-scatter {
+  fill: var(--taupe);
+}
+.gfx-mark-scale {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+.gfx-mark-disc {
+  fill: var(--ink);
+}
+.dark .gfx-mark-ring,
+.dark .gfx-mark-disc {
+  stroke: var(--on-brand);
+}
+.dark .gfx-mark-disc {
+  fill: var(--on-brand);
+}
+
+/* Where the small marks land: at the head of an offer card, and above the
+   stage label on What we do. */
+.offer-mark,
+.stage-mark {
+  margin-bottom: 14px;
+}
+
+/* --- The motion layer -----------------------------------------------------
+
+   Gated twice, the same way the Motion section is: inside
+   `prefers-reduced-motion: no-preference`, and inert until the script puts
+   `data-motion` on <html>. Everything above is the resting state.
+
+   The band graphics also start on sight rather than at load. The script adds
+   `gfx-idle` when it registers a band with its observer and removes it on the
+   first intersection, so a reader meets the beginning of a cycle rather than
+   the middle of one. It is applied by script and removed by script, so a page
+   where the script never runs has nothing paused.
+
+   Graphic 03 is deliberately left out of that: its three shapes are one
+   sequence read left to right across the pillars, and pausing them
+   individually would let them enter view a beat apart and desynchronise.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion] .gfx-idle,
+  [data-motion] .gfx-idle * {
+    animation-play-state: paused;
+  }
+
+  /* 01 and 02: the field drifts, each mark on its own period and phase. */
+  [data-motion] .gfx-dot {
+    animation: gfxDrift var(--dur, 6s) ease-in-out var(--delay, 0s) infinite;
+  }
+  [data-motion] .gfx-ring--breathe {
+    animation: gfxBreathe 6s ease-in-out infinite;
+  }
+
+  /* 02: two rings pulse outward through the absorption window. The marks and
+     the core are driven from Absorption.astro, because both depend on
+     distances only measurable once the band has a width. */
+  [data-motion] .gfx-ripple {
+    animation: gfxRipple 9s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) infinite;
+  }
+
+  /* 04: the source shrinks as it gives. */
+  [data-motion] .gfx-source {
+    animation: gfxSource 11s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  [data-motion] .gfx-parcel--a {
+    animation: gfxSendA 11s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+  [data-motion] .gfx-parcel--b {
+    animation: gfxSendB 11s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+  [data-motion] .gfx-parcel--c {
+    animation: gfxSendC 11s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+  [data-motion] .gfx-vessel--a .gfx-fill {
+    animation: gfxFillA 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-motion] .gfx-vessel--b .gfx-fill {
+    animation: gfxFillB 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-motion] .gfx-vessel--c .gfx-fill {
+    animation: gfxFillC 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  /* 05: `pathLength="100"` lets one dashoffset animation draw four segments of
+     four different lengths at the same rate. */
+  [data-motion] .gfx-flow-line--a {
+    animation: gfxLineA 11s ease-in-out infinite;
+  }
+  [data-motion] .gfx-flow-line--b {
+    animation: gfxLineB 11s ease-in-out infinite;
+  }
+  [data-motion] .gfx-flow-line--c {
+    animation: gfxLineC 11s ease-in-out infinite;
+  }
+  [data-motion] .gfx-flow-line--d {
+    animation: gfxLineD 11s ease-in-out infinite;
+  }
+  [data-motion] .gfx-flow-node--a {
+    animation: gfxPopA 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-motion] .gfx-flow-node--b {
+    animation: gfxPopB 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-motion] .gfx-flow-node--c {
+    animation: gfxPopC 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-motion] .gfx-flow-node--d {
+    animation: gfxPopD 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  /*
+   * 03 draws once, as its pillar arrives, and then stays drawn.
+   *
+   * The handoff loops it on a shared 9s cycle, which is right for a specimen
+   * band standing on its own. It is wrong here. Split across three columns of
+   * body copy, the loop leaves the third pillar with an empty box above its
+   * heading for five seconds out of every nine, and an empty box above a
+   * heading does not read as a stage waiting its turn. It reads as a picture
+   * that failed to load.
+   *
+   * So it becomes a reveal instead, which is what the rest of the site does
+   * with the same gesture: the measurement rule draws itself once when it
+   * scrolls in. It hangs off the same `is-in` class the reveal observer
+   * already sets, and the three delays run the sequence left to right.
+   */
+  [data-motion] .gfx-stage-boundary {
+    stroke-dashoffset: 640;
+  }
+  [data-motion] .is-in .gfx-stage-boundary {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.3s;
+  }
+
+  [data-motion] .gfx-stage-scale line {
+    stroke-dashoffset: 100;
+  }
+  [data-motion] .is-in .gfx-stage-scale line {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.75s;
+  }
+
+  [data-motion] .gfx-stage-claim {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  [data-motion] .is-in .gfx-stage-claim {
+    opacity: 1;
+    transform: scale(1);
+    transition:
+      opacity 0.4s ease-out 1.15s,
+      transform 0.6s cubic-bezier(0.33, 1, 0.68, 1) 1.15s;
+  }
+}
+
+@keyframes gfxDrift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes gfxBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.28;
+  }
+}
+@keyframes gfxRipple {
+  0%,
+  40% {
+    transform: scale(0.16);
+    opacity: 0;
+  }
+  46% {
+    opacity: 0.5;
+  }
+  72%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+@keyframes gfxSource {
+  0%,
+  8% {
+    transform: scale(1);
+  }
+  54%,
+  92% {
+    transform: scale(0.72);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes gfxSendA {
+  0%,
+  10% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  26% {
+    transform: translate(60cqw, -7cqw);
+    opacity: 1;
+  }
+  29%,
+  100% {
+    transform: translate(60cqw, -7cqw);
+    opacity: 0;
+  }
+}
+@keyframes gfxSendB {
+  0%,
+  22% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  26% {
+    opacity: 1;
+  }
+  38% {
+    transform: translate(60cqw, 3.25cqw);
+    opacity: 1;
+  }
+  41%,
+  100% {
+    transform: translate(60cqw, 3.25cqw);
+    opacity: 0;
+  }
+}
+@keyframes gfxSendC {
+  0%,
+  34% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  38% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(60cqw, 10.25cqw);
+    opacity: 1;
+  }
+  53%,
+  100% {
+    transform: translate(60cqw, 10.25cqw);
+    opacity: 0;
+  }
+}
+@keyframes gfxFillA {
+  0%,
+  26% {
+    transform: scale(0);
+  }
+  36%,
+  92% {
+    transform: scale(1);
+  }
+  99%,
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes gfxFillB {
+  0%,
+  38% {
+    transform: scale(0);
+  }
+  48%,
+  92% {
+    transform: scale(1);
+  }
+  99%,
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes gfxFillC {
+  0%,
+  50% {
+    transform: scale(0);
+  }
+  60%,
+  92% {
+    transform: scale(1);
+  }
+  99%,
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes gfxLineA {
+  0%,
+  4% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  17%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  97%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes gfxLineB {
+  0%,
+  26% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  29% {
+    opacity: 1;
+  }
+  39%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  97%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes gfxLineC {
+  0%,
+  48% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+  }
+  61%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  97%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes gfxLineD {
+  0%,
+  84% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  86% {
+    opacity: 1;
+  }
+  93%,
+  95% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  99%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes gfxPopA {
+  0%,
+  17% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  25%,
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  97%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@keyframes gfxPopB {
+  0%,
+  39% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  47%,
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  97%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@keyframes gfxPopC {
+  0%,
+  61% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  69%,
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  97%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@keyframes gfxPopD {
+  0%,
+  74% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  83%,
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  98%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1507,7 +2350,7 @@ nav.main a:not(.btn)[aria-current="page"] {
 }
 @media (max-width: 800px) {
   .proof {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .proof-item {
     border-right: 0;
@@ -1693,7 +2536,7 @@ footer a:hover {
 }
 @media (max-width: 800px) {
   .foot-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 26px;
   }
 }

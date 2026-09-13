@@ -41,6 +41,8 @@ Do not add: a CMS, React/Vue/Svelte, a component library, an animation library, 
 ```
 delv-site/
   reference/prototype.html        # read-only; do not edit
+  reference/design_handoff_delv_intro/     # the 5.5s intro handoff, as delivered
+  reference/design_handoff_delv_graphics/  # the six section graphics, as delivered
   vercel.json                     # deploy config, headers, clean URLs
   api/contact.js                  # contact form endpoint (serverless)
   scripts/og.mjs                  # renders the OG images; run manually, output committed
@@ -64,6 +66,16 @@ delv-site/
       CtaBand.astro
       ClaimDemo.astro             # hero what/why device
       ContactForm.astro
+      Figure.astro                # image slot, or the brief for the picture
+      Intro.astro                 # the 5.5s opening animation
+      graphics/                   # the six section graphics, see §5
+        Distillation.astro        # 01, home hero
+        Absorption.astro          # 02, home "the what / the why" band
+        StageMark.astro           # 03, one shape per pillar
+        Restatement.astro         # 04, What we do, Articulate
+        EngagementFlow.astro      # 05, How we work
+        Mark.astro                # 06, the vocabulary at list size
+    lib/scatter.ts                # the two deterministic mark fields, build time
     data/
       home.ts  what-we-do.ts  for-startups.ts  how-we-work.ts  who-we-are.ts  contact.ts
       site.ts                     # nav, footer, company details, email, strapline
@@ -201,6 +213,63 @@ Scale, letter-spacing, line-height and `font-stretch` values are all in the prot
 
    Earlier drafts said `--mark-deep` here, contradicting the colour paragraph above, which gives list markers to pacific blue. Pacific blue wins: it is what the prototype ships and what the one-job-per-colour rule says. Aquamarine stays the evidence colour.
 
+### Section graphics
+
+Added 12 Sep 2026 from a second design handoff, kept as delivered at
+`reference/design_handoff_delv_graphics/`. Six graphics, marked high fidelity:
+colours, geometry and timing are final.
+
+They are **conceptual, not evidential**. No figures, no axes, nothing a reader
+could mistake for a result. All six are built from one small vocabulary, and it
+is the vocabulary the copy already uses: a field of taupe marks is
+undifferentiated activity, a ring is a claim, a scale laid across it is
+measurement, one filled aquamarine point is the thing worth counting.
+
+| # | Graphic | Where it sits | Motion |
+| --- | --- | --- | --- |
+| 01 | Distillation | Home hero, under the claim demo | Drift, breathing ring |
+| 02 | Same ink, one form | Home, the "anyone can report the what" band | 9s loop, script-driven |
+| 03 | Define / Measure / Articulate | Home, one shape per pillar | Draws once on reveal |
+| 04 | One finding, more than one job | What we do, Articulate | 11s loop |
+| 05 | The engagement, drawing itself | How we work, the engagement band | 11s loop |
+| 06 | Repeating marks | The three offers, and each stage on What we do | Static |
+
+The handoff's palette is the site's palette exactly: linen, yale blue, rosy
+taupe, pacific blue, aquamarine. Nothing new was added for them.
+
+Three rules hold the set together, and the first is the handoff's own:
+
+1. **`cqw`, not `px`.** Every band that holds a graphic is a size container and
+   every mark, ring and disc inside it is sized in `cqw`. This is structural.
+   The design width is 1180px, so `1cqw` is 11.8px at full size and any value
+   taken from a mock is that value over 11.8. Sizing the focal points in fixed
+   px inside a fluid band breaks below about 700px, where the band hits its
+   height floor and stops shrinking vertically while the focal points do not.
+2. **The resting state is the finished state.** The animation is additive and
+   gated behind `data-motion` like everything else in the Motion section below.
+   Reduced motion, no JavaScript, or a browser without container query units
+   all get the argument in one static frame. Nothing here ever waits to appear.
+3. **Decorative, and marked as such.** They restate the copy beside them; they
+   do not add to it. All six are `aria-hidden` and out of the tab order.
+
+Three deliberate divergences from the handoff, each for a stated reason:
+
+- Graphic 02 is placed on the "anyone can report the what" band rather than
+  next to the Before / After device. Its own two labels are *the what* and *the
+  why*, which is that band's argument word for word, and it wants a yale blue
+  ground, which that band already has. Putting a second full band inside the
+  hero, under the claim demo and graphic 01, was too much in one screen.
+- Graphic 03 draws once as its pillar arrives and then stays drawn, instead of
+  looping on a shared 9s cycle. The loop is right for a specimen band standing
+  on its own. Split across three columns of body copy it leaves the third
+  pillar with an empty box above its heading for five seconds out of every
+  nine, and that reads as a picture that failed to load, not as a stage waiting
+  its turn. As a reveal it is the same gesture the measurement rule already
+  makes.
+- Graphic 03's scale is drawn with `stroke-dashoffset` rather than wiped in by
+  animating `width` on a wrapper. Same window, same easing; `width` is a layout
+  property and the rule below rules it out.
+
 ### Motion
 
 One orchestrated moment: the claim demo in the home hero, about two seconds, once on load. Three beats, extended from the prototype's single sweep at Sam's request on 12 Sep 2026 to show the shift from the old claim to the new one. The activity claim is struck through, the evidenced claim rises in behind it, then the highlighter sweeps the number. Nothing else on the site moves.
@@ -285,6 +354,11 @@ shot, a procurement scene on Home, a value model artefact on What we do, the
 deliverables on For startups, and a working session on How we work.
 
 Setting `src` and `alt` on a slot turns it into the image, in the same space.
+
+The section graphics added on 12 Sep 2026 do **not** stand in for any of these
+six. The handoff says so explicitly and it is right: those pages argue from
+first-hand experience, and abstract marks where a photograph belongs would work
+against that. All six slots stay open.
 
 ### The intro
 
@@ -414,6 +488,22 @@ they are recorded here so they are not reintroduced.
   62%, var(--ink))`, which is 4.0:1 at 12px semibold. It is 52% in the build,
   which is 4.75:1 and keeps the taupe cast.
 
+Two more were found on 12 Sep 2026, both in the build's own CSS rather than
+the prototype's, and both recorded for the same reason.
+
+- **A bare `1fr` grid track is a trap.** Every single-column stack under
+  `max-width: 800px` used `grid-template-columns: 1fr`, which floors the track
+  at its content's min-content size. A box with an `aspect-ratio` and a
+  `min-height` reports a min-content *width* of the two multiplied together, so
+  one section graphic in a column silently widened the whole column to 833px at
+  phone width, with only the band's `overflow: clip` hiding it. Every track is
+  now `minmax(0, 1fr)`, which is what the desktop tracks already used.
+- **`.figure { margin: 0 }` beat the `.mt-*` utilities.** Same specificity,
+  later in the file, so every `<Figure class="mt-block">` on the site was
+  rendering flush against whatever sat above it. The reset now sets
+  `margin-block-end` and `margin-inline` and leaves `margin-top` to the
+  utility.
+
 **Accessibility**
 - Keyboard-navigable end to end, with a visible focus ring on every interactive element: 2px `--ink`, 3px offset, and `--mark` on deep bands. This applies to form fields too. The prototype suppresses the outline on inputs in favour of a 28%-opacity pacific glow, which is 1.3:1 against the page and fails SC 1.4.11 — the ring is not optional there. Keep the glow if you like, underneath the ring.
 - Non-text contrast (SC 1.4.11): focus indicators and the boundary of every form control meet 3:1 against what is adjacent to them. This is the criterion the prototype misses most often, and Axe will not catch it — check it by hand.
@@ -428,6 +518,12 @@ they are recorded here so they are not reintroduced.
 - Lighthouse ≥ 95 on performance, accessibility, best practices and SEO, mobile profile.
 - Zero layout shift from font loading.
 - Total JS under 10kb across the site. If a page needs none, it ships none.
+  Measured 12 Sep 2026, gzipped: 3.8kb on Home, which carries the intro, the
+  reveal observer and graphic 02's absorption script; 4.1kb on Contact; 2.9kb
+  everywhere else. The section graphics are otherwise pure CSS, and both mark
+  fields are generated in component frontmatter at build time from a fixed
+  seed, so the field is identical on every build and none of the generator
+  reaches the browser.
 
 **Responsive**
 - Works from 320px up. Check 320, 375, 768, 1024, 1440.
@@ -491,7 +587,10 @@ decision rather than an oversight.
 4. **The value flywheel.** The plan calls for a graphic and uses the word four
    times. The site expresses the idea once, as &ldquo;a repeatable flow so
    evidence keeps refreshing instead of ageing in a slide&rdquo;, and has an
-   empty image slot on What we do that would take the diagram.
+   empty image slot on What we do that would take the diagram. Graphic 05 on
+   How we work is adjacent but not the same thing: it argues that the work
+   keeps running after we leave, by carrying its line off the right edge. It is
+   a line, not a loop, and it is not a substitute for the flywheel.
 
 Smaller omissions, all judged not worth the words: press releases, landing
 pages and sales decks from the deliverables list, and named partner

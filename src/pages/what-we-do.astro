@@ -3,7 +3,17 @@ import Base from '../layouts/Base.astro';
 import DetailList from '../components/DetailList.astro';
 import Rule from '../components/Rule.astro';
 import Figure from '../components/Figure.astro';
+import Mark from '../components/graphics/Mark.astro';
+import Restatement from '../components/graphics/Restatement.astro';
 import { closing, hero, meta, stageImage, stages } from '../data/what-we-do';
+
+/*
+ * Graphic 06 at the head of each stage: a claim not yet closed, then the same
+ * claim measured, then that one finding restated at the size each audience
+ * needs. The large version of the same three shapes sits on the home page, so
+ * a reader arriving here has already met them once.
+ */
+const stageMarks = ['unclosed', 'measured', 'restated'] as const;
 ---
 
 <Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
@@ -19,6 +29,7 @@ import { closing, hero, meta, stageImage, stages } from '../data/what-we-do';
       <div class:list={['band', index === 1 && 'dim']}>
         <div class="wrap split">
           <div>
+            {stageMarks[index] && <Mark kind={stageMarks[index]} class="stage-mark" />}
             <span class="stage-label ui">{stage.label}</span>
             <h2>{stage.heading}</h2>
             <p class="lede mt-lede" set:html={stage.lede} />
@@ -29,6 +40,7 @@ import { closing, hero, meta, stageImage, stages } from '../data/what-we-do';
             ))}
             <DetailList items={stage.details} />
             {index === 1 && <Figure figure={stageImage} class="mt-block" />}
+            {index === 2 && <Restatement class="mt-block" />}
           </div>
         </div>
       </div>

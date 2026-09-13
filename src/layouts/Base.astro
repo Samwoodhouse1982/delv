@@ -169,11 +169,37 @@ const ogUrl = new URL(ogImage, Astro.site).href;
         );
 
         for (const el of targets) io.observe(el);
+
+        /*
+         * The section graphics run on their own loops, and they start on
+         * sight rather than at load so a reader meets the beginning of a
+         * cycle rather than the middle of one. The paused class is added
+         * here and removed here, so a page where this never runs has
+         * nothing paused: the graphics simply animate from the start.
+         */
+        const graphics = document.querySelectorAll('.gfx');
+        if (graphics.length) {
+          const gio = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.remove('gfx-idle');
+                gio.unobserve(entry.target);
+              }
+            },
+            { rootMargin: '0px 0px -5% 0px', threshold: 0.02 },
+          );
+
+          for (const el of graphics) {
+            el.classList.add('gfx-idle');
+            gio.observe(el);
+          }
+        }
+
         document.documentElement.setAttribute('data-motion', '');
       }
 
-      // The mobile nav toggle. This and the contact form are the only two
-      // pieces of JavaScript on the site.
+      // The mobile nav toggle.
       const toggle = document.getElementById('menuToggle');
       const nav = document.getElementById('mainnav');
 

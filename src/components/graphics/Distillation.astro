@@ -1,0 +1,35 @@
+---
+/**
+ * Graphic 01, Distillation. Home hero.
+ *
+ * A field of taupe marks, dense at the left and thinning to the right, until
+ * one aquamarine point is left inside two rings. It is the headline as a
+ * picture: activity everywhere, one thing worth counting.
+ *
+ * The field is generated at build time from a fixed seed, so this ships no
+ * JavaScript at all. The only motion is drift and a breathing ring, both
+ * gated in the stylesheet.
+ */
+import { buildField } from '../../lib/scatter';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+const field = buildField();
+---
+
+<div class:list={['gfx', 'gfx--band', 'gfx--linen', className]} aria-hidden="true">
+  {
+    field.map((d) => (
+      <span
+        class="gfx-dot"
+        style={`--x:${d.x}%;--y:${d.y}%;--s:${d.s}cqw;--o:${d.o};--dur:${d.dur}s;--delay:${d.delay}s`}
+      />
+    ))
+  }
+  <span class="gfx-ring gfx-ring--breathe" style="--x:86%;--y:50%;--s:11.19cqw;--o:0.55"></span>
+  <span class="gfx-ring" style="--x:86%;--y:50%;--s:6.44cqw;--o:0.7"></span>
+  <span class="gfx-point" style="--x:86%;--y:50%;--s:2.2cqw"></span>
+</div>

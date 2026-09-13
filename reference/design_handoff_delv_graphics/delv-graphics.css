@@ -1,0 +1,122 @@
+/* delv. section graphics — motion layer.
+   Pair with graphics.html (markup) and AbsorptionCore.jsx (graphic 02's JS).
+   Every band that contains cqw units must carry container-type: inline-size. */
+
+@keyframes delvFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+    @keyframes delvBreathe {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.06); opacity: 0.28; }
+    }
+    @keyframes delvCore {
+      0%, 28% { transform: scale(0.2); opacity: 0; }
+      34% { opacity: 1; }
+      68%, 88% { transform: scale(1); opacity: 1; }
+      97%, 100% { transform: scale(1); opacity: 0; }
+    }
+    @keyframes delvSource {
+      0%, 8% { transform: scale(1); }
+      54%, 92% { transform: scale(0.72); }
+      100% { transform: scale(1); }
+    }
+    @keyframes delvSendA {
+      0%, 10% { transform: translate(0, 0); opacity: 0; }
+      14% { opacity: 1; }
+      26% { transform: translate(60cqw, -7cqw); opacity: 1; }
+      29%, 100% { transform: translate(60cqw, -7cqw); opacity: 0; }
+    }
+    @keyframes delvSendB {
+      0%, 22% { transform: translate(0, 0); opacity: 0; }
+      26% { opacity: 1; }
+      38% { transform: translate(60cqw, 3.25cqw); opacity: 1; }
+      41%, 100% { transform: translate(60cqw, 3.25cqw); opacity: 0; }
+    }
+    @keyframes delvSendC {
+      0%, 34% { transform: translate(0, 0); opacity: 0; }
+      38% { opacity: 1; }
+      50% { transform: translate(60cqw, 10.25cqw); opacity: 1; }
+      53%, 100% { transform: translate(60cqw, 10.25cqw); opacity: 0; }
+    }
+    @keyframes delvFillA {
+      0%, 26% { transform: scale(0); }
+      36%, 92% { transform: scale(1); }
+      99%, 100% { transform: scale(0); }
+    }
+    @keyframes delvFillB {
+      0%, 38% { transform: scale(0); }
+      48%, 92% { transform: scale(1); }
+      99%, 100% { transform: scale(0); }
+    }
+    @keyframes delvFillC {
+      0%, 50% { transform: scale(0); }
+      60%, 92% { transform: scale(1); }
+      99%, 100% { transform: scale(0); }
+    }
+    @keyframes delvLineA {
+      0%, 4% { stroke-dashoffset: 100; opacity: 0; }
+      7% { opacity: 1; }
+      17%, 90% { stroke-dashoffset: 0; opacity: 1; }
+      97%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes delvLineB {
+      0%, 26% { stroke-dashoffset: 100; opacity: 0; }
+      29% { opacity: 1; }
+      39%, 90% { stroke-dashoffset: 0; opacity: 1; }
+      97%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes delvLineC {
+      0%, 48% { stroke-dashoffset: 100; opacity: 0; }
+      51% { opacity: 1; }
+      61%, 90% { stroke-dashoffset: 0; opacity: 1; }
+      97%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes delvLineD {
+      0%, 84% { stroke-dashoffset: 100; opacity: 0; }
+      86% { opacity: 1; }
+      93%, 95% { stroke-dashoffset: 0; opacity: 1; }
+      99%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes delvPopA {
+      0%, 17% { opacity: 0; transform: scale(0.5); }
+      25%, 90% { opacity: 1; transform: scale(1); }
+      97%, 100% { opacity: 0; transform: scale(1); }
+    }
+    @keyframes delvPopB {
+      0%, 39% { opacity: 0; transform: scale(0.5); }
+      47%, 90% { opacity: 1; transform: scale(1); }
+      97%, 100% { opacity: 0; transform: scale(1); }
+    }
+    @keyframes delvPopC {
+      0%, 61% { opacity: 0; transform: scale(0.5); }
+      69%, 90% { opacity: 1; transform: scale(1); }
+      97%, 100% { opacity: 0; transform: scale(1); }
+    }
+    @keyframes delvPopD {
+      0%, 74% { opacity: 0; transform: scale(0.5); }
+      83%, 90% { opacity: 1; transform: scale(1); }
+      98%, 100% { opacity: 0; transform: scale(1); }
+    }
+    @keyframes delvRipple {
+      0%, 40% { transform: scale(0.16); opacity: 0; }
+      46% { opacity: 0.5; }
+      72%, 100% { transform: scale(1); opacity: 0; }
+    }
+    @keyframes delvStage1 {
+      0% { opacity: 0; stroke-dashoffset: 640; }
+      4% { opacity: 1; }
+      24%, 90% { opacity: 1; stroke-dashoffset: 0; }
+      99%, 100% { opacity: 0; stroke-dashoffset: 0; }
+    }
+    @keyframes delvStage2 {
+      0%, 30% { width: 0%; opacity: 0; }
+      32% { opacity: 1; }
+      54%, 90% { width: 100%; opacity: 1; }
+      99%, 100% { width: 100%; opacity: 0; }
+    }
+    @keyframes delvStage3 {
+      0%, 58% { opacity: 0; transform: scale(0.72); }
+      78%, 90% { opacity: 1; transform: scale(1); }
+      99%, 100% { opacity: 0; transform: scale(1); }
+    }

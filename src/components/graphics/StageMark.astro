@@ -1,0 +1,71 @@
+---
+/**
+ * Graphic 03, Define / Measure / Articulate. One stage each, on a shared 9s
+ * cycle, sitting at the head of its own pillar on the home page.
+ *
+ * The handoff draws these as absolutely positioned divs on a 200px box. They
+ * are redrawn here on a 200x200 viewBox so that one width scales the whole
+ * shape, and so the two clipped groups need no `clipPath` element: the rules
+ * are trimmed to the chord of the circle instead, which removes a document id
+ * that would otherwise be repeated once per instance.
+ */
+interface Props {
+  kind: 'define' | 'measure' | 'articulate';
+  class?: string;
+}
+const { kind, class: className } = Astro.props;
+---
+
+<svg
+  class:list={['gfx-stage', `gfx-stage--${kind}`, className]}
+  viewBox="0 0 200 200"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    kind === 'define' && (
+      <g>
+        {/* The marks that stay outside the boundary once it closes. */}
+        <g class="gfx-stage-outside">
+          <circle cx="10.5" cy="28.5" r="4.5" />
+          <circle cx="194.5" cy="67.5" r="3.5" />
+          <circle cx="28" cy="186" r="4" />
+        </g>
+        <circle
+          class="gfx-stage-boundary"
+          cx="100"
+          cy="100"
+          r="72"
+          transform="rotate(-90 100 100)"
+        />
+      </g>
+    )
+  }
+
+  {
+    kind === 'measure' && (
+      <g>
+        <circle class="gfx-stage-ghost" cx="100" cy="100" r="72" />
+        {/* Trimmed to the chord at each height, so the scale ends at the
+            boundary without a clip path. */}
+        <g class="gfx-stage-scale">
+          <line x1="42.77" y1="58" x2="157.23" y2="58" pathLength="100" />
+          <line x1="30.63" y1="86" x2="169.37" y2="86" pathLength="100" />
+          <line x1="30.63" y1="114" x2="169.37" y2="114" pathLength="100" />
+          <line x1="42.77" y1="142" x2="157.23" y2="142" pathLength="100" />
+        </g>
+      </g>
+    )
+  }
+
+  {
+    kind === 'articulate' && (
+      <g class="gfx-stage-claim">
+        <circle class="gfx-stage-fill" cx="70" cy="100" r="52" />
+        <circle class="gfx-stage-point" cx="70" cy="100" r="11" />
+        <circle class="gfx-stage-echo" cx="160" cy="79" r="20.75" />
+        <circle class="gfx-stage-echo" cx="153" cy="128" r="13.75" />
+      </g>
+    )
+  }
+</svg>

@@ -1,0 +1,30 @@
+---
+/**
+ * Graphic 04, One finding, more than one job. The Articulate stage on
+ * What we do.
+ *
+ * The source emits three times and each parcel fills a differently shaped
+ * container: the business case, the founder's slide, the investor's line. The
+ * source shrinks as it gives, because the point of the copy beside it is that
+ * nothing is restated that was not already there.
+ *
+ * Deliberately unlabelled. Naming the three containers would turn a picture of
+ * an argument into a diagram that has to be read.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class:list={['gfx', 'gfx--band', 'gfx--ink', 'gfx-restate', className]} aria-hidden="true">
+  <span class="gfx-source" style="--x:18%;--y:50%;--s:15cqw"></span>
+
+  <span class="gfx-parcel gfx-parcel--a" style="--x:18%;--y:50%;--s:2.4cqw"></span>
+  <span class="gfx-parcel gfx-parcel--b" style="--x:18%;--y:50%;--s:2.4cqw"></span>
+  <span class="gfx-parcel gfx-parcel--c" style="--x:18%;--y:50%;--s:2.4cqw"></span>
+
+  <span class="gfx-vessel gfx-vessel--a"><span class="gfx-fill"></span></span>
+  <span class="gfx-vessel gfx-vessel--b"><span class="gfx-fill"></span></span>
+  <span class="gfx-vessel gfx-vessel--c"><span class="gfx-fill"></span></span>
+</div>

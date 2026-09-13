@@ -1,0 +1,56 @@
+---
+/**
+ * Graphic 05, The engagement drawing itself. How we work.
+ *
+ * Four states of one claim, each more resolved than the last: an unclosed
+ * ring, a closed ring, a measured ring, a filled mark with its centre. The
+ * line draws between them in sequence and then carries on past the last node,
+ * off the right edge, because the page's argument is that the work keeps
+ * running after we leave. That overhang is the point, so the band is never
+ * cropped tighter than the viewBox.
+ *
+ * A four-node horizontal flow cannot usefully compress to a phone, so below
+ * 620px the band scrolls rather than collapsing into sub-pixel strokes.
+ * `pathLength="100"` lets one dashoffset animation drive segments of four
+ * different lengths.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class:list={['gfx', 'gfx--linen', 'gfx-flow', className]} aria-hidden="true">
+  {/* The handoff's 1180x240 board leaves 170px of empty linen above and
+      below a flow that only occupies y 86 to 154. With the stage names
+      taken out, as the handoff asks, there is nothing to fill it. Cropping
+      to y 40-200 keeps every coordinate and the overhang past the right
+      edge, and takes the dead space out. */}
+  <svg viewBox="0 40 1180 160" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <g class="gfx-flow-lines">
+      <path class="gfx-flow-line gfx-flow-line--a" d="M 190 120 H 400" pathLength="100"></path>
+      <path class="gfx-flow-line gfx-flow-line--b" d="M 470 120 H 680" pathLength="100"></path>
+      <path class="gfx-flow-line gfx-flow-line--c" d="M 750 120 H 960" pathLength="100"></path>
+      <path class="gfx-flow-line gfx-flow-line--d" d="M 1030 120 H 1180" pathLength="100"></path>
+    </g>
+
+    <g class="gfx-flow-node gfx-flow-node--a">
+      <circle class="gfx-flow-ring gfx-flow-ring--open" cx="150" cy="120" r="34"></circle>
+    </g>
+    <g class="gfx-flow-node gfx-flow-node--b">
+      <circle class="gfx-flow-ring" cx="430" cy="120" r="34"></circle>
+    </g>
+    <g class="gfx-flow-node gfx-flow-node--c">
+      <circle class="gfx-flow-ring gfx-flow-ring--ghost" cx="710" cy="120" r="34"></circle>
+      <g class="gfx-flow-scale">
+        <line x1="682.56" y1="102" x2="737.44" y2="102"></line>
+        <line x1="677.4" y1="120" x2="742.6" y2="120"></line>
+        <line x1="682.56" y1="138" x2="737.44" y2="138"></line>
+      </g>
+    </g>
+    <g class="gfx-flow-node gfx-flow-node--d">
+      <circle class="gfx-flow-disc" cx="990" cy="120" r="34"></circle>
+      <circle class="gfx-flow-point" cx="990" cy="120" r="11"></circle>
+    </g>
+  </svg>
+</div>

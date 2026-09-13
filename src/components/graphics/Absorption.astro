@@ -1,0 +1,209 @@
+---
+/**
+ * Graphic 02, Same ink, one form. The home page's "anyone can report the
+ * what" band.
+ *
+ * The scatter travels into a core and is absorbed. Nothing is added on the
+ * way: it is the same material, made legible. The band's own two labels, the
+ * what and the why, are the argument of the copy beside it.
+ *
+ * This is the one graphic in the set that needs JavaScript, for the reason the
+ * handoff gives: each mark's flight path is a distance only measurable at
+ * runtime, and the core's growth is keyed to the marks' actual arrival times
+ * so it gains a visible step each time one lands. A fixed growth curve reads
+ * as the cloud simply disappearing.
+ *
+ * Its resting state, which is what a reader with reduced motion or without
+ * JavaScript sees, is the field and the finished core together. That is the
+ * whole claim in one frame, so nothing is lost by never animating.
+ */
+import { buildMarks } from '../../lib/scatter';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+const marks = buildMarks();
+---
+
+<div class:list={['gfx', 'gfx--band', 'gfx--ink', 'gfx-absorb', className]} aria-hidden="true">
+  <div class="gfx-cloud" data-cloud>
+    {
+      marks.map((d) => (
+        <span
+          class="gfx-dot gfx-dot--drift"
+          style={`--x:${d.x}%;--y:${d.y}%;--s:${d.s}cqw;--o:${d.o};--dur:${d.dur}s;--delay:${d.delay}s`}
+        >
+          <span class="gfx-dot-body" data-dep={d.dep} data-o={d.o}></span>
+        </span>
+      ))
+    }
+  </div>
+
+  <span class="gfx-ripple" style="--x:72%;--y:50%;--s:30cqw"></span>
+  <span class="gfx-ripple" style="--x:72%;--y:50%;--s:30cqw;--delay:1.1s"></span>
+  <span class="gfx-core" style="--x:72%;--y:50%;--s:14.24cqw" data-core></span>
+
+  <div class="gfx-absorb-labels"><span>the what</span><span>the why</span></div>
+</div>
+
+<script>
+  /*
+   * Ported from the handoff's AbsorptionCore.jsx. The two details that carry
+   * the whole effect, and that are the easy things to lose in a port:
+   *
+   *  - Each mark flies a single uninterrupted interval from home to the core.
+   *    A mid-flight keyframe restarts the easing and every mark visibly stalls
+   *    halfway. Opacity holds full the whole way; the mark scales to zero
+   *    exactly at the rim.
+   *  - The core's keyframes are generated from the marks' real arrival times,
+   *    collapsed where two land together, so it steps rather than swells.
+   */
+  const CYCLE_MS = 9000;
+
+  const band = document.querySelector<HTMLElement>('.gfx-absorb');
+
+  /*
+   * The same test Base.astro makes before it sets `data-motion`, rather than
+   * reading the attribute. Component scripts are emitted where the component
+   * sits in the document, so this one runs before the layout's does and the
+   * attribute is not there yet.
+   */
+  const canMove =
+    band !== null &&
+    typeof band.animate === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: no-preference)').matches &&
+    'IntersectionObserver' in window;
+
+  if (canMove) {
+    const cloud = band.querySelector<HTMLElement>('[data-cloud]');
+    const core = band.querySelector<HTMLElement>('[data-core]');
+
+    if (cloud && core) {
+      const bodies = Array.from(
+        cloud.querySelectorAll<HTMLElement>('.gfx-dot-body'),
+      );
+
+      const wire = () => {
+        const box = core.getBoundingClientRect();
+        // Zero width means the band is display:none or not laid out yet.
+        // Leaving the resting state up is the correct thing to do.
+        if (!box.width) return;
+
+        const cx = box.left + box.width / 2;
+        const cy = box.top + box.height / 2;
+        const arrivals: number[] = [];
+
+        for (const body of bodies) {
+          for (const running of body.getAnimations()) running.cancel();
+
+          const b = body.getBoundingClientRect();
+          const dx = cx - (b.left + b.width / 2);
+          const dy = cy - (b.top + b.height / 2);
+          const o = Number(body.dataset.o) || 0.6;
+          const dep = Number(body.dataset.dep) || 0.34;
+          const arr = dep + 0.16;
+          arrivals.push(arr);
+
+          const home = 'translate(0px, 0px) scale(1)';
+          const rim = `translate(${dx}px, ${dy}px) scale(0)`;
+
+          body.animate(
+            [
+              { transform: home, opacity: o, offset: 0, easing: 'linear' },
+              {
+                transform: home,
+                opacity: o,
+                offset: dep,
+                easing: 'cubic-bezier(0.45, 0, 0.55, 1)',
+              },
+              { transform: rim, opacity: o, offset: arr, easing: 'linear' },
+              { transform: rim, opacity: 0, offset: 0.9, easing: 'linear' },
+              { transform: home, opacity: 0, offset: 0.955, easing: 'ease-out' },
+              { transform: home, opacity: o, offset: 1 },
+            ],
+            { duration: CYCLE_MS, iterations: Infinity },
+          );
+        }
+
+        wireCore(arrivals);
+      };
+
+      const wireCore = (raw: number[]) => {
+        for (const running of core.getAnimations()) running.cancel();
+
+        // Collapse arrivals that land within 1.4% of each other, so that every
+        // step the core gains is one a reader can actually see.
+        const steps: number[] = [];
+        for (const a of [...raw].sort((x, y) => x - y)) {
+          if (!steps.length || a > steps[steps.length - 1] + 0.014) steps.push(a);
+        }
+        if (!steps.length) return;
+
+        const size = (i: number) => 0.18 + 0.82 * Math.pow((i + 1) / steps.length, 0.72);
+        const frames: Keyframe[] = [
+          { transform: 'scale(0.18)', opacity: 0, offset: 0, easing: 'linear' },
+          {
+            transform: 'scale(0.18)',
+            opacity: 0,
+            offset: Math.max(0.001, steps[0] - 0.03),
+            easing: 'ease-out',
+          },
+          {
+            transform: 'scale(0.18)',
+            opacity: 1,
+            offset: Math.max(0.002, steps[0] - 0.012),
+            easing: 'ease-out',
+          },
+        ];
+
+        steps.forEach((a, i) => {
+          const s = size(i);
+          // A small overshoot on landing, settled a moment later. Without it
+          // the step reads as a jump rather than something arriving.
+          frames.push({
+            transform: `scale(${(s * 1.07).toFixed(4)})`,
+            opacity: 1,
+            offset: Number(a.toFixed(4)),
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          });
+          frames.push({
+            transform: `scale(${s.toFixed(4)})`,
+            opacity: 1,
+            offset: Number((a + 0.009).toFixed(4)),
+            easing: 'ease-in-out',
+          });
+        });
+
+        frames.push({ transform: 'scale(1)', opacity: 1, offset: 0.9, easing: 'ease-in' });
+        frames.push({ transform: 'scale(1)', opacity: 0, offset: 0.975, easing: 'linear' });
+        frames.push({ transform: 'scale(0.18)', opacity: 0, offset: 1 });
+
+        core.animate(frames, { duration: CYCLE_MS, iterations: Infinity });
+      };
+
+      // Mount on first sight rather than at load, so the cycle a reader
+      // arrives at is the beginning of one.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            io.disconnect();
+            wire();
+          }
+        },
+        { threshold: 0.05 },
+      );
+      io.observe(band);
+
+      // Every path is measured in device pixels, so a resize invalidates all
+      // of them. Debounced: a drag fires this continuously.
+      let pending = 0;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(pending);
+        pending = window.setTimeout(wire, 200);
+      });
+    }
+  }
+</script>
