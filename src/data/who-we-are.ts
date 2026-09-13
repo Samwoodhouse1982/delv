@@ -94,6 +94,11 @@ const sampleBench: BenchMember[] = [
   },
   {
     name: 'Placeholder Name',
+    role: 'Regulatory',
+    body: 'Where a value claim crosses into a regulated one, and what your classification lets you say without fresh evidence behind it.',
+  },
+  {
+    name: 'Placeholder Name',
     role: 'Product',
     body: 'What the product would need to capture to prove the claim, and how to instrument for it without derailing a roadmap.',
   },

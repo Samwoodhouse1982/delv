@@ -55,9 +55,12 @@ one-line changes.
       it. Three on Who we are (two portraits at 4:5 and a working shot), two on
       Enterprise, one each on Home, What we do, Startups, Scale-ups and How we
       work.
-- [ ] **The wider bench.** `bench.people` in `src/data/who-we-are.ts` is empty,
-      so the page describes the bench in prose without naming anyone. `name` is
-      optional, so a specialist can be listed by discipline alone.
+- [ ] **The wider bench.** `publishedBench` in `src/data/who-we-are.ts` is
+      empty. Three placeholder disciplines are showing while
+      `SHOW_PLACEHOLDERS_ON_PRODUCTION` is on (health economics, regulatory,
+      product) and they disappear when it goes off, so anything meant to
+      survive launch has to move into `publishedBench`. `name` is optional
+      there, so a real seat can be listed by discipline alone.
 - [ ] **LinkedIn.** `site.sameAs` is empty, so the home page's `Organization`
       JSON-LD omits the property rather than pointing at nothing.
 
