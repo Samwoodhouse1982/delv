@@ -389,12 +389,12 @@ ratio, so a real photograph dropped in later shifts nothing on the page.
 Until a photograph exists each slot renders the **brief for the picture that
 belongs there**, not a grey rectangle: what to shoot, how to frame it, what to
 avoid. An empty box reads as a broken image; a brief reads as a commission.
-Nine slots are placed, one or two a page, defined in each page's data file
+Ten slots are placed, one to three a page, defined in each page's data file
 alongside its copy: two founder portraits at 4:5 on Who we are plus a working
 shot, a procurement scene on Home, a value model artefact on What we do, the
 deliverables on Startups, a working session on How we work, and on the two new
-audience pages a value model beside a printed business case, a claims
-record beside a bid response, and the claims and evidence library in use.
+audience pages a value model beside a printed business case, a claims record
+beside a bid response, and the claims and evidence library in use.
 
 Setting `src` and `alt` on a slot turns it into the image, in the same space.
 
@@ -807,6 +807,10 @@ per §6.
 
 Not blockers for starting, but all are blockers for launch.
 
+**The tickable version of this is `FIX-LATER.md` in the repo root.** That file
+is the actions and the file paths; this section is why each one is a decision
+rather than a fix. Keep them in step.
+
 1. **Domain.** `delv.health` is used as the placeholder. `delv.co.uk` and `delv.com` were unavailable at last check.
 2. **Brand punctuation.** Settled. A wordmark was supplied on 12 Sep 2026: `delv` in a high-contrast serif with the terminal full stop as an aquamarine dot. It is in `public/brand/`, inlined by `Logo.astro` for the header and footer, and carried through the favicon, the touch icon and all seven OG cards. The `.delv.` and `:delv:` variants are dead.
 3. **Company details** for the trading disclosures strip.
@@ -814,7 +818,7 @@ Not blockers for starting, but all are blockers for launch.
 5. **Where enquiries go.** `CONTACT_WEBHOOK_URL` in the Vercel project. Until it is set the form cannot deliver; it fails honestly rather than silently, but no enquiry reaches an inbox.
 6. **Privacy notice** text, and whether analytics goes in at launch.
 7. **Placeholders on production.** `SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts` is `true`, so the live site serves sample results, sample quotes and placeholder colleagues. Sam asked for this on 12 Sep 2026 while the site is on a test domain with no traffic. **Set it back to `false` before launch.**
-8. **Photography.** Nine image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
+8. **Photography.** Ten image slots are placed and none has a picture in it. Each carries its own brief. Until they are shot the site shows the briefs.
 9. **Proof.** The slots are built (§7) and empty. Sam is filling them at a later stage. For a consultancy selling evidence this remains the largest gap, and it is now a content decision rather than a build one: one anonymised result with its basis attached, and one quote, would change the conversion profile of the whole site. Until then four bands across four pages do not render at all.
 10. **The Value Incubator and the Value Due Diligence Framework.** Both are named offers in the business plan and neither is on the site. If they are real, they belong on How we work next to the Value Audit; if they were working titles, this brief should stop citing them.
 11. **Investors as an audience.** The plan gives them a full proposition. The site gives them two mentions and a line in the contact form. A page, or a section on For startups, is a scope call.
@@ -831,6 +835,8 @@ From the copy amends brief of 13 Sep 2026. Its Tier 1 finds are applied; these
 are the Tier 2 items, which are Sam's editorial call rather than fixes. None
 blocks a deploy. Counts below are measured against the rendered site, not
 against the amends brief, because the Tier 1 pass moved several of them.
+
+These are section E of `FIX-LATER.md`, with the proposed wording kept here.
 
 **Accuracy, and the one that matters most**
 

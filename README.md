@@ -454,42 +454,18 @@ Moving host again means revisiting two things: `vercel.json`, and
 
 ## Still a placeholder
 
-None of these blocks development. All of them block launch.
+The working list is **`FIX-LATER.md`** in the repo root: every outstanding
+item, grouped, with the file to change against each one. It is the list to
+tick off.
 
-- **Company details.** The footer legal strip shows only the registered name
-  and place of registration. A limited company must also show its company
-  number and registered office on its website. Both are `null` in
-  `src/data/site.ts`, and the strip renders only what is filled in. **The site
-  cannot go live without them.**
-- **Email address.** `hello@delv.health` is unconfirmed. It is in
-  `src/data/site.ts` and feeds the footer, the form note and the `mailto:`
-  fallback.
-- **Privacy notice.** `/privacy` is built but its text is Sam's to supply. The
-  page is `noindex` until then; `src/data/privacy.ts` says what to replace.
-- **Contact form delivery.** `CONTACT_WEBHOOK_URL` is not set, so the form
-  cannot deliver yet. It fails honestly rather than silently, as above, but no
-  enquiry reaches an inbox until this is configured.
-- **Domain.** `delv.health` is a placeholder, set as `site` in
-  `astro.config.mjs` and in `public/robots.txt`. Canonicals, Open Graph URLs
-  and the sitemap all derive from it, so change it in both places.
-- **Brand punctuation.** The favicon and OG cards use `delv.` with a single
-  terminal full stop. `.delv.` and `:delv:` were both in the source material.
-  Confirm before these are treated as final.
-- **`SHOW_PLACEHOLDERS_ON_PRODUCTION` is `true`.** The live site serves sample
-  proof, sample quotes and placeholder colleagues. Deliberate, and temporary.
-  Set it to `false` in `src/data/preview.ts` before launch.
-- **Photography.** Six image slots are placed and empty, each showing its own
-  brief. See the Imagery section.
-- **Proof and quotes.** Both registries in `src/data/proof.ts` are empty, so
-  four bands across four pages are currently absent.
-- **The wider bench.** `bench.people` in `src/data/who-we-are.ts` is empty, so
-  `/who-we-are` currently describes the bench in prose without naming anyone
-  on it. Placeholders for an economist and a product leader are set up in
-  preview. See the section above.
-- **LinkedIn.** `site.sameAs` is empty, so the home page's `Organization`
-  JSON-LD omits the property rather than pointing at nothing.
-- **Analytics.** Nothing is loaded. Plausible is the intended choice, and is
-  cookieless, but it is not in yet.
+This section used to duplicate it and had already drifted, so it now points at
+it instead. The reasoning behind each decision, and the options where there is
+a real choice, is in §13 and §13a of `delv-build-brief.md`.
+
+Three of them are one-line changes that will otherwise ship as they are:
+`SHOW_PLACEHOLDERS_ON_PRODUCTION` in `src/data/preview.ts`,
+`REPLAY_EVERY_VISIT` in `src/layouts/Base.astro`, and `CONTACT_WEBHOOK_URL` in
+the Vercel project.
 
 ## Noted, not changed
 
