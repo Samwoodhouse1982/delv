@@ -246,7 +246,7 @@ measurement, one filled aquamarine point is the thing worth counting.
 
 | # | Graphic | Where it sits | Motion |
 | --- | --- | --- | --- |
-| 01 | Distillation | Home hero, under the claim demo | Drift, breathing ring |
+| 01 | Distillation | Behind the home page's illustrative claim | Drift, breathing ring, one resolution beat |
 | 02 | Same ink, one form | Home, the "anyone can report the what" band | 9s loop, script-driven |
 | 03 | Define / Measure / Articulate | Home, one shape per pillar | Draws once on reveal |
 | 04 | One finding, more than one job | What we do, Articulate | 11s loop |
@@ -273,6 +273,13 @@ Three rules hold the set together, and the first is the handoff's own:
 
 Three deliberate divergences from the handoff, each for a stated reason:
 
+- Graphic 01 sits behind the illustrative claim rather than in a band under
+  it. Moved 13 Sep 2026 at Sam's request, and it is the better placement:
+  underneath the comparison it was a second telling of the same argument, one
+  band after another, and behind it it is the substrate the argument stands on.
+  Its geometry lines up with the columns on purpose. Dense scatter behind
+  Before, giving out across the dashed rule, and one ringed point in the right
+  fifth that the After claim resolves into. See §7b for what it cost.
 - Graphic 02 is placed on the "anyone can report the what" band rather than
   next to the Before / After device. Its own two labels are *the what* and *the
   why*, which is that band's argument word for word, and it wants a yale blue
@@ -294,6 +301,11 @@ Three deliberate divergences from the handoff, each for a stated reason:
 One orchestrated moment: the claim demo in the home hero, about two seconds, once on load. Three beats, extended from the prototype's single sweep at Sam's request on 12 Sep 2026 to show the shift from the old claim to the new one. The activity claim is struck through, the evidenced claim rises in behind it, then the highlighter sweeps the number.
 
 **Laid out in two columns from 13 Sep 2026**, at Sam's request: before on the left, after on the right, with the dashed rule that used to separate the rows now separating the columns. The comparison is the point of the block and two columns put both halves in one glance. Below 700px they stack again. The type comes down from a 27px ceiling to 23px, because each claim now has half the width; that also takes the line permanently below the large-text threshold, which simplifies its contrast requirement rather than complicating it (see §10).
+
+**A fourth beat, 13 Sep 2026:** the resolution point of the distillation field
+lands on the same 1.3s the highlighter sweeps on, a fraction behind it.
+Without it the graphic finishes its sentence before the claim has started one
+and reads as decoration running on its own clock.
 
 **The three beats are held while the intro overlay is up.** They are timed from page load and finish inside two seconds; the intro runs for five and a half, so without the hold the site's one orchestrated moment plays out behind a full-screen overlay and nobody sees it. A single rule pauses them under `[data-intro="play"]`, so the clock starts when the overlay goes, by any of the four routes it can go by. The attribute only exists while the intro is actually playing, so reduced motion and a page without JavaScript are untouched.
 
@@ -471,6 +483,51 @@ a standing that may not be intended.
 
 ---
 
+## 7b. The illustrative claim, and what a field behind text costs
+
+Merged 13 Sep 2026 at Sam's request: the distillation graphic was a band under
+the claim, and is now the field behind it, one section. The layout question was
+easy. The contrast question was not, and it is written down here because the
+numbers are what constrain any future change to this block.
+
+**Text sitting on a scatter has to clear 4.5:1 against a mark at full
+strength.** Not against the average, and not against the ground between marks.
+A mark can land under any glyph at some viewport width, and there is no honest
+way to promise otherwise when the text reflows and the field does not.
+
+Measured, `#CC998D` over `#F7F7F3`:
+
+| Mark alpha | Weak line `#6B5F5A` | Caption `#4E6675` | Before label at 52% | at 40% |
+| --- | --- | --- | --- | --- |
+| 0.26 | 4.71:1 | 4.61:1 | 3.90:1 | 4.76:1 |
+| 0.30 | 4.57:1 | 4.47:1 | 3.78:1 | 4.61:1 |
+| 0.78 | 3.05:1 | 2.99:1 | 2.53:1 | 3.08:1 |
+
+So the ceiling is **0.26**, in `OPACITY_CEILING` in `src/lib/scatter.ts`, and
+the field gets its weight from the number of marks rather than the darkness of
+them. Two things had to move before even 0.26 was available:
+
+1. **The weak line's flat 30% taupe wash is gone.** Two taupe layers compound.
+   With the wash in place, no mark alpha at all clears 4.5:1 behind that line:
+   0.10 already lands at 4.32:1. The wash was standing in for exactly what the
+   field now does, so this is a device replaced rather than removed. The strike
+   itself is untouched, and it is still the animated beat.
+2. **The Before label went from 52% to 40% taupe-in-ink**, per the table above.
+
+Two further rules follow from the merge and should not be quietly relaxed:
+
+- **The right fifth belongs to the resolution mark.** `.claim-pair` is capped
+  at `max-width: 78%` above 900px, and below that the mark drops into a
+  reserved band along the bottom. It is a layout reservation, not a padding
+  value that happens to be big enough today, and it is asserted at ten
+  viewport widths against every rendered line box in the block.
+- **The field is sized in em against a font-size of `1cqw`,** which is the same
+  number the other graphics write directly in cqw but with a floor under it.
+  Pure cqw is right for a band. Here the block is 335px wide on a phone, where
+  1cqw is 3.35px and a mark comes out as two pixels of 26% taupe.
+
+---
+
 ## 7a. The Who we help group
 
 Added 13 Sep 2026 from a separate brief. Three audience pages under one nav
@@ -596,8 +653,9 @@ they are recorded here so they are not reintroduced.
   invisible — on `/contact`, where `aria-current` lands on it. The nav colour
   rules are scoped `:not(.btn)`.
 - `.claim-tick` on the first claim row is `color-mix(in srgb, var(--taupe)
-  62%, var(--ink))`, which is 4.0:1 at 12px semibold. It is 52% in the build,
-  which is 4.75:1 and keeps the taupe cast.
+  62%, var(--ink))`, which is 4.0:1 at 12px semibold. It went to 52% in the
+  build, 4.75:1, and to 40% on 13 Sep 2026 once a mark could sit behind it:
+  52% is only 3.90:1 against one, 40% is 4.76:1.
 
 Two more were found on 12 Sep 2026, both in the build's own CSS rather than
 the prototype's, and both recorded for the same reason.
@@ -615,13 +673,33 @@ the prototype's, and both recorded for the same reason.
   `margin-block-end` and `margin-inline` and leaves `margin-top` to the
   utility.
 
+Three more on 13 Sep 2026, all of them specificity, all of them silent.
+
+- **`.gfx` beat `.claim-field`.** Equal specificity and declared later in the
+  file, so the field layer took `position: relative` and `width: 100%`,
+  collapsed to zero height because every child is absolute, and clipped itself
+  away. It is `.claim .claim-field` now.
+- **`.claim-field .claim-resolve` beat the reduced-motion override.** The
+  override was one class short, so it never applied, and the blanket
+  `animation-duration: 0.01ms !important` does not help because it does not
+  touch the delay. A reader with reduced motion got 1.35s of empty space and
+  then a mark appearing. Both overrides now match the specificity of the rule
+  they are overriding.
+- **The same rule beat the `[data-intro="play"]` pause**, so the fourth beat
+  would have played out behind the intro overlay.
+
+None of the three would have shown up in a typecheck, a build or an axe run.
+The reduced-motion one was found by asserting the resting state in a browser,
+which is the only thing that does find them.
+
 **Accessibility**
 - Keyboard-navigable end to end, with a visible focus ring on every interactive element: 2px `--ink`, 3px offset, and `--mark` on deep bands. This applies to form fields too. The prototype suppresses the outline on inputs in favour of a 28%-opacity pacific glow, which is 1.3:1 against the page and fails SC 1.4.11 — the ring is not optional there. Keep the glow if you like, underneath the ring.
 - Non-text contrast (SC 1.4.11): focus indicators and the boundary of every form control meet 3:1 against what is adjacent to them. This is the criterion the prototype misses most often, and Axe will not catch it — check it by hand.
 - The skip link's target carries `tabindex="-1"` so focus actually lands on `<main>`.
 - Working skip link.
 - Every page has exactly one `h1` and no skipped heading levels.
-- Body text meets WCAG AA (4.5:1), including the de-emphasised claim line in the hero. That line is **never** large text: since the two-column layout of 13 Sep 2026 it is `clamp(18px, 0.85vw + 12.5px, 23px)` at weight 350, so it needs 4.5:1 at every viewport, with no threshold to reason about. The prototype's `#8E7E79` on `#F7F7F3` is 3.3:1, and 2.5:1 where the taupe wash sits behind it. `#6B5F5A` with the wash at 30% is 5.7:1 on paper and 4.57:1 through the wash, both recomputed at the new size. Do not lighten it back.
+- Body text meets WCAG AA (4.5:1), including the de-emphasised claim line in the hero. That line is **never** large text: since the two-column layout of 13 Sep 2026 it is `clamp(18px, 0.85vw + 12.5px, 23px)` at weight 350, so it needs 4.5:1 at every viewport, with no threshold to reason about. The prototype's `#8E7E79` on `#F7F7F3` is 3.3:1. `#6B5F5A` is 5.73:1 on bare paper and 4.71:1 against a field mark at the 0.26 ceiling. Do not lighten it back, and do not put a second taupe layer under it: see §7b.
+- The claim block is checked against **rendered pixels**, not only against the token maths. `scripts/` has no runner for this yet; it was done by hiding the glyphs, screenshotting the block, and taking the darkest pixel actually painted behind every line box. Lowest measured: 4.60:1. Redo it if the field, the ceiling or any of those four colours changes.
 - Form inputs have real `<label>` elements, and errors are announced via `role="status"` or `aria-live`.
 - Axe DevTools reports zero violations. Automate this rather than checking it once: `@axe-core/cli` against the built output, wired into `npm run check`, so the criterion stays true as the site changes. A clean Axe run is a floor, not a pass — the contrast and focus items above are outside what it detects.
 

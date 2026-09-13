@@ -1,4 +1,6 @@
 ---
+import Distillation from './graphics/Distillation.astro';
+
 interface Props {
   claim: {
     weak: { label: string; text: string };
@@ -10,18 +12,23 @@ const { claim } = Astro.props;
 ---
 
 {/*
-  The one animated moment on the site. Three beats: the activity claim is
-  struck through, the evidenced claim rises in, the highlighter sweeps across
-  the number. Each rests in its finished state, so with animation off the
-  reader sees the completed comparison rather than a half-told story.
+  The one animated moment on the site, and now one section rather than two.
 
-  Side by side rather than stacked, at Sam's request on 13 Sep 2026. Two
-  columns put the weak claim and the strong one in the same glance, which is
-  the comparison the block exists to make; stacked, the reader met one and
-  then the other. Below 700px they stack again, because at that width two
-  columns of display type are four words a line.
+  Three beats: the activity claim is struck through, the evidenced claim rises
+  in, the highlighter sweeps across the number. Each rests in its finished
+  state, so with animation off the reader sees the completed comparison rather
+  than a half-told story.
+
+  The distillation field sits behind the whole block. It used to be a separate
+  band underneath, which made it a second telling of the same argument; behind
+  the comparison it is the substrate the argument sits on. Its geometry lines
+  up with the columns on purpose: dense scatter behind Before, giving out
+  across the dashed rule, and one ringed point in the clear right-hand fifth
+  that the After claim resolves into.
 */}
 <div class="claim">
+  <Distillation />
+
   <div class="claim-pair">
     <div class="claim-col">
       <span class="claim-tick">{claim.weak.label}</span>
@@ -36,5 +43,6 @@ const { claim } = Astro.props;
       </p>
     </div>
   </div>
+
   <p class="caption">{claim.caption}</p>
 </div>

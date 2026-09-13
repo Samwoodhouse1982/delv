@@ -748,6 +748,35 @@ h3 .mark {
 }
 
 /*
+ * The fourth beat: the point the After claim resolves into lands with it.
+ *
+ * Same 1.3s the highlighter sweeps on, a fraction behind. Without it the field
+ * has already finished its sentence before the claim has started one, and the
+ * graphic reads as decoration running on its own clock rather than the thing
+ * the comparison arrives at.
+ *
+ * Two declarations because the breathing ring's loop is gated behind
+ * `data-motion` and this is not: the beats in this block are plain animations
+ * with `backwards` fill, so they play for a reader with JavaScript off and
+ * rest in their finished state for everyone else. The second rule is more
+ * specific, so under `data-motion` the outer ring gets both.
+ */
+.claim-field .claim-resolve {
+  animation: claimResolve 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 1.35s backwards;
+}
+[data-motion] .claim-field .gfx-ring--breathe {
+  animation:
+    gfxBreathe 6s ease-in-out infinite,
+    claimResolve 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 1.35s backwards;
+}
+@keyframes claimResolve {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+}
+
+/*
  * Hold all three beats while the intro overlay is up.
  *
  * They are timed from page load and finish by about two seconds; the intro
@@ -762,7 +791,12 @@ h3 .mark {
  */
 [data-intro="play"] .claim-strike,
 [data-intro="play"] .claim-reveal,
-[data-intro="play"] .mark--sweep {
+[data-intro="play"] .mark--sweep,
+/* Two classes, matching the rule that sets the animation. `.claim-resolve`
+   alone is a tenth of a specificity point short of `.claim-field
+   .claim-resolve`, which declares the shorthand and so resets play-state back
+   to running. The pause would have been silently ignored. */
+[data-intro="play"] .claim-field .claim-resolve {
   animation-play-state: paused;
 }
 
@@ -858,7 +892,13 @@ nav.main a:not(.btn) {
 @media (prefers-reduced-motion: reduce) {
   .claim-strike,
   .claim-reveal,
-  .mark--sweep {
+  .mark--sweep,
+  /* Same specificity trap as the intro pause above, and worse here: losing it
+     left the resolution mark on `backwards` fill at opacity 0 for the 1.35s
+     delay, which the blanket 0.01ms duration below does not shorten because
+     it does not touch the delay. A reader with reduced motion would have
+     watched an empty space and then a mark appear. */
+  .claim-field .claim-resolve {
     animation: none;
   }
   *,
@@ -1223,10 +1263,88 @@ nav.main .nav-panel a[aria-current="page"] {
   margin-top: 34px;
 }
 
+/*
+ * One section: the comparison and the field it sits on.
+ *
+ * The padding is not decoration. The field needs clear air above the labels
+ * and below the caption or it reads as texture applied to a paragraph rather
+ * than a picture the paragraph is standing in, and the right fifth is held
+ * empty for the resolution mark.
+ */
 .claim {
+  position: relative;
   border-top: 1px solid var(--hair);
   margin-top: clamp(44px, 6vw, 72px);
-  padding-top: 26px;
+  padding: clamp(30px, 4vw, 52px) 0 clamp(34px, 4.5vw, 58px);
+}
+/*
+ * Two classes, not one. The `.gfx` base is declared further down the file, in
+ * the section graphics block, and at equal specificity it would win: the field
+ * would take `position: relative` and `width: 100%`, collapse to zero height
+ * because every child is absolute, and then clip itself away.
+ */
+/*
+ * Sized in em against a font-size of 1cqw, which is the same number the other
+ * graphics write directly in cqw, with one thing gained: the unit has a floor.
+ *
+ * Pure cqw is right for a band whose only job is to be a picture. Here the
+ * block is as narrow as 335px on a phone, where 1cqw is 3.35px and a mark
+ * comes out at two pixels of 26%-opacity taupe, which is nothing. The floor
+ * keeps the field legible down there without changing a single coordinate.
+ */
+.claim .claim-field {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  border-radius: 0;
+  container-type: inline-size;
+  font-size: 1cqw;
+  z-index: 0;
+}
+@media (max-width: 700px) {
+  .claim .claim-field {
+    font-size: max(1cqw, 5.4px);
+  }
+}
+.claim-pair,
+.claim .caption {
+  position: relative;
+  z-index: 1;
+}
+/*
+ * The resolution's position lives here rather than inline on the element, so
+ * a media query can move it. The base rule in the section graphics block reads
+ * --x and --y; an inline value on the element itself could not be overridden
+ * from anywhere.
+ *
+ * Wide: the right fifth, vertically centred, in the strip the columns below
+ * are held out of. Narrow: the columns take the full width, so it drops into
+ * a reserved band along the bottom instead.
+ */
+.claim-field .claim-resolve {
+  --x: 87%;
+  --y: 50%;
+}
+/*
+ * The reservation. `max-width` on the pair, not padding on one column: the
+ * rings are 11.19cqw centred at 87%, so they start at 81.4% of the block, and
+ * ending the columns at 78% keeps every line clear of them by construction
+ * rather than by a padding value that happens to be big enough today.
+ */
+@media (min-width: 901px) {
+  .claim-pair {
+    max-width: 78%;
+  }
+}
+@media (max-width: 900px) {
+  .claim-field .claim-resolve {
+    --x: 84%;
+    --y: calc(100% - 52px);
+  }
+  /* The band the mark drops into has to exist before it can sit in it. */
+  .claim {
+    padding-bottom: clamp(96px, 10vw, 120px);
+  }
 }
 /*
  * Two columns, side by side, so the weak claim and the strong one land in one
@@ -1261,19 +1379,19 @@ nav.main .nav-panel a[aria-current="page"] {
   display: block;
   margin-bottom: 12px;
 }
-/* 52%, not the prototype's 62%: at 12px semibold that was 4.0:1 on paper.
-   This is 4.75:1 and keeps the taupe cast that marks the weaker claim. */
+/*
+ * 40%, down from 52%, because a mark can now sit behind it. 52% was 4.75:1 on
+ * bare paper but only 3.90:1 against a mark at the ceiling; 40% is 4.76:1
+ * against the mark and still visibly warmer than the After label beside it.
+ * The prototype's 62% was 4.0:1 even on paper.
+ */
 .claim-col:first-child .claim-tick {
-  color: #746c70;
-  color: color-mix(in srgb, var(--taupe) 52%, var(--ink));
+  color: #5e6168;
+  color: color-mix(in srgb, var(--taupe) 40%, var(--ink));
 }
 .claim-text {
-  /*
-   * A shade smaller than the stacked version, because each claim now has half
-   * the width. The measure is the column, not a ch cap: at this size 26ch left
-   * a third of every column empty and the two blocks stopped reading as a
-   * pair.
-   */
+  /* A shade smaller than the stacked version, because each claim has half the
+     width. */
   font-size: clamp(18px, 0.85vw + 12.5px, 23px);
   line-height: 1.34;
   letter-spacing: -0.012em;
@@ -1281,6 +1399,16 @@ nav.main .nav-panel a[aria-current="page"] {
      leaving it on pushed the dividing rule a line and a bit past the text it
      is meant to divide. */
   margin: 0;
+}
+/*
+ * The After column stops short of the right fifth, which belongs to the
+ * resolution mark. It is a hard reservation rather than a hopeful one: the
+ * rings are 11.19cqw wide centred at 87%, so they occupy from 81.4% of the
+ * block, and this keeps the last line clear of that with room to spare at
+ * every width the two-column layout runs at.
+ */
+.claim-col + .claim-col .claim-text {
+  padding-right: clamp(70px, 15%, 150px);
 }
 
 /* Back to one column before the display type is down to four words a line. */
@@ -1307,40 +1435,35 @@ nav.main .nav-panel a[aria-current="page"] {
 }
 .claim-text.weak span {
   /*
-   * Two layers. The strike sits on top and is the one that animates; the
-   * taupe wash underneath is static.
+   * The strike, and only the strike.
    *
-   * Correction (§5): wash dropped from 38% to 30% so the text over it clears
-   * 4.5:1. Fallback first for browsers without color-mix.
+   * There used to be a flat 30% taupe wash under it, marking the claim as
+   * unevidenced. The field behind the block now does that job, and the wash
+   * had to go for it to: two taupe layers compound, and with the wash in
+   * place no mark opacity at all clears 4.5:1 behind this line. A mark at
+   * 0.10 already lands at 4.32:1. Without it the line is 4.71:1 against a
+   * mark at the 0.26 ceiling, and 5.73:1 on bare paper.
    *
    * The strike band is measured from Newsreader: its box is 1.0em with the
    * baseline 0.265em up and an x-height of 0.426em, so mid x-height is
    * 0.478em from the bottom of the box.
    */
-  background-image:
-    linear-gradient(
-      to top,
-      transparent 0 0.45em,
-      rgba(107, 95, 90, 0.85) 0.45em 0.506em,
-      transparent 0.506em
-    ),
-    linear-gradient(to top, rgba(204, 153, 141, 0.3) 0 0.62em, transparent 0.62em);
-  background-image:
-    linear-gradient(
-      to top,
-      transparent 0 0.45em,
-      color-mix(in srgb, var(--claim-weak) 85%, transparent) 0.45em 0.506em,
-      transparent 0.506em
-    ),
-    linear-gradient(
-      to top,
-      color-mix(in srgb, var(--taupe) 30%, transparent) 0 0.62em,
-      transparent 0.62em
-    );
-  background-repeat: no-repeat, no-repeat;
+  background-image: linear-gradient(
+    to top,
+    transparent 0 0.45em,
+    rgba(107, 95, 90, 0.85) 0.45em 0.506em,
+    transparent 0.506em
+  );
+  background-image: linear-gradient(
+    to top,
+    transparent 0 0.45em,
+    color-mix(in srgb, var(--claim-weak) 85%, transparent) 0.45em 0.506em,
+    transparent 0.506em
+  );
+  background-repeat: no-repeat;
   /* Struck is the resting state, so a browser that runs no animation still
      shows the finished idea rather than an unmarked claim. */
-  background-size: 100% 100%, 100% 100%;
+  background-size: 100% 100%;
   padding: 0 0.12em;
 }
 .caption {
