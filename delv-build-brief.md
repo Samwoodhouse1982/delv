@@ -930,8 +930,11 @@ template, and a reader who visits two of the three pages will see it.
    `hold up` and the verb `defend` were all at three or more, so a synonym
    would only have moved the repetition. "Quietly indefensible" on What we
    do is a different word and stays.
-7. **"a sceptical analyst"**, near-identical phrasing on Home and Startups.
-   Vary one.
+7. **"a sceptical analyst"**, done. The Startups deliverable now reads "a
+   value model with sourced assumptions, built to be questioned", which
+   also takes "analyst" from four instances to three. The phrase survives
+   once, on the Home proof lede, which is where it does the most work. It
+   lives in `proof.ts` under `placement.home`, not in `home.ts`.
 8. **Two meta descriptions still open "How delv."** (Startups, Enterprise).
    Scale-ups was recast in the Tier 1 pass. Defensible as a pattern; worth a
    look if the other two are ever regenerated.

@@ -103,8 +103,6 @@ audience pages will see the template:
 
 Then, each on its own:
 
-- [ ] "a sceptical analyst" appears on Home and Startups in near-identical
-      phrasing.
 - [ ] Two meta descriptions still open "How delv." (Startups, Enterprise).
 - [ ] "Sound familiar?" on Home is the only weak heading on the page.
 - [ ] List saturation on What we do: two six-item lists with a triple anaphora

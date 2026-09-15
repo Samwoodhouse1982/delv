@@ -65,7 +65,7 @@ export const outcome = {
   heading: 'What you end up with',
   details: [
     'A clear statement of what your product is worth, to whom, and under what conditions',
-    'A value model with sourced assumptions you can hand to a sceptical analyst',
+    'A value model with sourced assumptions, built to be questioned',
     'A claims library your team can use without checking with legal every time',
     'Materials that work in procurement, in a data room, and on a stand at a conference',
     'A measurement plan that keeps producing evidence after we leave',
