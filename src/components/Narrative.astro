@@ -1,0 +1,214 @@
+---
+/**
+ * The growth narrative, beats 1 to 3.
+ *
+ * One continuous drawing that begins at the foot of the hero and develops as
+ * the reader scrolls: a ground line, a field of marks below it, one aquamarine
+ * point that crosses downward, and a root system that pushes out into the
+ * field and does not always find anything.
+ *
+ * ## Why this is a page-level layer and not five section graphics
+ *
+ * `.band`, `.cta-band` and `.hero` are all `overflow: clip` — they have to be,
+ * because their decorative discs are wider than the viewport and would
+ * otherwise scroll the page sideways. Anything drawn inside a band is
+ * therefore cut off at the band's edge, which is the one thing a continuous
+ * drawing cannot survive. So the narrative is a sibling of the bands, spanning
+ * a stage wrapper that contains them, and it is the sections that sit on top
+ * of it rather than the other way round.
+ *
+ * The stacking works out with no changes to any existing rule. `.band` is
+ * `position: relative` with no z-index, so it opens no stacking context, and
+ * `.band > .wrap` and `.hero > *` already carry `z-index: 1` in the root
+ * context. This layer takes `z-index: 1` too and sits earlier in the DOM, so
+ * it paints above every band ground and below every word on the page.
+ *
+ * ## Why two coordinate systems
+ *
+ * The lines live in an SVG with `preserveAspectRatio="none"`, stretched to
+ * whatever height the stage turns out to be. That sounds like it should ruin
+ * them and does not, for two reasons: `vector-effect="non-scaling-stroke"`
+ * takes the stroke width out of the transform, so a hairline stays a hairline
+ * at any stage height, and the roots are vertical-ish, so a taller stage makes
+ * them steeper, which is the right direction to distort in.
+ *
+ * Circles are the exception — a stretched circle is an ellipse — so every
+ * mark is a CSS element positioned in stage percentages and sized in `cqw`,
+ * exactly as the existing graphics size theirs. That is the whole trick, and
+ * it is why there is no measurement anywhere in the drawing itself.
+ *
+ * ## Where the ground line goes
+ *
+ * At the foot of the hero, which is a position only the browser knows. One
+ * `ResizeObserver` writes it to `--ground` as a percentage of the stage and
+ * writes it again when the layout changes. That is a measurement on resize,
+ * never on scroll: nothing here reads layout while the reader is moving.
+ *
+ * ## Motion
+ *
+ * Scroll-linked where the browser has `animation-timeline: view()`, which is
+ * genuinely tied to scroll position rather than triggered by it, costs no
+ * JavaScript and cannot jank. Where it does not, an `IntersectionObserver`
+ * puts each beat into its resting state on the way in. The resting state is
+ * the full picture in both cases, which is also what `prefers-reduced-motion`
+ * gets: still, and complete, rather than a degraded version of it.
+ */
+import { buildRoots, buildSoil } from '../lib/narrative';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+/*
+ * 0 to 100 of the region below the ground line, not of the stage. The layers
+ * that carry these are anchored to `--ground` in CSS, so this file never needs
+ * to know where the horizon landed — which is the only reason the drawing has
+ * no measurement in it.
+ */
+const soil = buildSoil(76, 51009, 1, 100);
+const roots = buildRoots(30117, 0, 94);
+---
+
+<div class:list={['narr', className]} data-narr aria-hidden="true">
+  {/*
+    Beat 1. The ground line, and the field below it. This is the resting state
+    of the whole beat: there is nothing to animate here beyond the field
+    arriving, because the reader is meant to register that most of the picture
+    is underground before they register that anything is growing.
+  */}
+  <div class="narr-ground" data-narr-beat="1"></div>
+
+  <div class="narr-soil" data-narr-beat="1">
+    {
+      soil.map((mark) => (
+        <span
+          class="narr-mark"
+          style={`--x:${mark.x}%;--y:${mark.y}%;--s:${mark.s}cqw;--o:${mark.o}`}
+        />
+      ))
+    }
+  </div>
+
+  {/*
+    Beat 2. One aquamarine point crosses the ground line, downward, and it is
+    the only aquamarine on screen. A decision rather than an event: this is the
+    claim you have chosen to try to prove.
+  */}
+  <span class="narr-seed" data-narr-beat="2"></span>
+
+  {/*
+    Beat 3. The trunk, and eight probes into the field. Three of them find
+    nothing and stop at an unclosed ring — the existing vocabulary's mark for a
+    claim not yet closed, which is exactly what a root that reached nothing is.
+  */}
+  <svg
+    class="narr-roots"
+    data-narr-beat="3"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    role="presentation"
+    aria-hidden="true"
+    focusable="false"
+  >
+    {
+      roots.map((root) => (
+        <path
+          class:list={['narr-root', root.finds ? null : 'narr-root--dry']}
+          d={root.d}
+          fill="none"
+          vector-effect="non-scaling-stroke"
+          style={`--len:${root.len};--order:${root.order}`}
+        />
+      ))
+    }
+  </svg>
+
+  <div class="narr-tips" data-narr-beat="3">
+    {
+      roots.slice(1).map((root) => (
+        <span
+          class:list={['narr-tip', root.finds ? 'narr-tip--found' : 'narr-tip--dry']}
+          style={`--x:${root.tip.x}%;--y:${root.tip.y}%;--order:${root.order}`}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  /*
+   * Two jobs, both off the scroll path.
+   *
+   * The ground line sits at the foot of the hero, which is a position only the
+   * browser knows, so one ResizeObserver writes it to `--ground` and writes it
+   * again when the layout changes. Reading layout on resize is cheap and
+   * happens while nobody is moving; reading it on scroll is the thing that
+   * makes pages stutter, and nothing here does that.
+   *
+   * The second job only exists for browsers without `animation-timeline`.
+   * There, an IntersectionObserver marks each beat seen on the way in and CSS
+   * transitions it to the resting state. Browsers that have the timeline never
+   * run it, and the observer is not even created.
+   */
+  const stage = document.querySelector<HTMLElement>('[data-narr-stage]');
+  const layer = document.querySelector<HTMLElement>('[data-narr]');
+  const hero = document.querySelector<HTMLElement>('[data-narr-stage] .hero');
+
+  if (stage && layer && hero) {
+    const place = () => {
+      /*
+       * Rect deltas rather than offsetTop. The stage is the hero's
+       * offsetParent, so `hero.offsetTop` is already stage-relative and
+       * subtracting the stage's own offset takes the header's height off a
+       * second time — which put the ground line 66px above the hero's foot
+       * the first time this ran.
+       */
+      const s = stage.getBoundingClientRect();
+      const h = hero.getBoundingClientRect();
+      if (!s.height) return;
+      layer.style.setProperty(
+        '--ground',
+        `${(((h.bottom - s.top) / s.height) * 100).toFixed(3)}%`,
+      );
+    };
+
+    place();
+    /* Fonts land after first paint and change the hero's height with them. */
+    document.fonts?.ready.then(place);
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(place);
+      ro.observe(stage);
+      ro.observe(hero);
+    }
+    /* Belt and braces: a resize that changes nothing observable still moves
+       the hero's foot if the viewport width crosses a breakpoint. */
+    window.addEventListener('resize', place, { passive: true });
+
+    layer.setAttribute('data-narr-placed', '');
+
+    const scrollLinked =
+      typeof CSS !== 'undefined' && CSS.supports?.('animation-timeline', 'view()');
+
+    if (
+      !scrollLinked &&
+      'IntersectionObserver' in window &&
+      window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+    ) {
+      const beats = layer.querySelectorAll('[data-narr-beat]');
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add('is-drawn');
+            io.unobserve(entry.target);
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.01 },
+      );
+      for (const beat of beats) io.observe(beat);
+      layer.setAttribute('data-narr-observed', '');
+    }
+  }
+</script>

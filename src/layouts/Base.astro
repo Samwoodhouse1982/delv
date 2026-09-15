@@ -12,10 +12,22 @@ interface Props {
   noindex?: boolean;
   /** JSON-LD, home page only. */
   jsonLd?: Record<string, unknown>;
+  /**
+   * Marks a page that carries the growth narrative. It stills the section
+   * graphics: a continuous scroll-linked layer and five graphics looping on
+   * their own timers are two motion systems competing for the same attention.
+   */
+  narrative?: boolean;
 }
 
-const { title, description, ogImage = '/og/home.png', noindex = false, jsonLd } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage = '/og/home.png',
+  noindex = false,
+  jsonLd,
+  narrative = false,
+} = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogUrl = new URL(ogImage, Astro.site).href;
@@ -131,7 +143,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
     <Intro />
     <a class="skip ui" href="#main">Skip to content</a>
     <Header />
-    <main id="main" tabindex="-1">
+    <main id="main" tabindex="-1" data-narrative={narrative ? '' : undefined}>
       <slot />
     </main>
     <Footer />
@@ -257,6 +269,59 @@ const ogUrl = new URL(ogImage, Astro.site).href;
           } else {
             mark();
           }
+        }
+
+        /*
+         * On a narrative page the section graphics keep their geometry and
+         * lose their loops. Sam's call, 15 Sep 2026: a continuous scroll-linked
+         * layer and five graphics looping on their own timers are two motion
+         * systems competing for the same attention.
+         *
+         * getAnimations() rather than CSS, because Absorption drives itself
+         * with element.animate() and a Web Animations animation ignores
+         * animation-play-state entirely. And each one is seeked before it is
+         * paused: a loop stopped wherever it happened to be is an arbitrary
+         * frame, not a resting state. 0.86 of the cycle is past the last
+         * mark's arrival in every one of the five, so what is left on screen
+         * is the state each graphic was working towards.
+         *
+         * Deferred a frame because Absorption starts its animations from its
+         * own module script, which may not have run when this one does.
+         */
+        const narrative = document.querySelector('[data-narrative]');
+        if (narrative) {
+          /*
+           * Selected by exclusion rather than by class. `.gfx` looked like the
+           * handle and was not: the three stage marks on the home page carry
+           * `gfx-stage` with no `.gfx` ancestor, so a `[data-narrative] .gfx`
+           * selector matched nothing and left them looping.
+           *
+           * Three things are deliberately spared. The claim demo is the one
+           * animation the site has always had and the reason the home page
+           * works. The narrative layer's own beats are the thing being built.
+           * And CSS transitions are not loops at all — the scroll reveals are
+           * transitions, and pausing one leaves a block half-faded forever.
+           */
+          const spared = (el: Element) =>
+            el.closest('[data-claim], [data-narr]') !== null;
+
+          const still = () => {
+            for (const anim of narrative.getAnimations({ subtree: true })) {
+              if (typeof CSSTransition !== 'undefined' && anim instanceof CSSTransition) {
+                continue;
+              }
+              const target = anim.effect && 'target' in anim.effect ? anim.effect.target : null;
+              if (!(target instanceof Element) || spared(target)) continue;
+
+              const dur = Number(anim.effect?.getComputedTiming().duration) || 0;
+              if (dur) anim.currentTime = dur * 0.86;
+              anim.pause();
+            }
+          };
+          requestAnimationFrame(() => requestAnimationFrame(still));
+          /* Anything that starts late — a font-driven relayout, a second
+             observer — is caught on the next settled frame. */
+          window.setTimeout(still, 1200);
         }
 
         document.documentElement.setAttribute('data-motion', '');
