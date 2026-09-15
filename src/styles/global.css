@@ -3230,3 +3230,315 @@ footer a:hover {
 main:focus {
   outline: none;
 }
+
+/* --------------------------------------------------------------------------
+   The growth narrative, beats 1 to 3
+
+   One continuous drawing behind the top of the home page. The architecture is
+   explained at the head of Narrative.astro; what matters here is the order the
+   rules are written in.
+
+   The resting state is declared first and unconditionally, so it is what the
+   page renders when nothing else runs: no JavaScript, an old browser, reduced
+   motion. The full picture, still. Motion is then layered on top of it, twice
+   over — once for browsers with a scroll timeline and once for the observer
+   fallback — and neither is ever the thing that makes the drawing visible.
+
+   Nothing here animates a property that affects layout. Transform and opacity
+   only, plus stroke-dashoffset, which composites on its own layer.
+   -------------------------------------------------------------------------- */
+
+.narr-stage {
+  position: relative;
+}
+
+.narr {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  container-type: inline-size;
+  /*
+   * Until the script measures the hero, the ground line would otherwise sit at
+   * 0 and the field would hang off the top of the stage. 34% is close enough
+   * to a hero's foot that the first paint is not wrong, and the measurement
+   * replaces it within a frame.
+   */
+  --ground: 34%;
+}
+
+/* The horizon. Above it is what you can say; below it is what you can show. */
+.narr-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--ground);
+  height: 1px;
+  /*
+   * Fading at both ends rather than stopping, because a line that ends in mid
+   * air reads as a border that failed rather than as a horizon.
+   */
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--hair) 12%,
+    var(--hair) 88%,
+    transparent
+  );
+}
+
+/*
+ * Everything that hangs from the horizon starts at the horizon. These are
+ * anchored to `--ground` rather than to the stage, which means the geometry in
+ * narrative.ts spans 0 to 100 of the region *below* the line and never has to
+ * guess where the line is. The first version bounded the field and the roots
+ * by a hardcoded 22%, the measured ground came out at 34%, and the result was
+ * roots growing through the sky.
+ */
+.narr-soil,
+.narr-tips,
+.narr-roots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--ground);
+  bottom: 0;
+}
+
+.narr-mark,
+.narr-tip {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s, 1.1cqw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /*
+   * Sized in cqw and centred on its own point, so the mark scales with the
+   * stage and stays a circle however tall the stage is. This is why the marks
+   * are CSS elements rather than SVG circles inside the stretched viewBox.
+   */
+  translate: -50% -50%;
+}
+
+/* Undifferentiated activity: unsorted deployment data, in the dark. */
+.narr-mark {
+  background: var(--taupe);
+  opacity: var(--o, 0.3);
+}
+
+/*
+ * The seed. The only aquamarine in beats 1 to 3, and it stays the only one:
+ * the moment this colour becomes the colour of leaves it stops meaning "the
+ * one thing that counts", and the highlighter behind the word value in the
+ * hero loses its force along with it.
+ */
+.narr-seed {
+  position: absolute;
+  /* Where the trunk starts. See the TRUNK constant in lib/narrative.ts. */
+  left: 28%;
+  /* Just below the line, so it reads as having crossed it rather than as
+     sitting on it. 2.4cqw rather than a percentage of the stage: the distance
+     should look the same whatever the page's height turns out to be. */
+  top: var(--ground);
+  margin-top: 2.4cqw;
+  width: 1.15cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mark);
+  translate: -50% -50%;
+}
+
+/*
+ * The roots. Drawn at the weight of the measuring rule, not as botanical
+ * shapes: the moment a root looks grown rather than drawn, this reads as a
+ * consultancy tree rather than as delv. Nothing tapers, nothing branches
+ * organically, and the vocabulary stays the one the five section graphics use.
+ */
+.narr-root {
+  stroke: var(--rule, #429ea6);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.42;
+}
+/* A probe that reached nothing. Taupe, not blue: it measured nothing. */
+.narr-root--dry {
+  stroke: var(--taupe);
+  opacity: 0.34;
+  stroke-dasharray: 3 4;
+}
+
+/* What a probe brought up, and what it did not. */
+.narr-tip {
+  width: 0.85cqw;
+}
+.narr-tip--found {
+  background: color-mix(in srgb, var(--rule, #429ea6) 70%, transparent);
+}
+/*
+ * An unclosed ring: the existing vocabulary's mark for a claim not yet closed,
+ * which is exactly what a root that reached nothing is. Open, because the gap
+ * in the ring is the point.
+ */
+.narr-tip--dry {
+  width: 1.5cqw;
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--taupe) 75%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 62%, 62% 100%, 0 100%);
+}
+
+/*
+ * Over the dark band the field would disappear and the seed would glare, so
+ * the layer is nudged rather than recoloured. Scoped to the stage so it cannot
+ * reach a band the narrative does not cover.
+ */
+.narr-stage .dark {
+  --narr-lift: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Scroll-linked, where the browser has a view timeline. This is tied to
+   * scroll position rather than triggered by it: the reader can scrub it
+   * backwards, and it costs no JavaScript and cannot jank. Native scroll speed
+   * and native scroll position throughout — nothing here pins or delays.
+   */
+  @supports (animation-timeline: view()) {
+    [data-motion] [data-narr] .narr-soil .narr-mark {
+      opacity: 0;
+      animation: narrSoil linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 34%;
+    }
+    [data-motion] [data-narr] .narr-seed {
+      animation: narrSeed linear both;
+      animation-timeline: view();
+      animation-range: cover 6% cover 42%;
+    }
+    [data-motion] [data-narr] .narr-root {
+      stroke-dasharray: var(--len) var(--len);
+      stroke-dashoffset: var(--len);
+      animation: narrDraw linear both;
+      animation-timeline: view();
+      animation-range: cover calc(24% + var(--order) * 22%) cover
+        calc(52% + var(--order) * 22%);
+    }
+    [data-motion] [data-narr] .narr-tip {
+      opacity: 0;
+      animation: narrTip linear both;
+      animation-timeline: view();
+      animation-range: cover calc(46% + var(--order) * 22%) cover
+        calc(58% + var(--order) * 22%);
+    }
+  }
+
+  /*
+   * The fallback, for browsers without the timeline. Each beat is put into its
+   * resting state on the way in, once. A beat that only makes sense mid
+   * transition would be a beat designed wrong, so there is nothing here that
+   * the scroll-linked version shows and this one does not.
+   */
+  @supports not (animation-timeline: view()) {
+    [data-motion] [data-narr-observed] .narr-mark,
+    [data-motion] [data-narr-observed] .narr-tip {
+      opacity: 0;
+      transition:
+        opacity 0.9s ease calc(var(--order, 0) * 0.35s),
+        transform 0.9s ease calc(var(--order, 0) * 0.35s);
+    }
+    [data-motion] [data-narr-observed] .narr-root {
+      stroke-dasharray: var(--len) var(--len);
+      stroke-dashoffset: var(--len);
+      transition: stroke-dashoffset 1.3s ease calc(var(--order, 0) * 0.35s);
+    }
+    [data-motion] [data-narr-observed] .narr-seed {
+      transform: translateY(-3.5cqw);
+      opacity: 0;
+      transition:
+        transform 1.1s cubic-bezier(0.3, 0, 0.2, 1),
+        opacity 0.5s ease;
+    }
+    [data-motion] [data-narr-observed] .is-drawn .narr-mark,
+    [data-motion] [data-narr-observed] .is-drawn .narr-tip {
+      opacity: var(--o, 1);
+    }
+    [data-motion] [data-narr-observed] .narr-soil.is-drawn .narr-mark {
+      opacity: var(--o);
+    }
+    [data-motion] [data-narr-observed] .is-drawn.narr-roots .narr-root {
+      stroke-dashoffset: 0;
+    }
+    [data-motion] [data-narr-observed] .narr-seed.is-drawn {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes narrSoil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--o);
+  }
+}
+/* The seed crosses the line, downward, and stops where it lands. */
+@keyframes narrSeed {
+  from {
+    transform: translateY(-4.5cqw);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes narrDraw {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes narrTip {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   The five section graphics go still where the narrative runs
+
+   Sam's call, 15 Sep 2026. A continuous scroll-linked layer and five graphics
+   looping on their own timers are two motion systems competing for the same
+   attention, and the page reads as busy rather than as one unfolding thing.
+   On a narrative page the section graphics keep their geometry and lose their
+   loops: they become marks inside the narrative rather than pieces beside it.
+
+   This is the `gfx-idle` mechanism the scroll observer already uses, made
+   permanent, so it is one behaviour rather than two.
+   -------------------------------------------------------------------------- */
+
+/*
+ * Stilling happens in Base.astro, not here, and the reason is worth keeping:
+ * Absorption drives itself with `element.animate()`, and a Web Animations
+ * animation is not a CSS animation. `animation-play-state` never touched it.
+ * The first version of this rule looked like it worked — the test that checked
+ * `animationName !== 'none'` reported nothing animating — while Absorption ran
+ * on regardless and the screenshot caught it mid-cycle with its core at full
+ * size, which is the exact failure the brief names: aquamarine spreading until
+ * it stops meaning "the one thing that counts".
+ *
+ * `document.getAnimations()` sees both kinds, so the script seeks each one to
+ * its resting frame and pauses it there. Pausing without seeking is worse than
+ * leaving it running: a loop stopped at frame zero is not a resting state, it
+ * is an arbitrary one.
+ */

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ClaimDemo from '../components/ClaimDemo.astro';
+import Narrative from '../components/Narrative.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Pillars from '../components/Pillars.astro';
 import ProblemList from '../components/ProblemList.astro';
@@ -32,7 +33,22 @@ const jsonLd = {
 };
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage} jsonLd={jsonLd}>
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  jsonLd={jsonLd}
+  narrative
+>
+  {/*
+    The growth-narrative stage: the run of sections the drawing spans, beats 1
+    to 3. It is a wrapper rather than a class on <main> because the narrative
+    stops at the problems band for now, and a stage that ended where the page
+    ended would stretch three beats over six sections.
+  */}
+  <div class="narr-stage" data-narr-stage>
+    <Narrative />
+
   <div class="wrap hero">
     <h1 class="h1-lockup" set:html={hero.heading} />
     <p class="sub" set:html={hero.sub} />
@@ -71,6 +87,7 @@ const jsonLd = {
       </div>
       <ProblemList items={problems.items} />
     </div>
+  </div>
   </div>
 
   <div class="band dim band--tight">
