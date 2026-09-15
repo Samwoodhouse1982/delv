@@ -90,12 +90,11 @@ export const changes = {
     'A claims and evidence library holding every claim you make, versioned, sourced and owned',
     'One ROI calculator, with the versions each market needs built from the same method',
     'A single value methodology your markets apply consistently',
-    'Market-specific versions of the same argument, rebuilt around the payer and evidence bar in each',
     'Usage rules and disclaimers, so no claim can travel further than the evidence behind it',
     'A retirement list: the claims to stop making, and what to say instead',
     'Enablement that survives a sales hire, so the numbers do not drift apart again',
   ],
-  note: 'What we will not do: rubber-stamp the version that happens to be most commercially convenient, or produce a framework nobody inside the business has agreed to. Choosing between four defensible numbers is a decision, not an analysis, and getting the right people in the room for it is most of the job.',
+  note: 'What we will not do: rubber-stamp the version that happens to be most commercially convenient, or produce a framework nobody inside the business has agreed to. Choosing between four credible numbers is a decision, not an analysis, and getting the right people in the room for it is most of the job.',
 };
 
 export const changesImage: Figure = {

@@ -924,7 +924,9 @@ template, and a reader who visits two of the three pages will see it.
 **Repeated vocabulary**
 
 6. **"defensible"**, three instances against a target of two: Startups,
-   Enterprise, How we work. Down from eight.
+   Home, How we work. Down from eight. The Enterprise instance went in the
+   16 September pass; the Home one arrived with the rewritten `muted`
+   paragraph in the same window, so the count is unchanged.
 7. **"a sceptical analyst"**, near-identical phrasing on Home and Startups.
    Vary one.
 8. **Two meta descriptions still open "How delv."** (Startups, Enterprise).
