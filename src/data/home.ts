@@ -1,7 +1,7 @@
 import type { CtaBand, Figure, Hero, PageMeta, Pillar } from './types';
 
 export const meta: PageMeta = {
-  title: 'delv. · Prove the value. Prove the why.',
+  title: 'delv. · Prove the value. Prove your why.',
   description:
     'delv. helps healthtech companies define, measure and articulate value, so their claims stand up to procurement, investors and regulators.',
   ogImage: '/og/home.png',
@@ -14,7 +14,7 @@ export const hero: Hero = {
   // swept: the one animation on the site belongs to the claim demo below.
   heading:
     '<span class="hl">Prove the <span class="mark">value</span>.</span>' +
-    '<span class="hl">Prove the why.</span>',
+    '<span class="hl">Prove your why.</span>',
   sub: 'Your product works. Proving what it is worth to the person signing the budget is a different job. We help healthtech companies define, measure and articulate value, so that the claims you make in market hold up when someone checks the working.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
