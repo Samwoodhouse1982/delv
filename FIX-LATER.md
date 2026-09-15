@@ -103,7 +103,6 @@ audience pages will see the template:
 
 Then, each on its own:
 
-- [ ] "defensible" is at three; the target was two.
 - [ ] "a sceptical analyst" appears on Home and Startups in near-identical
       phrasing.
 - [ ] Two meta descriptions still open "How delv." (Startups, Enterprise).

@@ -49,7 +49,7 @@ export const what = {
     'Most healthtech companies know this already. What they usually lack is the time, the data plumbing or the internal agreement to fix it, and the realisation tends to arrive with a tender deadline already moving towards them.',
   ],
   muted:
-    'We sit between the economists and the optimists. A two-year multi-country study is more than most decisions need. A story from one enthusiastic ward is less. What works is a defensible number, pitched at the level the decision gets made.',
+    'We sit between the economists and the optimists. A two-year multi-country study is more than most decisions need. A story from one enthusiastic ward is less. What works is a number your buyer can put their name to, pitched at the level the decision gets made.',
 };
 
 export const problems = {

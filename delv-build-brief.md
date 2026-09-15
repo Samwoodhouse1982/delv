@@ -923,10 +923,13 @@ template, and a reader who visits two of the three pages will see it.
 
 **Repeated vocabulary**
 
-6. **"defensible"**, three instances against a target of two: Startups,
-   Home, How we work. Down from eight. The Enterprise instance went in the
-   16 September pass; the Home one arrived with the rewritten `muted`
-   paragraph in the same window, so the count is unchanged.
+6. **"defensible"**, done. Two instances, Startups and How we work, down
+   from eight. Enterprise went to "credible" in the 16 September pass. Home
+   had picked one up with the rewritten `muted` paragraph in the same window
+   and now reads "a number your buyer can put their name to": `survive`,
+   `hold up` and the verb `defend` were all at three or more, so a synonym
+   would only have moved the repetition. "Quietly indefensible" on What we
+   do is a different word and stays.
 7. **"a sceptical analyst"**, near-identical phrasing on Home and Startups.
    Vary one.
 8. **Two meta descriptions still open "How delv."** (Startups, Enterprise).
