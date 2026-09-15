@@ -210,6 +210,55 @@ const ogUrl = new URL(ogImage, Astro.site).href;
           }
         }
 
+        /*
+         * The logo dot, on arrival and on hover.
+         *
+         * Every link on this site is a full page load, so an animation
+         * started on click is cut off wherever the next page happens to
+         * paint: 80ms on a warm cache, two seconds on a cold connection.
+         * Running it as the new header lands is the same event from the
+         * reader's side and is the same length every time.
+         *
+         * Back and forward restore from bfcache rather than re-parsing, so
+         * this does not replay on those, which is the behaviour we want.
+         *
+         * The class is removed when the animation ends so hover can re-arm
+         * it. Listening on the ring alone keeps that deterministic; both
+         * shapes finish at their resting values, so a cancelled frame would
+         * be invisible either way.
+         */
+        const logo = document.querySelector('.site-header .logo');
+        const ring = logo?.querySelector('.logo-ring');
+
+        if (logo && ring) {
+          const mark = () => {
+            logo.classList.remove('is-marking');
+            /* Forces the style flush that lets the class take twice. */
+            void (logo as HTMLElement).offsetWidth;
+            logo.classList.add('is-marking');
+          };
+
+          ring.addEventListener('animationend', () =>
+            logo.classList.remove('is-marking'),
+          );
+          logo.addEventListener('mouseenter', mark);
+          logo.addEventListener('focus', mark);
+
+          /*
+           * On a page where the intro plays, the overlay is over the header
+           * for its whole run. The claim demo waits the same way.
+           */
+          if (document.documentElement.hasAttribute('data-intro')) {
+            const poll = window.setInterval(() => {
+              if (document.documentElement.hasAttribute('data-intro')) return;
+              window.clearInterval(poll);
+              mark();
+            }, 120);
+          } else {
+            mark();
+          }
+        }
+
         document.documentElement.setAttribute('data-motion', '');
       }
 

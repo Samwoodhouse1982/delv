@@ -1030,6 +1030,100 @@ nav.main a:not(.btn) {
 .logo-mark {
   display: block;
   height: auto;
+  /*
+   * The ring grows past the viewBox: 1.8 units beyond the right edge and 7.7
+   * below the baseline at its widest, because the dot very nearly touches
+   * both. Clipped by default, since browsers set `overflow: hidden` on the
+   * root svg. The element's own box is unchanged, so nothing moves.
+   */
+  overflow: visible;
+}
+
+/* --------------------------------------------------------------------------
+   The logo dot
+
+   The dot contracts to a pinpoint while its own edge expands away as a ring,
+   holds, and comes back. The same point-and-ring vocabulary as the shapes
+   behind the claim demo, which is the only other thing on the site that
+   moves of its own accord.
+
+   Twice gated, like everything else: inside `no-preference`, and behind the
+   `data-motion` attribute the script sets only when that query passes and the
+   browser has an IntersectionObserver. The resting state is declared here
+   rather than falling out of an animation not running, so reduced motion, no
+   JavaScript and an old browser all get the mark exactly as it was.
+
+   `transform-box: fill-box` puts the origin at each shape's own centre, so
+   neither needs to know where it sits in the viewBox. Transform and opacity
+   only: nothing here can cost a layout shift.
+   -------------------------------------------------------------------------- */
+
+.logo-dot,
+.logo-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.logo-ring {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion] .site-header .logo.is-marking .logo-dot {
+    animation: logoDot 1.05s both;
+  }
+  [data-motion] .site-header .logo.is-marking .logo-ring {
+    animation: logoRing 1.05s both;
+  }
+}
+
+/*
+ * Both ends of both keyframes are written out. An implicit `from` takes the
+ * element's computed value, which is how the claim demo's resolve once
+ * animated nothing into nothing (§10).
+ *
+ * The timing function on a keyframe governs the interval that starts there,
+ * so the ring eases out on the way open and back in on the way closed, with
+ * a flat hold between.
+ *
+ * The dot contracts to half, not to a pinpoint. Smaller reads better as a
+ * diagram and worse as a wordmark: at a third, the full stop stops being a
+ * full stop for the length of the hold.
+ */
+@keyframes logoDot {
+  0% {
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  42% {
+    transform: scale(0.5);
+  }
+  60% {
+    transform: scale(0.5);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes logoRing {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  42% {
+    transform: scale(1.75);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.75);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 nav.main {

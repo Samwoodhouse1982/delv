@@ -333,7 +333,48 @@ to pause the beats behind it: the block is inside the viewport while the
 overlay is over it, so intersection alone would play the whole sequence to a
 covered screen.
 
-Nothing else on the site moves except the section graphics above.
+Nothing else on the site moves except the section graphics above and the logo
+dot below.
+
+### The logo dot
+
+**Added 15 Sep 2026, at Sam’s request.** The full stop in the header mark
+contracts to half size while its own edge expands away as a hairline ring,
+holds, and comes back. One second, twice: once as a page lands, and again on
+hover or keyboard focus of the logo link. The same point-and-ring vocabulary as
+the shapes behind the claim demo.
+
+It runs on **arrival, not on departure**, and that is the whole design. Every
+link here is a full page load, so an animation started on click is cut off
+wherever the next page happens to paint: under 150ms on a warm cache, seconds
+on a cold connection, and the dot caught at an arbitrary frame. Running it as
+the new header lands is the same event from the reader’s side and is the same
+length every time. Cross-document view transitions would allow the real thing,
+and were rejected: the CSS-only form reaches Chromium and recent Safari only,
+and Astro’s `ClientRouter` would turn full loads into swaps, which the intro
+gate, the claim demo’s observer, the nav disclosure and focus handling are all
+built around. A flourish is not worth re-testing the motion system.
+
+Back and forward restore from bfcache rather than re-parsing, so it does not
+replay on those. Deliberate: a logo that moves on the back button feels fussy.
+
+The ring is a `<circle>` in `Logo.astro`, concentric with the dot path and at
+`opacity: 0` at rest, so the resting mark is declared rather than falling out
+of an animation not running. Only the header animates it; the footer carries
+the same markup, inert. Two details worth keeping:
+
+- **`vector-effect="non-scaling-stroke"` makes stroke-width screen pixels**,
+  outside the transform chain and outside the viewBox’s 0.2px-per-unit scale.
+  At the 5 units a hairline would normally need, the ring rendered as a solid
+  aquamarine blob. It is 1.2.
+- **`overflow: visible` on the mark.** The dot very nearly touches the right
+  and bottom edges of the cropped viewBox, and browsers set `overflow: hidden`
+  on the root `svg`, so the open ring was clipped. The element’s own box is
+  unchanged, so nothing moves on the page.
+
+The dot contracts to half rather than to a pinpoint. Smaller reads better as a
+diagram and worse as a wordmark: at a third, the full stop stops being a full
+stop for the length of the hold.
 
 `prefers-reduced-motion: reduce` must render the finished state immediately with no animation at all. Verified at 250ms under reduced motion: the block is never armed, the claim is never split into characters, and the strike, the rise, the sweep and the mark all read as complete.
 
