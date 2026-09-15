@@ -18,7 +18,7 @@ export const moments = {
     {
       heading: 'The deal that will not close',
       when: 'Usually the second or third NHS conversation',
-      body: 'The clinical team love it. Then it reaches finance, and someone asks what it saves and against what baseline. Enthusiasm scores nothing in that meeting. Minutes, money and metrics do.',
+      body: 'The clinical team love it. Then it reaches finance, and somebody asks what it saves and against what baseline. Enthusiasm scores nothing in that meeting.',
     },
     {
       heading: 'The raise',
@@ -28,7 +28,7 @@ export const moments = {
     {
       heading: 'The contract with outcomes attached',
       when: 'After signature, sometimes too soon after',
-      body: 'Value-based and outcomes-based agreements tie revenue to demonstrable impact. If nobody designed the measurement before go-live, the evidence you need may not exist by the time it is due.',
+      body: 'Outcomes-based agreements tie revenue to demonstrable impact. If nobody designed the measurement before go-live, the evidence you need may not exist by the time it is due.',
     },
   ] satisfies StageRow[],
 };

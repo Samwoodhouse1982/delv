@@ -45,7 +45,7 @@ const wordmark = logoSvg
  * is reworded: check them against src/data/*.ts when you change an h1.
  */
 const CARDS = [
-  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>.\nProve your why.', eyebrow: null },
+  { file: 'home.png', heading: 'Prove the <span class="mark">value</span>.\nProve the why.', eyebrow: null },
   { file: 'what-we-do.png', heading: 'Define. Measure.\nArticulate.', eyebrow: 'What we do' },
   { file: 'for-startups.png', heading: 'For founders with traction\nand no proof yet.', eyebrow: 'Startups' },
   { file: 'scale-ups.png', heading: 'The proof is already in\nyour deployment data.', eyebrow: 'Scale-ups' },

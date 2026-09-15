@@ -1317,15 +1317,17 @@ nav.main .nav-panel a[aria-current="page"] {
  * also capped against the space actually available: the viewport less both
  * gutters, divided by the longest half's width-per-pixel-of-font-size.
  *
- * 6.24, remeasured 13 Sep 2026 when the line became "Prove the value. Prove
- * your why." and the longest half changed from "prove your why." to "Prove
- * your why." It was 6.45 against the old comma-joined halves, which is why
- * this number is measured and not guessed.
+ * 6.11, remeasured 15 Sep 2026 when the line became "Prove the value. Prove
+ * the why." and the longest half moved from the second to the first: "Prove
+ * the why." is 5.69 against "Prove the value." at 6.11. It was 6.24 against
+ * "Prove your why.", and 6.45 against the old comma-joined halves. Three
+ * measurements, three different numbers, which is why this one is measured
+ * and never guessed.
  *
- * The 0.87 is headroom for the fallback face, which measures 6.666 against
- * the real face's 6.24 and so sets this line about 17px wider at 320px: with
- * 0.92 that leaves 5px of margin, which is not margin. The cap only bites
- * below about 348px; above that the clamp wins and the scale is untouched.
+ * The 0.87 is headroom for the fallback face, which measures 6.553 against
+ * the real face's 6.11 and so sets this line about 18px wider at 320px: with
+ * 0.92 that leaves 4px of margin, which is not margin. The cap only bites
+ * below about 342px; above that the clamp wins and the scale is untouched.
  */
 .hero h1.h1-lockup .hl {
   display: block;
@@ -1334,7 +1336,7 @@ nav.main .nav-panel a[aria-current="page"] {
 .hero h1.h1-lockup {
   font-size: min(
     clamp(43px, 7.2vw, 83px),
-    calc((100vw - 2 * var(--gutter)) / 6.24 * 0.87)
+    calc((100vw - 2 * var(--gutter)) / 6.11 * 0.87)
   );
 }
 .hero .sub {

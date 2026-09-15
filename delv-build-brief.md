@@ -112,7 +112,7 @@ Hash routing in the prototype was a demo constraint. Production uses real paths.
 
 | Path | Page | `<title>` |
 | --- | --- | --- |
-| `/` | Home | delv. · Prove the value. Prove your why. |
+| `/` | Home | delv. · Prove the value. Prove the why. |
 | `/what-we-do` | Approach (Define / Measure / Articulate) | What we do — delv. |
 | `/for-startups` | Startups | For startups — delv. |
 | `/scale-ups` | Scale-ups | Scale-ups · delv. |
@@ -357,8 +357,8 @@ All copy is final and lives in `reference/prototype.html`. Move it into `src/dat
 - Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
 - **No em dashes anywhere.** Sam's instruction, 12 Sep 2026, and it overrides the prototype. Recast each one rather than swapping in a hyphen: a colon where it introduces a list or an elaboration, a comma where it is parenthetical, a full stop where the clauses stand alone. `&middot;` is the separator in page titles. The rendered site is checked for `\u2014` on every build.
 - Flag, don't fix: if you spot a typo or factual inconsistency, list it in the PR description rather than silently editing.
-- **The brand line is "Prove the value. Prove your why."** Settled 13 Sep 2026. Two sentences, not a comma splice, and it keeps "your". It sets the home `h1`, the home `<title>`, `site.strapline` in the footer of every page, and the home OG card, and the headline's measured fit constant moved with it (§5). The `.delv.` and comma-joined variants are dead.
-- **"Minutes, money and metrics do." is a deliberate refrain**, confirmed 13 Sep 2026, and appears on Home and on Startups on purpose. It is not a duplication to be varied. Leave it.
+- **The brand line is "Prove the value. Prove the why."** Two sentences, not a comma splice. It went to "Prove your why." on 13 Sep 2026 and to "the why" on 15 Sep, which is the version originally recorded as agreed. It sets the home `h1`, the home `<title>`, `site.strapline` in the footer of every page, and the home OG card, and the headline's measured fit constant moved with it both times (§5). The `.delv.` and comma-joined variants are dead.
+- **"Minutes, money and metrics do." is kept, once.** Sam confirmed on 13 Sep 2026 that he wants the line. It ran on Home and on Startups; the 15 Sep edit pass cut the Startups instance, so it is now a single line on Home rather than a refrain. Do not cut the last one.
 - **The library is not a proper noun.** "Value Library" was capitalised as a product name; it is now "a claims and evidence library", lower case, everywhere. A capitalised noun naming an artefact reads as something you license, and delv. sells the work rather than the thing. The engagement names stay capitalised, because Value Audit, Value Model Build and Claims and Evidence Review are pieces of work. `/for-startups` keeps the shorter "claims library", which is the same artefact under a shorter descriptive name.
 - **Copy amends pass, 13 Sep 2026.** A site-wide pass against a separate amends brief, applied to `src/data/*.ts` only. It removed every QMS reference, took the software vocabulary out of the Enterprise deliverables (engine, variants, maintained system, "without a consultant"), and cut the site's most-repeated rhetorical move, the "X, not Y" contrastive negation, from 25 instances to 7. Copy is now materially ahead of `reference/prototype.html`: 34% of substantial strings still match it verbatim, and the two newest pages share none of it. **The prototype is no longer the copy source of truth**, only the design one, and §13.15 tracks the decision to retire it as a copy reference.
 

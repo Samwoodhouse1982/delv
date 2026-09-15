@@ -43,13 +43,15 @@ export const people: Person[] = [
 export const different = {
   heading: 'What makes us different',
   items: [
+    /*
+     * The first two blocks made the same argument twice, so they are one. The
+     * heading is the 13 Sep one, not the edit brief's: that pass replaced
+     * "not just built it" precisely because two consecutive "not just X"
+     * headings were the clearest tell on the site.
+     */
     {
       heading: 'We have defended the number in the room',
-      body: 'We have carried the number into the meeting and had it questioned. That is a different experience from advising on it.',
-    },
-    {
-      heading: 'We work in the data itself',
-      body: 'We do not hand over a set of recommendations and leave. We sit with your analysts, work in the actual numbers, and give back things your team can use on Monday.',
+      body: 'We have carried a figure into the meeting and had it questioned, then gone back into the data with your own analysts to rebuild it. That is a different experience from advising on it, and it is why what we hand over is something your team can use on Monday.',
     },
     {
       heading: 'We know how health systems buy',

@@ -1,7 +1,7 @@
 import type { CtaBand, Figure, Hero, PageMeta, Pillar } from './types';
 
 export const meta: PageMeta = {
-  title: 'delv. · Prove the value. Prove your why.',
+  title: 'delv. · Prove the value. Prove the why.',
   description:
     'delv. helps healthtech companies define, measure and articulate value, so their claims stand up to procurement, investors and regulators.',
   ogImage: '/og/home.png',
@@ -14,8 +14,8 @@ export const hero: Hero = {
   // swept: the one animation on the site belongs to the claim demo below.
   heading:
     '<span class="hl">Prove the <span class="mark">value</span>.</span>' +
-    '<span class="hl">Prove your why.</span>',
-  sub: 'Your product works. The hard part is showing what it is worth. We help healthtech companies define, measure and articulate value, so the claims on your website survive a procurement review, a data room and a clinical safety officer.',
+    '<span class="hl">Prove the why.</span>',
+  sub: 'Your product works. Proving what it is worth to the person signing the budget is a different job. We help healthtech companies define, measure and articulate value, so that the claims you make in market hold up when someone checks the working.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
     { label: 'See how we work', href: '/what-we-do', ghost: true },
@@ -32,19 +32,24 @@ export const claim = {
     text: 'Two minutes back on each one: 500 clinician hours a week, at one trust.',
   },
   caption:
-    'Illustrative, and both lines are the same trust and the same week: 15,000 consultations at two minutes each is 500 hours. The first is activity. The second is the one a finance director can put in a business case.',
+    'Illustrative, and both lines describe the same trust in the same week. 15,000 consultations at two minutes each is 500 hours. The first number reports activity; the second is the one a finance director can take into a business case.',
 };
 
 export const what = {
   heading: 'Anyone can report the what',
   paragraphs: [
-    'Downloads, seats, sessions, sign-ups. They prove someone turned your product on. They do not tell a commissioner what changed, an investor what it is worth, or a regulator what you are entitled to claim.',
-    'The why is harder. What changed, for whom, by how much, and how you know. That is the version that gets signed off, and it is the version almost nobody has ready when it is asked for.',
-    'Procurement scores what it can count. Investors discount what they cannot check. A warm quote from a delighted clinician is not evidence, and a nice-to-have does not win a budget line. Minutes, money and metrics do.',
-    'Most healthtech companies know this. What they lack is the time, the data plumbing or the internal agreement to fix it, usually while a tender deadline is moving towards them.',
+    'Downloads, seats, sessions and sign-ups all prove the same thing: somebody turned your product on. None of them tell a commissioner what changed, an investor what it is worth, or a regulator what you are entitled to claim.',
+    /*
+     * The closing line is kept. The edit brief dropped it here while its own
+     * note on for-startups says it stays on the home page, and Sam confirmed
+     * on 13 Sep that he wants the line. Cutting it from both would have taken
+     * it off the site entirely.
+     */
+    'Procurement scores what it can count, and investors discount what they cannot check. A warm quote from a delighted clinician is not evidence, and a nice-to-have does not win a budget line. Minutes, money and metrics do.',
+    'Most healthtech companies know this already. What they usually lack is the time, the data plumbing or the internal agreement to fix it, and the realisation tends to arrive with a tender deadline already moving towards them.',
   ],
   muted:
-    'We sit between the economists and the optimists. A two-year multi-country study is more than you need. A heroic anecdote from one ward is less. What works is a number your buyer can defend, at the level the decision gets made.',
+    'We sit between the economists and the optimists. A two-year multi-country study is more than most decisions need. A story from one enthusiastic ward is less. What works is a defensible number, pitched at the level the decision gets made.',
 };
 
 export const problems = {
@@ -52,9 +57,9 @@ export const problems = {
   lede: 'If two or more of these are true, there is usually a month of work that changes the shape of your year.',
   items: [
     'Your marketing claims have run ahead of the evidence behind them, and someone has started asking for the source: a customer, a regulator, or your own quality team.',
-    'Procurement keeps asking for a business case, and every deal stalls in the same place.',
+    'Procurement keeps asking for a business case, and every deal stalls at the same point.',
     'You are raising, and the deck says &ldquo;proven&rdquo; where the data room says &ldquo;pilot&rdquo;.',
-    'You signed an outcomes-based or value-based agreement and now have to evidence delivery to get paid.',
+    'You have signed an outcomes-based agreement and now have to evidence delivery in order to get paid.',
     'Sales, product, data and clinical each describe your value differently, and all of them are a bit right.',
     'The product generates plenty of data. None of it was set up to prove anything.',
   ],
@@ -86,9 +91,8 @@ export const stages = {
 export const table = {
   heading: 'We have been on your side of the table',
   paragraphs: [
-    'Between us we have been a practising GP, a medical director inside a fast-scaling digital health company, and the person responsible for making a healthtech vendor&rsquo;s value story stand up in NHS procurement.',
-    'We have written the claim, found the data that did not support it, and had to go back and rebuild it. That is why we are useful early, and why we will tell you when a number does not hold.',
-    'The other half of the job is knowing where the number has to land. We know how the NHS buys, who signs a business case off and at what level, and how the same argument has to be rebuilt for a health system in another country.',
+    'Between us we have been a practising GP, a medical director inside a fast-scaling digital health company, and the person responsible for making a healthtech vendor&rsquo;s value story stand up in NHS procurement. We have written the claim, found the data that did not support it, and gone back to rebuild it.',
+    'The other half of the job is knowing where the number has to land. We know how the NHS buys, who signs a business case off and at what level, and how the same argument has to be rebuilt for a health system in another country, where the payer, the budget and the evidence bar are all different.',
   ],
   action: { label: 'Who we are', href: '/who-we-are' },
 };

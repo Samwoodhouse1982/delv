@@ -30,12 +30,12 @@ export const stages: Stage[] = [
       'Then we look honestly at what you already say. Most companies are carrying a mix of claims: some evidenced, some inherited from a pitch deck two years ago, some quietly indefensible. Sorting them is uncomfortable and fast.',
     ],
     details: [
-      'Audit of current messaging, claims and proof points, including the ones nobody can source',
+      'An audit of your current messaging, claims and proof points, including the ones nobody can source',
+      /* "would move deals", not "would genuinely move deals". The edit brief
+         restored an intensifier the 13 Sep pass had taken out. */
       'Hypotheses for the claims that would move deals, ranked by what it would cost to prove them',
-      'A shift from inward-looking product language to statements the market recognises',
-      'Baselining whatever real-world or research data already exists',
-      'A review of what your product captures today, and what it would need to capture',
-      'Sessions with commercial, product, data and clinical to get one version of the story',
+      'A baseline of whatever real-world or research data you already hold, and a review of what the product would need to capture',
+      'Sessions with commercial, product, data and clinical to agree one version of the story',
     ],
   },
   {
@@ -44,8 +44,13 @@ export const stages: Stage[] = [
     lede: 'How much, and how do you know?',
     paragraphs: [
       'We identify the financial, operational and clinical measures that matter for your market: money saved, revenue protected, hours released, appointments freed, errors avoided, readmissions prevented. Then we work out which of them you can credibly attribute to your product.',
-      'Length is not evidence. A buyer will not read four pages of narrative to find the number, and a reviewer who has to hunt for it assumes it is not there. We work to figures a finance lead can lift straight into a model: minutes released, money saved, the metric the contract is actually written against.',
-      'Attribution is where most value models fall over. We are explicit about assumptions, conservative where the data is thin, and we keep an audit trail so that when an analyst asks where a figure came from, there is an answer.',
+      /*
+       * Attribution first. It is the substantive point and was sitting behind
+       * the aside about length. The aside also loses its trailing clause,
+       * which carried the last P5 intensifier left anywhere on the site.
+       */
+      'Attribution is where most value models fall over. We are explicit about assumptions, conservative where the data is thin, and we keep an audit trail, so that when an analyst asks where a figure came from there is an answer.',
+      'Length is not evidence either. A buyer will not read four pages of narrative to find the number, and a reviewer who has to hunt for it will assume it is not there. We work to figures a finance lead can lift straight into a model.',
     ],
     details: [
       'Metric selection for your market and buyer, not a generic ROI template',
@@ -63,14 +68,13 @@ export const stages: Stage[] = [
     paragraphs: [
       'A finding that stays in a spreadsheet has no commercial effect. The same result has to become a business case a trust can put through its own approvals, a slide a founder can use in a room, and a line an investor can check.',
       'We build the assets and the governance around them: where each claim came from, what it can and cannot be used for, and who updates it when the data moves.',
-      'One piece of evidence, built properly, has more than one job. The same finding becomes the value proposition your sales team leads with, the narrative in an investor update, an abstract or a conference poster, the numbers inside an ROI tool, a year of content, and the training that gets a new starter saying it correctly. You are not buying a report. You are buying the asset everything else is built from.',
+      'What you are buying is the asset the rest of your commercial material is built from, rather than a report. One finding, built properly, becomes a sales proposition, an investor narrative, a conference abstract and the numbers inside an ROI tool.',
     ],
     details: [
       'A claims and evidence library holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request',
       'ROI calculators, from sales-led walkthroughs to short web tools for lead generation',
-      'Case studies, business case templates, white papers, briefings and speaker notes',
+      'Case studies, business case templates, white papers, briefings and award submissions',
       'Investor and board materials that connect evidence to the commercial model',
-      'Award submissions and value-based presentation material',
       'Disclaimers and usage rules, so claims are communicated responsibly',
       'Internal enablement, so the fiftieth sales conversation sounds like the first',
     ],
