@@ -246,7 +246,7 @@ measurement, one filled aquamarine point is the thing worth counting.
 
 | # | Graphic | Where it sits | Motion |
 | --- | --- | --- | --- |
-| 01 | Distillation | Behind the home page's illustrative claim | Drift, breathing ring, one resolution beat |
+| 01 | Distillation | **Removed 15 Sep 2026.** See below | |
 | 02 | Same ink, one form | Home, the "anyone can report the what" band | 9s loop, script-driven |
 | 03 | Define / Measure / Articulate | Home, one shape per pillar | Draws once on reveal |
 | 04 | One finding, more than one job | What we do, Articulate | 11s loop |
@@ -273,13 +273,16 @@ Three rules hold the set together, and the first is the handoff's own:
 
 Three deliberate divergences from the handoff, each for a stated reason:
 
-- Graphic 01 sits behind the illustrative claim rather than in a band under
-  it. Moved 13 Sep 2026 at Sam's request, and it is the better placement:
-  underneath the comparison it was a second telling of the same argument, one
-  band after another, and behind it it is the substrate the argument stands on.
-  Its geometry lines up with the columns on purpose. Dense scatter behind
-  Before, giving out across the dashed rule, and one ringed point in the right
-  fifth that the After claim resolves into. See §7b for what it cost.
+- Graphic 01 moved behind the illustrative claim on 13 Sep 2026 and was
+  removed on 15 Sep, when that block became a typed sequence. Both were Sam's
+  calls and both were right. Under the comparison the field was a second
+  telling of the same argument; behind it, it was the substrate the argument
+  stood on; and once the words themselves started moving it became a second
+  thing moving behind them, competing with the beat it was there to support.
+  Its ringed point survives as the sequence's last beat. The handoff bundle
+  stays in `reference/`, and §7b records what the field cost while it was
+  there, because the contrast ceiling it forced is the reason two of the
+  block's colours are the values they are.
 - Graphic 02 is placed on the "anyone can report the what" band rather than
   next to the Before / After device. Its own two labels are *the what* and *the
   why*, which is that band's argument word for word, and it wants a yale blue
@@ -302,18 +305,39 @@ One orchestrated moment: the claim demo in the home hero, about two seconds, onc
 
 **Laid out in two columns from 13 Sep 2026**, at Sam's request: before on the left, after on the right, with the dashed rule that used to separate the rows now separating the columns. The comparison is the point of the block and two columns put both halves in one glance. Below 700px they stack again. The type comes down from a 27px ceiling to 23px, because each claim now has half the width; that also takes the line permanently below the large-text threshold, which simplifies its contrast requirement rather than complicating it (see §10).
 
-**A fourth beat, 13 Sep 2026:** the resolution point of the distillation field
-lands on the same 1.3s the highlighter sweeps on, a fraction behind it.
-Without it the graphic finishes its sentence before the claim has started one
-and reads as decoration running on its own clock.
+**Rebuilt as five beats, 15 Sep 2026**, at Sam's request, and the whole thing
+is inverted from how it used to work.
 
-**The three beats are held while the intro overlay is up.** They are timed from page load and finish inside two seconds; the intro runs for five and a half, so without the hold the site's one orchestrated moment plays out behind a full-screen overlay and nobody sees it. A single rule pauses them under `[data-intro="play"]`, so the clock starts when the overlay goes, by any of the four routes it can go by. The attribute only exists while the intro is actually playing, so reduced motion and a page without JavaScript are untouched.
+The sequence is now about the words: the activity claim types itself out, two
+strokes cross it through, the evidenced claim rises in beside it, the
+highlighter sweeps the number, and the mark lands. About four and a half
+seconds. The page's argument is that one of those two sentences is worth
+writing down, so watching one get written and struck and the other arrive
+intact is the argument rather than a decoration of it.
+
+It used to run at page load from `backwards` fill, so the resting state fell
+out of the animation not running. It now runs on scroll into view, which
+typing makes necessary: four and a half seconds that start before a reader has
+arrived is four and a half seconds nobody sees. So the markup is the finished
+state, always, and the script adds `data-claim-armed` to take it apart only
+once it has established it can put it back. No JavaScript, no
+`IntersectionObserver`, reduced motion, or a script that throws: every one of
+them leaves the attribute off and the finished comparison on screen.
+
+Only the typing needs JavaScript, because the claim wraps and a `steps()`
+width animation only works on one unwrapped line. It costs 462 bytes gzipped.
+The other four beats are CSS keyed off one class.
+
+The script also waits for the intro overlay, which replaces the rule that used
+to pause the beats behind it: the block is inside the viewport while the
+overlay is over it, so intersection alone would play the whole sequence to a
+covered screen.
 
 Nothing else on the site moves except the section graphics above.
 
-Every beat **rests in its finished state and animates from the start**, with `animation-fill-mode: backwards`. Animating towards the end state instead, as the prototype did, means a browser that runs no animation shows an unmarked claim and no highlight: the story half-told. This way it shows the completed comparison.
+`prefers-reduced-motion: reduce` must render the finished state immediately with no animation at all. Verified at 250ms under reduced motion: the block is never armed, the claim is never split into characters, and the strike, the rise, the sweep and the mark all read as complete.
 
-`prefers-reduced-motion: reduce` must render the finished state immediately with no animation at all. Verified: at 120ms under reduced motion the strike, the reveal and the sweep all read as complete and `document.getAnimations()` is empty.
+Four traps were hit rebuilding this, all recorded in §10 because every one of them is the sort that a typecheck, a build and an axe run all pass.
 
 **Reversed 12 Sep 2026, at Sam's request:** scroll reveals are now in. Blocks fade and rise as they enter, three-ups reveal column by column, and the measurement rules draw from the left rather than rising, because a ruler being laid down is the right gesture for the device. Hover is limited to colour, a nav underline that grows from the left, and the list tick marks extending a few pixels. **Still out:** parallax, counters, and hover transforms that move a block.
 
@@ -695,6 +719,37 @@ Three more on 13 Sep 2026, all of them specificity, all of them silent.
 None of the three would have shown up in a typecheck, a build or an axe run.
 The reduced-motion one was found by asserting the resting state in a browser,
 which is the only thing that does find them.
+
+Four more on 15 Sep 2026, rebuilding the claim demo as a typed sequence. Same
+character: everything compiled, everything rendered, everything passed axe.
+
+- **`.claim-text.weak span` matched every character span** the typewriter
+  creates, so each letter took 0.12em of padding and its own copy of both
+  strike strokes. The sentence rendered 58% too wide with a line through every
+  glyph. The selector is `.claim-strike` now, which also puts it below the
+  rules that arm the sequence instead of above them.
+- **Substituting U+00A0 for spaces removed every line-break opportunity.** It
+  was there to stop the caret jumping back at a collapsed end-of-line space.
+  The claim then ran in one line straight through the column rule and under
+  the claim beside it. A caret in the wrong place for one 31ms frame is much
+  the cheaper problem.
+- **Removing `data-claim-armed` when typing finished** dropped the four rules
+  that had not run yet and snapped the block to its finished state three
+  seconds early. The attribute stays for good now; every animation carries
+  `forwards`, and a filled final frame outranks the declaration it overrides.
+- **`claimResolve` declared only a `from`.** The implicit `to` takes the
+  element's own computed value, which while armed is `opacity: 0`, so the mark
+  spent its whole animation going from nothing to nothing and never appeared.
+  Both ends are written out now, with `var(--o, 1)` because the three elements
+  land on three different opacities.
+
+And one that was not a bug yet but would have become one: the general
+`[data-motion] .gfx-ring--breathe` rule was left in place alongside the
+sequence's own. A browser keeps an animation's start time when only the rule
+around it changes, so the loop's clock began when `data-motion` landed rather
+than when the sequence did, and its 4.15s delay was measured from page load. On
+any page where the reader took longer than that to scroll down, the ring was
+already on screen while everything around it was still armed.
 
 **The worked example**
 - The home page's illustrative claim is the site's own evidenced claim, so its arithmetic has to survive a reader doing it. The two lines share a denominator and the caption shows the working: 15,000 consultations a week at two minutes each is 500 clinician hours a week, at one trust. Settled 13 Sep 2026, after the previous pair (4,000 clinicians platform-wide against 92 working days a month at one trust) turned out not to reconcile on any basis, and to invite exactly the multiplication that exposes it. If either figure changes, change both and re-check the caption.

@@ -709,96 +709,177 @@ h3 .mark {
 }
 
 /*
- * The one orchestrated moment on the site, in the home hero's claim demo.
- * Three beats, about two seconds end to end: the activity claim is struck
- * through, the evidenced claim rises in behind it, and the highlighter sweeps
- * across the number.
+ * The one orchestrated moment on the site, in the home page's claim demo.
  *
- * Every step rests in its finished state and animates *from* the start with
- * `backwards` fill. A browser that runs no animation therefore shows the
- * completed sequence rather than a struck-out nothing, which is the failure
- * mode of animating towards the end state instead.
+ * Five beats, about four and a half seconds: the activity claim types itself
+ * out, two strokes cross it through, the evidenced claim rises in beside it,
+ * the highlighter sweeps the number, and the mark lands.
+ *
+ * The whole sequence is inverted from how it used to work, and the inversion
+ * is the important part. It used to run at page load, from `backwards` fill,
+ * so the resting state fell out of the animation not running. It now runs on
+ * scroll into view, which typing makes necessary: four and a half seconds
+ * that start before a reader has arrived is four and a half seconds nobody
+ * sees.
+ *
+ * So the markup is the finished state, always, and the script adds
+ * `data-claim-armed` to take it apart only once it has established it can put
+ * it back. No JavaScript, no IntersectionObserver, reduced motion, or a script
+ * that throws: every one of them leaves the attribute off and the finished
+ * comparison on screen. There is no ordering in which a reader is left with a
+ * half-typed sentence.
  */
-.claim-strike {
-  animation: strike 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 0.5s backwards;
+[data-claim-armed] .claim-strike {
+  background-size:
+    0% 100%,
+    0% 100%;
+}
+[data-claim-armed] .claim-reveal {
+  opacity: 0;
+  transform: translateY(8px);
+}
+[data-claim-armed] .mark--sweep {
+  background-size: 0% 100%;
+}
+[data-claim-armed] .claim-resolve {
+  opacity: 0;
+  transform: scale(0.72);
+}
+[data-claim-armed] .claim-char {
+  visibility: hidden;
+}
+
+/*
+ * The delays are the score. Typing takes 52 characters at 31ms plus a 100ms
+ * lead, so it finishes at about 1.7s, and everything below is timed from
+ * there. Change the copy and these want re-timing with it.
+ */
+[data-claim-armed].is-running .claim-strike {
+  animation: strike 0.7s cubic-bezier(0.3, 0.6, 0.3, 1) 1.85s forwards;
 }
 @keyframes strike {
-  from {
-    background-size: 0% 100%, 100% 100%;
+  0% {
+    background-size:
+      0% 100%,
+      0% 100%;
+  }
+  58% {
+    background-size:
+      100% 100%,
+      0% 100%;
+  }
+  100% {
+    background-size:
+      100% 100%,
+      100% 100%;
   }
 }
 
-.claim-reveal {
-  animation: reveal 0.4s cubic-bezier(0.2, 0.7, 0.3, 1) 1s backwards;
+[data-claim-armed].is-running .claim-reveal {
+  animation: reveal 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) 2.75s forwards;
 }
 @keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-.mark--sweep {
-  animation: sweep 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) 1.3s backwards;
+[data-claim-armed].is-running .mark--sweep {
+  animation: sweep 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) 3.35s forwards;
 }
 @keyframes sweep {
-  from {
-    background-size: 0% 100%;
+  to {
+    background-size: 100% 100%;
   }
 }
 
 /*
- * The fourth beat: the point the After claim resolves into lands with it.
- *
- * Same 1.3s the highlighter sweeps on, a fraction behind. Without it the field
- * has already finished its sentence before the claim has started one, and the
- * graphic reads as decoration running on its own clock rather than the thing
- * the comparison arrives at.
+ * The last beat: the mark the evidenced claim resolves into. It is the brand's
+ * own full stop, so it is the right thing to end a sentence about a claim
+ * being true with.
  *
  * Two declarations because the breathing ring's loop is gated behind
- * `data-motion` and this is not: the beats in this block are plain animations
- * with `backwards` fill, so they play for a reader with JavaScript off and
- * rest in their finished state for everyone else. The second rule is more
- * specific, so under `data-motion` the outer ring gets both.
+ * `data-motion` and this is not. The second rule is more specific, so under
+ * `data-motion` the outer ring gets both.
  */
-.claim-field .claim-resolve {
-  animation: claimResolve 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 1.35s backwards;
+[data-claim-armed].is-running .claim-resolve {
+  animation: claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 4.15s forwards;
 }
-[data-motion] .claim-field .gfx-ring--breathe {
+/*
+ * The outer ring runs both, and the two have to hand over cleanly.
+ *
+ * The breathe carries the same 4.15s delay as the beat it belongs to: without
+ * it the loop starts at zero and paints the ring in at full opacity, over the
+ * armed state, four seconds before the claim it is answering.
+ *
+ * And this one claimResolve does not fill forwards, where the other two marks
+ * do. Later animations win for a shared property, so a forward fill here would
+ * hold opacity and transform for good and the ring would never breathe again.
+ * With no fill it lets go the moment it ends, and the loop, which started at
+ * the same instant, is already there to take over.
+ */
+[data-motion] [data-claim-armed].is-running .claim-field .gfx-ring--breathe {
   animation:
-    gfxBreathe 6s ease-in-out infinite,
-    claimResolve 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 1.35s backwards;
+    gfxBreathe 6s ease-in-out 4.15s infinite,
+    claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 4.15s;
 }
+
+/*
+ * The caret. Positioned from the character spans, which never move once they
+ * are laid out, so this rides along without costing a reflow per frame.
+ */
+.claim-caret {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 1.05em;
+  margin-top: 0.13em;
+  background: var(--mark-deep);
+  animation: claimCaret 0.9s steps(1, end) infinite;
+  pointer-events: none;
+}
+@keyframes claimCaret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.15;
+  }
+}
+/*
+ * Both ends written out, and that is not tidiness.
+ *
+ * With only a `from`, the implicit `to` takes the element's own computed
+ * value for each property, and the element's computed opacity while the block
+ * is armed is zero. The mark spent its whole animation interpolating from
+ * nothing to nothing, and never appeared at all.
+ *
+ * `var(--o, 1)` because the three elements land on three different opacities:
+ * the outer ring carries `--o: 0.55` inline, the inner one `0.7`, and the
+ * point sets none and wants full.
+ */
 @keyframes claimResolve {
   from {
     opacity: 0;
     transform: scale(0.72);
   }
+  to {
+    opacity: var(--o, 1);
+    transform: none;
+  }
 }
 
 /*
- * Hold all three beats while the intro overlay is up.
- *
- * They are timed from page load and finish by about two seconds; the intro
- * runs for five and a half. Without this the site's one orchestrated moment
- * plays out behind a full-screen overlay and nobody ever sees it. Pausing
- * them means the clock starts when the overlay goes, whether that is the end
- * of the animation, a key, a click, or the dead man's switch.
- *
- * The attribute only exists when the intro is actually playing, so reduced
- * motion and a page with no JavaScript are untouched: there is nothing to
- * wait for and the beats run as they always did.
+ * There used to be a rule here pausing the beats while the intro overlay was
+ * up, because they ran from page load and would otherwise have played out
+ * behind a covered screen. The sequence waits for the overlay in script now,
+ * along with waiting to be scrolled to, so the rule was doing nothing and has
+ * gone rather than sitting here looking load-bearing.
  */
-[data-intro="play"] .claim-strike,
-[data-intro="play"] .claim-reveal,
-[data-intro="play"] .mark--sweep,
-/* Two classes, matching the rule that sets the animation. `.claim-resolve`
-   alone is a tenth of a specificity point short of `.claim-field
-   .claim-resolve`, which declares the shorthand and so resets play-state back
-   to running. The pause would have been silently ignored. */
-[data-intro="play"] .claim-field .claim-resolve {
-  animation-play-state: paused;
-}
 
 /* --------------------------------------------------------------------------
    Motion
@@ -890,17 +971,17 @@ nav.main a:not(.btn) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .claim-strike,
-  .claim-reveal,
-  .mark--sweep,
-  /* Same specificity trap as the intro pause above, and worse here: losing it
-     left the resolution mark on `backwards` fill at opacity 0 for the 1.35s
-     delay, which the blanket 0.01ms duration below does not shorten because
-     it does not touch the delay. A reader with reduced motion would have
-     watched an empty space and then a mark appear. */
-  .claim-field .claim-resolve {
-    animation: none;
-  }
+  /*
+   * The claim demo needs no entry here. Every one of its beats is gated behind
+   * `data-claim-armed`, which the script only sets after checking
+   * `prefers-reduced-motion: no-preference`, so under reduce the markup is
+   * simply left as it is: typed, struck, highlighted and marked.
+   *
+   * That is a better guarantee than the rules that used to sit here. Those
+   * animated from `backwards` fill and had to be switched off by name, and
+   * one of them was silently losing on specificity and leaving the mark
+   * invisible for its whole delay.
+   */
   *,
   *::before,
   *::after {
@@ -1270,33 +1351,31 @@ nav.main .nav-panel a[aria-current="page"] {
 }
 
 /*
- * One section: the comparison and the field it sits on.
- *
- * The padding is not decoration. The field needs clear air above the labels
- * and below the caption or it reads as texture applied to a paragraph rather
- * than a picture the paragraph is standing in, and the right fifth is held
- * empty for the resolution mark.
+ * The padding used to be sized so the field of marks had clear air above the
+ * labels and below the caption. The field has gone, so it is back to being
+ * ordinary separation: enough below the tick rule that the block starts, and
+ * enough under the caption that the hero ends. The right fifth is still held
+ * empty for the resolution mark, which is a reservation rather than padding
+ * and lives further down.
  */
 .claim {
   position: relative;
   border-top: 1px solid var(--hair);
   margin-top: clamp(44px, 6vw, 72px);
-  padding: clamp(30px, 4vw, 52px) 0 clamp(34px, 4.5vw, 58px);
+  padding: clamp(26px, 3.2vw, 44px) 0 clamp(24px, 3vw, 40px);
 }
 /*
- * Two classes, not one. The `.gfx` base is declared further down the file, in
- * the section graphics block, and at equal specificity it would win: the field
- * would take `position: relative` and `width: 100%`, collapse to zero height
- * because every child is absolute, and then clip itself away.
- */
-/*
+ * The layer the resolution mark sits on.
+ *
+ * It used to carry a field of 76 drifting taupe marks as well, which is where
+ * graphic 01 from the section-graphics handoff lived. The field went on
+ * 15 Sep 2026: once the sequence became about the words, a second thing moving
+ * behind them was competing with the beat it was supposed to support. The
+ * handoff bundle stays in reference/ and §5 records the removal.
+ *
  * Sized in em against a font-size of 1cqw, which is the same number the other
  * graphics write directly in cqw, with one thing gained: the unit has a floor.
- *
- * Pure cqw is right for a band whose only job is to be a picture. Here the
- * block is as narrow as 335px on a phone, where 1cqw is 3.35px and a mark
- * comes out at two pixels of 26%-opacity taupe, which is nothing. The floor
- * keeps the field legible down there without changing a single coordinate.
+ * The block is as narrow as 335px on a phone, where 1cqw is 3.35px.
  */
 .claim .claim-field {
   position: absolute;
@@ -1396,6 +1475,8 @@ nav.main .nav-panel a[aria-current="page"] {
   color: color-mix(in srgb, var(--taupe) 40%, var(--ink));
 }
 .claim-text {
+  /* The caret is positioned against this. */
+  position: relative;
   /* A shade smaller than the stacked version, because each claim has half the
      width. */
   font-size: clamp(18px, 0.85vw + 12.5px, 23px);
@@ -1439,9 +1520,15 @@ nav.main .nav-panel a[aria-current="page"] {
 .claim-text.weak {
   color: var(--claim-weak);
 }
-.claim-text.weak span {
+.claim-strike {
   /*
    * The strike, and only the strike.
+   *
+   * `.claim-strike`, not `.claim-text.weak span`. The broad selector matched
+   * every character span the typewriter creates, so each letter got its own
+   * 0.12em of padding and its own copy of both strokes: the sentence rendered
+   * 58% too wide with a strike through every glyph. It also out-specified the
+   * rules that arm the sequence, so the strike showed from the first frame.
    *
    * There used to be a flat 30% taupe wash under it, marking the claim as
    * unevidenced. The field behind the block now does that job, and the wash
@@ -1454,22 +1541,51 @@ nav.main .nav-panel a[aria-current="page"] {
    * baseline 0.265em up and an x-height of 0.426em, so mid x-height is
    * 0.478em from the bottom of the box.
    */
-  background-image: linear-gradient(
-    to top,
-    transparent 0 0.45em,
-    rgba(107, 95, 90, 0.85) 0.45em 0.506em,
-    transparent 0.506em
-  );
-  background-image: linear-gradient(
-    to top,
-    transparent 0 0.45em,
-    color-mix(in srgb, var(--claim-weak) 85%, transparent) 0.45em 0.506em,
-    transparent 0.506em
-  );
-  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(
+      to top,
+      transparent 0 0.45em,
+      rgba(107, 95, 90, 0.85) 0.45em 0.506em,
+      transparent 0.506em
+    ),
+    linear-gradient(
+      to top,
+      transparent 0 0.36em,
+      rgba(107, 95, 90, 0.6) 0.36em 0.4em,
+      transparent 0.4em
+    );
+  background-image:
+    linear-gradient(
+      to top,
+      transparent 0 0.45em,
+      color-mix(in srgb, var(--claim-weak) 85%, transparent) 0.45em 0.506em,
+      transparent 0.506em
+    ),
+    linear-gradient(
+      to top,
+      transparent 0 0.36em,
+      color-mix(in srgb, var(--claim-weak) 60%, transparent) 0.36em 0.4em,
+      transparent 0.4em
+    );
+  background-repeat: no-repeat, no-repeat;
+  /*
+   * Two strokes, not one, and the second starts from the right: crossed out by
+   * hand rather than typographically struck. A single neat rule read as a
+   * text-decoration, which is a state a document can be in; two passes read as
+   * somebody deciding the sentence was wrong.
+   *
+   * They are backgrounds on an inline box, so a wrapped claim gets them on
+   * every line for free, and `box-decoration-break: slice` means the sweep
+   * crosses the lines in reading order rather than all at once.
+   */
+  background-position:
+    0 0,
+    100% 0;
   /* Struck is the resting state, so a browser that runs no animation still
      shows the finished idea rather than an unmarked claim. */
-  background-size: 100% 100%;
+  background-size:
+    100% 100%,
+    100% 100%;
   padding: 0 0.12em;
 }
 .caption {
@@ -2247,9 +2363,18 @@ figure.figure:not([class*="mt-"]) {
   [data-motion] .gfx-dot {
     animation: gfxDrift var(--dur, 6s) ease-in-out var(--delay, 0s) infinite;
   }
-  [data-motion] .gfx-ring--breathe {
-    animation: gfxBreathe 6s ease-in-out infinite;
-  }
+  /*
+   * No general breathe rule any more, deliberately.
+   *
+   * Graphic 01 was the only other user and it has gone, so the one remaining
+   * breathing ring is the claim demo's, and that one is declared with the rest
+   * of its sequence. Leaving this here as well was worse than redundant: the
+   * browser keeps an animation's start time when only the rule around it
+   * changes, so the loop's clock began when `data-motion` landed rather than
+   * when the sequence did. Its 4.15s delay was then measured from page load,
+   * and on any page where the reader took longer than that to scroll down, the
+   * ring was already on screen while everything around it was still armed.
+   */
 
   /* 02: two rings pulse outward through the absorption window. The marks and
      the core are driven from Absorption.astro, because both depend on
@@ -2974,6 +3099,23 @@ footer a:hover {
   padding-bottom: 12px;
   border-bottom: 1px solid var(--hair-dark);
   max-width: 22ch;
+}
+
+/*
+ * Out of sight, still in the accessibility tree. `display: none` and
+ * `visibility: hidden` both take a node out of that tree, which is the whole
+ * thing this has to avoid.
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .skip {

@@ -1,6 +1,4 @@
 ---
-import Distillation from './graphics/Distillation.astro';
-
 interface Props {
   claim: {
     weak: { label: string; text: string };
@@ -12,28 +10,38 @@ const { claim } = Astro.props;
 ---
 
 {/*
-  The one animated moment on the site, and now one section rather than two.
+  The one orchestrated moment on the site, and it is about the words.
 
-  Three beats: the activity claim is struck through, the evidenced claim rises
-  in, the highlighter sweeps across the number. Each rests in its finished
-  state, so with animation off the reader sees the completed comparison rather
-  than a half-told story.
+  Five beats, about four and a half seconds, starting when the block scrolls
+  into view rather than at page load: the activity claim types itself out, two
+  strokes cross it through, the evidenced claim rises in beside it, the
+  highlighter sweeps the number, and the mark lands. The argument of the page
+  is that one of these two sentences is worth writing down, so watching one get
+  written and struck and the other arrive intact is the argument, not a
+  decoration of it.
 
-  The distillation field sits behind the whole block. It used to be a separate
-  band underneath, which made it a second telling of the same argument; behind
-  the comparison it is the substrate the argument sits on. Its geometry lines
-  up with the columns on purpose: dense scatter behind Before, giving out
-  across the dashed rule, and one ringed point in the clear right-hand fifth
-  that the After claim resolves into.
+  It ends in the two-column comparison, which is also where it starts for
+  anyone who never sees it move. Nothing here is ever waiting on an animation
+  to become readable: the markup below is the finished state, and the script
+  takes it apart only once it knows it can put it back.
+
+  The full text of both claims is also carried in a visually hidden copy, so
+  what a screen reader gets never depends on how far through the typing the
+  animation happens to be.
 */}
-<div class="claim">
-  <Distillation />
+<div class="claim" data-claim>
+  <div class="claim-field" aria-hidden="true">
+    <span class="gfx-ring gfx-ring--breathe claim-resolve" style="--s:11.19em;--o:0.55"></span>
+    <span class="gfx-ring claim-resolve" style="--s:6.44em;--o:0.7"></span>
+    <span class="gfx-point claim-resolve" style="--s:2.2em"></span>
+  </div>
 
   <div class="claim-pair">
     <div class="claim-col">
       <span class="claim-tick">{claim.weak.label}</span>
       <p class="claim-text weak">
-        <span class="claim-strike" set:html={claim.weak.text} />
+        <span class="claim-strike" data-claim-type set:html={claim.weak.text} />
+        <span class="claim-caret" aria-hidden="true" hidden></span>
       </p>
     </div>
     <div class="claim-col claim-reveal">
@@ -46,3 +54,153 @@ const { claim } = Astro.props;
 
   <p class="caption">{claim.caption}</p>
 </div>
+
+<script>
+  /*
+   * The typewriter, and the trigger for everything else.
+   *
+   * Only the typing needs JavaScript. Splitting a paragraph into characters is
+   * the one thing CSS cannot do here, because the line wraps and a `steps()`
+   * width animation only works on a single unwrapped line. The other four
+   * beats are CSS, keyed off one class, so this file stays small.
+   *
+   * Three gates, all of which have to pass before anything is taken apart:
+   * reduced motion off, an IntersectionObserver to know when the block is
+   * being looked at, and the intro overlay gone. The last one matters because
+   * the block is inside the viewport while the overlay is over it, so without
+   * the check the whole sequence would play to a covered screen.
+   */
+  const block = document.querySelector<HTMLElement>('[data-claim]');
+  const source = block?.querySelector<HTMLElement>('[data-claim-type]');
+  const caret = block?.querySelector<HTMLElement>('.claim-caret');
+
+  const canMove =
+    !!block &&
+    !!source &&
+    !!caret &&
+    window.matchMedia('(prefers-reduced-motion: no-preference)').matches &&
+    'IntersectionObserver' in window;
+
+  if (canMove) {
+    const PER_CHAR = 31;
+    const START = 100;
+
+    const text = source.textContent ?? '';
+
+    /*
+     * A static copy for assistive technology, added before the visible text is
+     * broken up. `visibility: hidden` takes a character out of the
+     * accessibility tree as well as off the screen, so without this a screen
+     * reader reaching the block mid-sequence would read half a sentence.
+     */
+    const forReaders = document.createElement('span');
+    forReaders.className = 'visually-hidden';
+    forReaders.textContent = text;
+    source.insertAdjacentElement('afterend', forReaders);
+    source.setAttribute('aria-hidden', 'true');
+
+    // One span per character. The spans are laid out and measured once, and
+    // then only their visibility changes, so nothing reflows while typing and
+    // the caret can be placed from positions read at the start.
+    const chars: HTMLElement[] = [];
+    const frag = document.createDocumentFragment();
+    for (const character of text) {
+      const span = document.createElement('span');
+      span.className = 'claim-char';
+      /*
+       * A real space, not a non-breaking one. The first version substituted
+       * U+00A0 to stop the caret jumping back at a collapsed end-of-line
+       * space, and in doing so removed every break opportunity in the
+       * sentence: the claim ran in a single line straight through the column
+       * rule and under the claim beside it. A caret in the wrong place for one
+       * 31ms frame is much the cheaper problem.
+       */
+      span.textContent = character;
+      frag.appendChild(span);
+      chars.push(span);
+    }
+    source.textContent = '';
+    source.appendChild(frag);
+
+    block.setAttribute('data-claim-armed', '');
+    caret.hidden = false;
+
+    const place = (index: number) => {
+      const target = chars[Math.min(index, chars.length - 1)];
+      if (!target) return;
+      const past = index >= chars.length;
+      caret.style.transform = `translate(${
+        target.offsetLeft + (past ? target.offsetWidth : 0)
+      }px, ${target.offsetTop}px)`;
+    };
+
+    const run = () => {
+      block.classList.add('is-running');
+      place(0);
+
+      const began = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - began - START;
+        const shown = Math.floor(elapsed / PER_CHAR);
+
+        for (let i = 0; i < chars.length; i++) {
+          chars[i].style.visibility = i < shown ? 'visible' : 'hidden';
+        }
+        place(Math.max(0, Math.min(shown, chars.length)));
+
+        if (shown < chars.length) {
+          requestAnimationFrame(tick);
+          return;
+        }
+
+        /*
+         * Typing is done, but the sequence is not: the strike, the rise, the
+         * sweep and the mark are all still ahead, and all four are keyed off
+         * `data-claim-armed`. Taking the attribute off here, which is what the
+         * first version did, dropped every one of those rules at 1.8s and
+         * snapped the whole block to its finished state three seconds early.
+         *
+         * So the attribute stays for good. Every animation carries `forwards`,
+         * and a filled final frame outranks the armed declaration it is
+         * overriding, so the block still ends exactly where the markup says it
+         * should. The characters are set visible explicitly rather than having
+         * their inline style cleared, because clearing it would hand them
+         * straight back to the armed rule that hides them.
+         */
+        for (const span of chars) span.style.visibility = 'visible';
+        caret.hidden = true;
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    /*
+     * Wait for the overlay, then for the block to be looked at. The overlay
+     * removes its attribute by four routes, including a dead man's switch, so
+     * polling it is the one honest way to wait for any of them.
+     */
+    const whenIntroGone = (then: () => void) => {
+      if (!document.documentElement.hasAttribute('data-intro')) {
+        then();
+        return;
+      }
+      const poll = window.setInterval(() => {
+        if (document.documentElement.hasAttribute('data-intro')) return;
+        window.clearInterval(poll);
+        then();
+      }, 120);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          io.disconnect();
+          whenIntroGone(run);
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(block);
+  }
+</script>
