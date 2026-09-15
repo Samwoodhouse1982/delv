@@ -3387,15 +3387,6 @@ main:focus {
   clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 62%, 62% 100%, 0 100%);
 }
 
-/*
- * Over the dark band the field would disappear and the seed would glare, so
- * the layer is nudged rather than recoloured. Scoped to the stage so it cannot
- * reach a band the narrative does not cover.
- */
-.narr-stage .dark {
-  --narr-lift: 1;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   /*
    * Scroll-linked, where the browser has a view timeline. This is tied to

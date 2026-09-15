@@ -288,15 +288,34 @@ const ogUrl = new URL(ogImage, Astro.site).href;
          * Deferred a frame because Absorption starts its animations from its
          * own module script, which may not have run when this one does.
          */
-        if (document.querySelector('[data-narrative]')) {
+        const narrative = document.querySelector('[data-narrative]');
+        if (narrative) {
+          /*
+           * Selected by exclusion rather than by class. `.gfx` looked like the
+           * handle and was not: the three stage marks on the home page carry
+           * `gfx-stage` with no `.gfx` ancestor, so a `[data-narrative] .gfx`
+           * selector matched nothing and left them looping.
+           *
+           * Three things are deliberately spared. The claim demo is the one
+           * animation the site has always had and the reason the home page
+           * works. The narrative layer's own beats are the thing being built.
+           * And CSS transitions are not loops at all — the scroll reveals are
+           * transitions, and pausing one leaves a block half-faded forever.
+           */
+          const spared = (el: Element) =>
+            el.closest('[data-claim], [data-narr]') !== null;
+
           const still = () => {
-            for (const gfx of document.querySelectorAll('[data-narrative] .gfx')) {
-              for (const anim of gfx.getAnimations({ subtree: true })) {
-                const timing = anim.effect?.getComputedTiming();
-                const dur = Number(timing?.duration) || 0;
-                if (dur) anim.currentTime = dur * 0.86;
-                anim.pause();
+            for (const anim of narrative.getAnimations({ subtree: true })) {
+              if (typeof CSSTransition !== 'undefined' && anim instanceof CSSTransition) {
+                continue;
               }
+              const target = anim.effect && 'target' in anim.effect ? anim.effect.target : null;
+              if (!(target instanceof Element) || spared(target)) continue;
+
+              const dur = Number(anim.effect?.getComputedTiming().duration) || 0;
+              if (dur) anim.currentTime = dur * 0.86;
+              anim.pause();
             }
           };
           requestAnimationFrame(() => requestAnimationFrame(still));
