@@ -12,6 +12,14 @@ source of truth and is not edited.
 
 ---
 
+
+## Getting back to a working site
+
+The growth-narrative work starts from `e83773f`, pinned as the branch
+`origin/pre-growth-narrative`. **REVERT.md** has the three routes back and
+which one to use when. Read it before rolling anything back rather than
+improvising a force-push.
+
 ## Running it
 
 ```
