@@ -18,7 +18,7 @@ export const hero: Hero = {
   sub: 'Your product works. Proving what it is worth to the person signing the budget is a different job. We help healthtech companies define, measure and articulate value, so that the claims you make in market hold up when someone checks the working.',
   actions: [
     { label: 'Start a conversation', href: '/contact' },
-    { label: 'See how we work', href: '/what-we-do', ghost: true },
+    { label: 'See how we work', href: '/how-we-work', ghost: true },
   ],
 };
 

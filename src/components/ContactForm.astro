@@ -161,8 +161,20 @@ const note = form.note.replaceAll('{email}', site.email);
       status.append(link);
     };
 
+    /*
+     * One enquiry per submission. Without this, three quick clicks on the
+     * button sent three copies: the fetch is in flight for as long as the
+     * network takes, and nothing was stopping the handler running again.
+     * The flag is the guard rather than the disabled attribute alone,
+     * because Enter on a focused field submits the form without going
+     * near the button.
+     */
+    const submit = el.querySelector<HTMLButtonElement>('button[type="submit"]');
+    let sending = false;
+
     el.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (sending) return;
 
       const failed = validate();
       if (failed.length > 0) {
@@ -172,6 +184,8 @@ const note = form.note.replaceAll('{email}', site.email);
         return;
       }
 
+      sending = true;
+      if (submit) submit.disabled = true;
       status.textContent = 'Sending.';
       status.className = 'status';
 
@@ -195,8 +209,12 @@ const note = form.note.replaceAll('{email}', site.email);
         (done as HTMLElement).focus();
       } catch {
         // Everything the user typed is still in the form; the mailto: carries
-        // a copy of it so the enquiry is not lost either way.
+        // a copy of it so the enquiry is not lost either way. The button comes
+        // back, because trying again is a reasonable thing to want to do.
         offerMailto();
+      } finally {
+        sending = false;
+        if (submit) submit.disabled = false;
       }
     });
   }

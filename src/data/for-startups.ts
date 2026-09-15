@@ -10,6 +10,10 @@ export const meta: PageMeta = {
 export const hero: Hero = {
   heading: 'For founders with traction and no proof yet.',
   sub: 'Early-stage healthtech gets judged on evidence long before it has any. We help you build the base, and the narrative, early enough that it compounds instead of costing you a quarter.',
+  actions: [
+    { label: 'Start a conversation', href: '/contact' },
+    { label: 'See what we do', href: '/what-we-do', ghost: true },
+  ],
 };
 
 export const moments = {

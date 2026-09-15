@@ -1,12 +1,27 @@
 ---
 import Base from '../layouts/Base.astro';
 import Rule from '../components/Rule.astro';
-import { site } from '../data/site';
+import { isGroup, site } from '../data/site';
+
+/*
+ * The recovery list is the whole point of this page, so it lists pages rather
+ * than nav entries. "Who we help" is a disclosure group with no page behind
+ * it: mapped straight from `site.nav` it rendered as `<a>Who we help</a>`,
+ * an anchor with no href, which is not focusable, not clickable and not a
+ * link in the accessibility tree — and it took the three audience pages off
+ * the only page whose job is to get a lost visitor somewhere useful. The
+ * group is flattened into its children instead.
+ */
+const links = site.nav.flatMap((entry) =>
+  isGroup(entry)
+    ? entry.children.map((child) => ({ label: child.label, href: child.href }))
+    : [{ label: entry.label, href: entry.href }],
+);
 ---
 
 <Base
   title="Page not found · delv."
-  description="That page does not exist. The four pages of the site are linked below."
+  description="That page does not exist. Every page of the site is linked below."
   noindex
 >
   <div class="wrap hero">
@@ -24,9 +39,9 @@ import { site } from '../data/site';
       <h2>Where you might have been going</h2>
       <ul class="detail mt-rule" style="max-width:var(--measure)">
         {
-          site.nav.map((item) => (
+          links.map((link) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a href={link.href}>{link.label}</a>
             </li>
           ))
         }

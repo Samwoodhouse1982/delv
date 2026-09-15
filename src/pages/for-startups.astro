@@ -21,6 +21,15 @@ const proofCopy = placement['for-startups'];
   <div class="wrap hero">
     <h1>{hero.heading}</h1>
     <p class="sub" set:html={hero.sub} />
+    <div class="hero-actions">
+      {
+        hero.actions?.map((action) => (
+          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
+            {action.label}
+          </a>
+        ))
+      }
+    </div>
   </div>
 
   <div class="wrap"><Rule /></div>

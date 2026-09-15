@@ -123,3 +123,29 @@ Then, each on its own:
       reading it for wording is reading an old draft.
 - [ ] **Consider a CI check.** `npm run check` runs `astro check` and the axe
       suite. Nothing runs it automatically on push.
+
+## G. Found in the 15 September site audit
+
+Three defects were fixed in the audit pass and are recorded here only so the
+reasoning survives. What remains open:
+
+- [ ] **No Content-Security-Policy.** `vercel.json` sets `X-Content-Type-Options`,
+      `Referrer-Policy` and `X-Frame-Options` but no CSP. `base-uri 'self'` and
+      `form-action 'self'` are free and break nothing; a `script-src` needs
+      hashes, because Astro inlines the small scripts.
+- [ ] **The contact endpoint has no rate limit and no length cap.** It is a
+      public POST that forwards to whatever `CONTACT_WEBHOOK_URL` points at.
+      The honeypot stops naive bots only. Decide before the webhook is live,
+      because the abuse lands in Sam's inbox.
+- [ ] **No timeout on the outbound webhook fetch** in `api/contact.js`. A
+      hanging webhook holds the function until Vercel kills it.
+      `AbortSignal.timeout(8000)` is the whole fix.
+- [ ] **The hero block is copy-pasted across eight page templates.** The
+      divergence between them is what silently dropped the Startups hero
+      buttons: the data set `actions`, the template had no slot to render
+      them. A `<Hero>` component would make that class of bug impossible.
+- [ ] **`/privacy` is `noindex`.** Unusual for a privacy policy, which people
+      and regulators look for. Confirm it is deliberate.
+- [ ] **Footer links are 23px tall**, one pixel under the 24px in WCAG 2.5.8.
+      They pass on the spacing exception, so this is polish, not a failure.
+
