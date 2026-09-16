@@ -53,7 +53,7 @@
  * the full picture in both cases, which is also what `prefers-reduced-motion`
  * gets: still, and complete, rather than a degraded version of it.
  */
-import { buildRoots, buildSoil } from '../lib/narrative';
+import { buildRoots, buildSoil, buildTree } from '../lib/narrative';
 
 interface Props {
   class?: string;
@@ -68,6 +68,7 @@ const { class: className } = Astro.props;
  */
 const soil = buildSoil(76, 51009, 1, 100);
 const roots = buildRoots(30117, 0, 94);
+const tree = buildTree(88213);
 ---
 
 <div class:list={['narr', className]} data-narr aria-hidden="true">
@@ -145,6 +146,71 @@ const roots = buildRoots(30117, 0, 94);
         ))
     }
   </div>
+
+  {/*
+    Beats 5 and 6. The stem, the canopy, and a second ground line beneath them.
+
+    A note on where these sit, because it is a consequence of a decision rather
+    than an accident. The ground line flows with the document rather than being
+    fixed to the viewport (§7.2 of the brief, answered deliberately: a fixed
+    horizon is filmic and the reader never descends). That means the horizon
+    established at the hero is thousands of pixels above by the time the reader
+    reaches the end of the page, and a tree cannot grow above it there.
+
+    So a second horizon is drawn at the foot of the page, and the tree stands on
+    that one, with the root system faintly visible beneath it. Read top to
+    bottom the page is: a horizon, a long descent through the soil, and then a
+    complete picture — a tree on the ground with roots under it. The final
+    composition is the coherent one; everything above it is the passage that
+    earned it.
+  */}
+  <svg
+    class="narr-tree"
+    data-narr-beat="5"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    role="presentation"
+    aria-hidden="true"
+    focusable="false"
+  >
+    {
+      tree.map((limb) => (
+        <path
+          class:list={['narr-limb', `narr-limb--${limb.order}`]}
+          d={limb.d}
+          fill="none"
+          vector-effect="non-scaling-stroke"
+          style={`--len:${limb.len};--seq:${limb.seq}`}
+        />
+      ))
+    }
+  </svg>
+
+  <div class="narr-canopy" data-narr-beat="5">
+    {
+      tree
+        .filter((limb) => limb.tip !== null)
+        .map((limb) => (
+          <span
+            class:list={['narr-leaf', limb.counts ? 'narr-leaf--counts' : null]}
+            style={`--x:${limb.tip!.x}%;--y:${limb.tip!.y}%;--seq:${limb.seq}`}
+          />
+        ))
+    }
+  </div>
+
+  {/* The second horizon, and what stays visible underneath it. */}
+  <div class="narr-ground narr-ground--2" data-narr-beat="6"></div>
+  <div class="narr-under" data-narr-beat="6">
+    {
+      roots
+        .filter((root) => root.order === 1)
+        .slice(0, 7)
+        .map((root) => (
+          <span class="narr-under-mark" style={`--x:${root.tip?.x ?? 28}%;--seq:${root.seq}`} />
+        ))
+    }
+  </div>
 </div>
 
 <script>
@@ -178,10 +244,23 @@ const roots = buildRoots(30117, 0, 94);
       const s = stage.getBoundingClientRect();
       const h = hero.getBoundingClientRect();
       if (!s.height) return;
-      layer.style.setProperty(
-        '--ground',
-        `${(((h.bottom - s.top) / s.height) * 100).toFixed(3)}%`,
-      );
+      const pc = (px: number) => `${((px / s.height) * 100).toFixed(3)}%`;
+
+      layer.style.setProperty('--ground', pc(h.bottom - s.top));
+
+      /*
+       * Two more anchors, marked in the page rather than guessed here: where
+       * the tree stands, and where the second horizon runs. Beats keyed to
+       * named sections, as the brief asks, so a page that gains or loses a
+       * section moves the beats with it instead of running out before the page
+       * does.
+       */
+      const tree = stage.querySelector('[data-narr-anchor="tree"]');
+      const foot = stage.querySelector('[data-narr-anchor="ground2"]');
+      if (tree && foot) {
+        layer.style.setProperty('--tree', pc(tree.getBoundingClientRect().top - s.top));
+        layer.style.setProperty('--ground2', pc(foot.getBoundingClientRect().top - s.top));
+      }
     };
 
     place();

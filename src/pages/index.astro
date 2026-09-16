@@ -86,7 +86,6 @@ const jsonLd = {
       <ProblemList items={problems.items} />
     </div>
   </div>
-  </div>
 
   <div class="band dim band--tight">
     <div class="wrap">
@@ -117,7 +116,7 @@ const jsonLd = {
     )
   }
 
-  <div class="band">
+  <div class="band" data-narr-anchor="tree">
     <div class="wrap split">
       <div>
         <h2>{table.heading}</h2>
@@ -143,5 +142,6 @@ const jsonLd = {
     )
   }
 
-  <CtaBand cta={cta} />
+  <div data-narr-anchor="ground2"><CtaBand cta={cta} /></div>
+  </div>
 </Base>

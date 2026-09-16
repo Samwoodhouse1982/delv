@@ -247,3 +247,137 @@ export function buildRoots(seed = 30117, top = 0, bottom = 100): Root[] {
 
   return roots;
 }
+
+export interface Limb {
+  d: string;
+  len: number;
+  /** 0 the stem, 1 a limb off it, 2 a limb off that. Drives stroke width. */
+  order: number;
+  /** Where it ends, for the mark at the tip. Null for a limb that carries others. */
+  tip: { x: number; y: number } | null;
+  /** The one thing that counts. Exactly one limb in the canopy carries it. */
+  counts: boolean;
+  seq: number;
+}
+
+/**
+ * Beats 5 and 6: the stem, and the canopy.
+ *
+ * The same construction as the root system, turned over: a spine, limbs off
+ * it, limbs off those, thinning by order. Deliberately the same, because the
+ * argument the page makes is that the visible thing and the thing underneath
+ * are one structure, and drawing them in two different languages would say the
+ * opposite.
+ *
+ * The proportion is the point. This zone is a fraction of the depth the roots
+ * occupy, and it stays that way: a large root system under a small visible
+ * thing is a truer picture of evidence work than the reverse, and it is more
+ * distinctive than a tree getting bigger.
+ *
+ * Coordinates run 0 at the top of the zone to 100 at the ground line beneath
+ * it, so the stem grows from 100 upward.
+ */
+export function buildTree(seed = 88213): Limb[] {
+  const rnd = lcg(seed);
+  const limbs: Limb[] = [];
+  const STEM = 28;
+
+  /*
+   * The control point sits high and only part of the way out, so a limb rises
+   * as it leaves the stem and spreads late. The first version put it level
+   * with the start and far to the side, which sent every limb sideways before
+   * it hooked upward — the whole canopy read as drooping, closer to a fountain
+   * than a tree. Branches reach up. That is most of what makes a canopy a
+   * canopy rather than more roots.
+   */
+  const curve = (x: number, y: number, dx: number, dy: number, lift: number) => {
+    const ex = x + dx;
+    const ey = y + dy;
+    const cx = x + dx * 0.42;
+    const cy = y + dy * lift;
+    return {
+      d: `M ${round(x)} ${round(y)} Q ${round(cx)} ${round(cy)} ${round(ex)} ${round(ey)}`,
+      ex,
+      ey,
+      len: round(Math.hypot(dx, dy) * 1.25),
+    };
+  };
+
+  /* The stem. Modest, and it does not reach the top of its own zone: a stem,
+     not a trunk, because at this beat the thing has only just surfaced. */
+  const crown = 30;
+  limbs.push({
+    d: `M ${STEM} 100 C ${STEM - 0.9} 78 ${STEM + 1.1} 54 ${STEM - 0.3} ${crown}`,
+    len: 100 - crown,
+    order: 0,
+    tip: null,
+    counts: false,
+    seq: 0,
+  });
+
+  const grow = (x: number, y: number, dir: number, order: number, seq: number) => {
+    if (order > 2) return;
+    /*
+     * Rise still beats spread, but only just, and the numbers are in different
+     * units: this zone is about as wide as it is tall, so a limb of 24 up and
+     * 7.5 across is three to one in actual pixels and the canopy came out as a
+     * sheaf of near-parallel stems. Widened until the crown is broader than it
+     * is tall, which is what a crown is.
+     */
+    const spread = [0, 17, 11][order] ?? 8;
+    const rise = [0, 19, 11][order] ?? 8;
+    const kids = 2;
+
+    for (let i = 0; i < kids; i++) {
+      /* Each pair fans rather than running parallel: the first child leans
+         out, the second climbs. */
+      const lean = i === 0 ? 0.75 + rnd() * 0.5 : 0.28 + rnd() * 0.36;
+      const dx = dir * lean * spread;
+      const dy = -rise * (i === 0 ? 0.6 + rnd() * 0.35 : 0.9 + rnd() * 0.45);
+      const c = curve(x, y, dx, dy, 0.72 + rnd() * 0.16);
+      const childSeq = round(seq + 0.12 + rnd() * 0.1, 3);
+      const terminal = order === 2 || rnd() < 0.3;
+
+      limbs.push({
+        d: c.d,
+        len: c.len,
+        order,
+        tip: terminal ? { x: round(c.ex), y: round(c.ey) } : null,
+        counts: false,
+        seq: childSeq,
+      });
+
+      if (!terminal) grow(c.ex, c.ey, dir, order + 1, childSeq);
+      if (!terminal && rnd() < 0.4) grow(c.ex, c.ey, -dir, order + 1, childSeq + 0.05);
+    }
+  };
+
+  /*
+   * Six limb points, alternating, and they start at 0.42 of the stem rather
+   * than 0.25: a bare lower stem and the branching held up near the crown is
+   * what separates a tree from a shrub.
+   */
+  for (let i = 0; i < 6; i++) {
+    const t = 0.42 + (i / 6) * 0.5;
+    grow(
+      STEM + Math.sin(t * 3) * 0.8,
+      100 - (100 - crown) * t,
+      i % 2 === 0 ? 1 : -1,
+      1,
+      round(t, 3),
+    );
+  }
+
+  /*
+   * One tip carries aquamarine, and only one. The colour means the one thing
+   * that counts, and a canopy of it would be the failure the brief names: the
+   * moment it becomes the colour of leaves it stops meaning anything, and the
+   * highlighter behind the word value in the hero loses its force with it.
+   * The highest tip gets it.
+   */
+  const tips = limbs.filter((l) => l.tip);
+  const highest = tips.reduce((a, b) => (a.tip!.y <= b.tip!.y ? a : b));
+  highest.counts = true;
+
+  return limbs;
+}

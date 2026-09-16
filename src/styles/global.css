@@ -3302,7 +3302,15 @@ main:focus {
   left: 0;
   right: 0;
   top: var(--ground);
-  bottom: 0;
+  /*
+   * The soil stops where the tree stands, rather than running to the foot of
+   * the page. Now that the stage spans every section, letting it run the whole
+   * way stretched the root system over four thousand pixels and turned every
+   * branch into a near-vertical line.
+   */
+  bottom: calc(
+    100% - var(--tree, 100%) - (var(--ground2, 100%) - var(--tree, 100%)) * 0.25
+  );
 }
 
 .narr-mark,
@@ -3524,6 +3532,139 @@ main:focus {
   }
   to {
     opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Beats 5 and 6: the stem, the canopy, and the second horizon
+   -------------------------------------------------------------------------- */
+
+/*
+ * The tree's zone starts a quarter of the way into the section it is anchored
+ * to, not at its top. Anchored flush, the tree took a fifth of the page against
+ * the roots' half — under three to one, when the proportion is the whole point.
+ * Inset, it is four to one, and the canopy no longer fills the band, which the
+ * brief asks for in the same breath.
+ */
+.narr-tree,
+.narr-canopy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--tree, 100%) + (var(--ground2, 100%) - var(--tree, 100%)) * 0.25);
+  bottom: calc(100% - var(--ground2, 100%));
+}
+
+/*
+ * The same weights as the roots, because the visible thing and the thing
+ * underneath are one structure and drawing them in two languages would say the
+ * opposite. Pacific Blue throughout: this is what the measuring found, not the
+ * one thing that counts.
+ */
+.narr-limb {
+  stroke: var(--rule, #429ea6);
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.42;
+}
+.narr-limb--0 {
+  stroke-width: 1.7;
+  opacity: 0.5;
+}
+.narr-limb--1 {
+  stroke-width: 1.1;
+}
+.narr-limb--2 {
+  stroke-width: 0.7;
+  opacity: 0.34;
+}
+
+.narr-leaf {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 0.85cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: color-mix(in srgb, var(--rule, #429ea6) 70%, transparent);
+}
+/*
+ * Exactly one. The colour means the one thing that counts, and a canopy of it
+ * would be the failure the brief names by name.
+ */
+.narr-leaf--counts {
+  width: 1.05cqw;
+  background: var(--mark);
+}
+
+/* The horizon the tree stands on. Same construction as the first. */
+.narr-ground--2 {
+  top: var(--ground2, 100%);
+}
+
+/*
+ * What stays visible under it. The last thing on the page is the thing
+ * underneath, which is the whole argument of the site in one gesture.
+ */
+.narr-under {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--ground2, 100%);
+  bottom: 0;
+}
+.narr-under-mark {
+  position: absolute;
+  left: var(--x);
+  top: calc(12% + var(--seq) * 52%);
+  width: 0.7cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: var(--taupe);
+  opacity: 0.22;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-motion] [data-narr] .narr-limb {
+      stroke-dasharray: var(--len) var(--len);
+      stroke-dashoffset: var(--len);
+      animation: narrDraw linear both;
+      animation-timeline: view();
+      animation-range: cover calc(18% + var(--seq) * 30%) cover
+        calc(46% + var(--seq) * 30%);
+    }
+    [data-motion] [data-narr] .narr-leaf,
+    [data-motion] [data-narr] .narr-under-mark {
+      opacity: 0;
+      animation: narrTip linear both;
+      animation-timeline: view();
+      animation-range: cover calc(40% + var(--seq) * 26%) cover
+        calc(54% + var(--seq) * 26%);
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    [data-motion] [data-narr-observed] .narr-limb {
+      stroke-dasharray: var(--len) var(--len);
+      stroke-dashoffset: var(--len);
+      transition: stroke-dashoffset 1.3s ease calc(var(--seq, 0) * 0.5s);
+    }
+    [data-motion] [data-narr-observed] .is-drawn.narr-tree .narr-limb {
+      stroke-dashoffset: 0;
+    }
+    [data-motion] [data-narr-observed] .narr-leaf,
+    [data-motion] [data-narr-observed] .narr-under-mark {
+      opacity: 0;
+      transition: opacity 0.9s ease calc(var(--seq, 0) * 0.5s);
+    }
+    [data-motion] [data-narr-observed] .is-drawn .narr-leaf {
+      opacity: 1;
+    }
+    [data-motion] [data-narr-observed] .is-drawn .narr-under-mark {
+      opacity: 0.22;
+    }
   }
 }
 
