@@ -36,27 +36,6 @@ export interface SoilMark {
   o: number;
 }
 
-export interface Root {
-  /**
-   * The path, in stage percentages. Drawn in an SVG with
-   * preserveAspectRatio="none", so only the shape stretches; the stroke does
-   * not, and neither does anything drawn as a mark.
-   */
-  d: string;
-  /** Rough path length, for the draw-on animation's dasharray. */
-  len: number;
-  /**
-   * Whether this root found anything. A root that reaches nothing is an
-   * `unclosed` mark in the existing vocabulary: a claim not yet closed. The
-   * failures are not decoration — a root system where every probe succeeds is
-   * the visual equivalent of a case study with no failures in it.
-   */
-  finds: boolean;
-  /** Where it ends, for the mark that sits at the tip. */
-  tip: { x: number; y: number };
-  /** Draw order, 0 to 1, so the system spreads rather than appearing at once. */
-  order: number;
-}
 
 /**
  * The soil: undifferentiated activity, in Rosy Taupe, denser with depth.
@@ -103,73 +82,167 @@ export function buildSoil(
  * had to find its way. They stay within the line vocabulary either way: the
  * weight is the measuring rule's, and nothing tapers.
  */
+export interface Root {
+  /**
+   * The path, in percentages of the region below the ground line. Drawn in an
+   * SVG with preserveAspectRatio="none", so only the shape stretches; the
+   * stroke does not, and neither does anything drawn as a mark.
+   */
+  d: string;
+  /** Rough path length, for the draw-on animation's dasharray. */
+  len: number;
+  /**
+   * Branch order. 0 is the taproot, 1 a branch off it, 2 a branch off that.
+   * It drives stroke width, because the single strongest cue that a line is a
+   * root rather than an arc is that it gets thinner every time it divides.
+   */
+  order: number;
+  /**
+   * Whether this root found anything. A root that reaches nothing is an
+   * `unclosed` mark in the existing vocabulary: a claim not yet closed. The
+   * failures are not decoration — a root system where every probe succeeds is
+   * the visual equivalent of a case study with no failures in it.
+   */
+  finds: boolean;
+  /** Where it ends, for the mark that sits at the tip. Null for a root that
+      only exists to carry others. */
+  tip: { x: number; y: number } | null;
+  /** Draw order, 0 to 1, so the system spreads rather than appearing at once. */
+  seq: number;
+}
+
+/**
+ * The root system: a taproot descending from where the seed landed, branches
+ * off it, and branches off those.
+ *
+ * ## Why this was rebuilt
+ *
+ * The first version was a trunk with eight single probes, drawn at one weight
+ * with no subdivision, and Sam's reaction was that it did not look like roots.
+ * He was right. Avoiding a stock tree had been taken as far as avoiding the
+ * thing entirely: what makes a line read as a root rather than as an arc is
+ * that it divides, and divides again, and thins each time it does. Neither
+ * happened, so the drawing read as neither a tree nor anything else.
+ *
+ * Branching and thinning are structural cues, not botanical ones. Nothing here
+ * is drawn as a tapering organic form: every path is still a stroke at the
+ * weight of a measuring rule, and the weight simply steps down by order. That
+ * keeps the vocabulary the five section graphics use while letting the shape
+ * be legible.
+ */
 export function buildRoots(seed = 30117, top = 0, bottom = 100): Root[] {
   const rnd = lcg(seed);
   const roots: Root[] = [];
   const span = bottom - top;
 
   /*
-   * The trunk descends at 28% of the width, not at 50%.
-   *
-   * Centred looked right in the abstract and was wrong on the page: the site's
-   * `.split` sections put a short heading in the left column and the prose in
-   * the right, so the middle of the page is the middle of a paragraph. The
-   * roots ran lines through the copy, which is the brief's own first failure
-   * mode — the motion becoming the point rather than the copy.
-   *
-   * 28% sits under the heading column, which is the one part of these sections
-   * that is mostly empty below its first two lines. It is also the more
-   * distinctive composition: a root system rising off-centre rather than a
-   * tree diagram bisecting the page.
+   * The taproot descends at 28% of the width, not at 50%. Centred looked right
+   * in the abstract and was wrong on the page: the site's `.split` sections put
+   * a short heading in the left column and the prose in the right, so the
+   * middle of the page is the middle of a paragraph, and roots drawn there ran
+   * lines through the copy.
    */
   const TRUNK = 28;
-  const trunkEnd = top + span * 0.86;
-  roots.push({
-    d: `M ${TRUNK} ${round(top)} C ${TRUNK} ${round(top + span * 0.3)} ${TRUNK - 0.8} ${round(top + span * 0.5)} ${TRUNK - 0.4} ${round(trunkEnd)}`,
-    len: round(trunkEnd - top),
-    finds: true,
-    tip: { x: TRUNK - 0.4, y: round(trunkEnd) },
-    order: 0,
-  });
+
+  /* A quadratic through a start, a direction and a distance. */
+  const curve = (
+    x: number,
+    y: number,
+    dx: number,
+    dy: number,
+    bend: number,
+  ) => {
+    const ex = x + dx;
+    const ey = y + dy;
+    /* The control point sits ahead and to the side, so the root leaves its
+       parent sideways and turns down rather than setting off diagonally. */
+    const cx = x + dx * bend;
+    const cy = y + dy * (1 - bend) * 0.55;
+    return {
+      d: `M ${round(x)} ${round(y)} Q ${round(cx)} ${round(cy)} ${round(ex)} ${round(ey)}`,
+      ex,
+      ey,
+      len: round(Math.hypot(dx, dy) * 1.2),
+    };
+  };
 
   /*
-   * Eight probes, alternating sides so the system balances, each leaving the
-   * trunk at a different depth. Three of the eight find nothing. That ratio
-   * is a judgement rather than a measurement, and it is the one number here
-   * worth arguing about: too few failures and the picture is a brochure, too
-   * many and the company looks like it cannot find anything.
+   * Roughly a third of the tips find nothing. A judgement rather than a
+   * measurement, and the one number here worth arguing about: too few failures
+   * and the picture is a brochure, too many and the company looks like it
+   * cannot find anything.
    */
-  const FAILS = new Set([1, 4, 6]);
+  const fails = () => rnd() < 0.34;
 
-  for (let i = 0; i < 8; i++) {
-    const side = i % 2 === 0 ? 1 : -1;
-    const startY = top + span * (0.12 + (i / 8) * 0.64 + rnd() * 0.04);
-    /*
-     * Drop exceeds reach, always. The first version had it the other way and
-     * the probes read as flight paths sweeping across the page rather than as
-     * roots going down, and they crossed the measure while they did it. A root
-     * that travels further sideways than downward is not a root.
-     *
-     * A probe that finds nothing also stops short. It did not get as far.
-     */
-    const found = !FAILS.has(i);
-    const scale = found ? 1 : 0.55;
-    const reach = (6 + rnd() * 13) * side * scale;
-    const drop = span * (0.13 + rnd() * 0.1) * scale;
-    const endX = TRUNK + reach;
-    const endY = startY + drop;
-    /* The control point sits out ahead of the start, so the probe leaves the
-       trunk sideways and turns down rather than setting off diagonally. */
-    const cx = TRUNK + reach * 0.75;
-    const cy = startY + drop * 0.2;
+  const grow = (
+    x: number,
+    y: number,
+    dir: number,
+    order: number,
+    seq: number,
+  ) => {
+    if (order > 2 || y > bottom - 4) return;
 
-    roots.push({
-      d: `M ${TRUNK} ${round(startY)} Q ${round(cx)} ${round(cy)} ${round(endX)} ${round(endY)}`,
-      len: round(Math.hypot(reach, drop) * 1.15),
-      finds: found,
-      tip: { x: round(endX), y: round(endY) },
-      order: round(0.08 + (i / 8) * 0.8, 3),
-    });
+    /* Each order reaches less far and drops less deep than its parent. */
+    const spread = [0, 11, 6.5][order] ?? 5;
+    const depth = [0, 0.13, 0.08][order] ?? 0.06;
+
+    const kids = order === 1 ? 2 : 1 + Math.floor(rnd() * 2);
+
+    for (let i = 0; i < kids; i++) {
+      const away = dir * (0.55 + rnd() * 0.95);
+      const dx = away * spread;
+      const dy = span * depth * (0.7 + rnd() * 0.7);
+      const c = curve(x, y, dx, dy, 0.7 + rnd() * 0.2);
+      const childSeq = round(seq + 0.1 + rnd() * 0.12, 3);
+
+      /* An order-2 root is a tip. An order-1 root carries more roots, and only
+         the ones that carry nothing get a mark, so the system does not end in
+         a rash of dots at every junction. */
+      const terminal = order === 2 || rnd() < 0.4;
+      const found = terminal ? !fails() : true;
+
+      roots.push({
+        d: c.d,
+        len: c.len,
+        order,
+        finds: found,
+        tip: terminal ? { x: round(c.ex), y: round(c.ey) } : null,
+        seq: childSeq,
+      });
+
+      if (!terminal) grow(c.ex, c.ey, dir, order + 1, childSeq);
+      /* One in three carries on straight down as well as sideways, which is
+         what stops the system reading as a row of chevrons. */
+      if (!terminal && rnd() < 0.34) {
+        grow(c.ex, c.ey, -dir, order + 1, childSeq + 0.04);
+      }
+    }
+  };
+
+  /* The taproot, wandering slightly rather than ruled straight. */
+  const end = top + span * 0.88;
+  roots.push({
+    d:
+      `M ${TRUNK} ${round(top)} ` +
+      `C ${TRUNK + 1.2} ${round(top + span * 0.26)} ` +
+      `${TRUNK - 1.6} ${round(top + span * 0.58)} ` +
+      `${TRUNK - 0.6} ${round(end)}`,
+    len: round(end - top),
+    order: 0,
+    finds: true,
+    tip: { x: TRUNK - 0.6, y: round(end) },
+    seq: 0,
+  });
+
+  /* Six branch points down the taproot, alternating sides. */
+  for (let i = 0; i < 6; i++) {
+    const t = 0.1 + (i / 6) * 0.7 + rnd() * 0.05;
+    const y = top + span * t;
+    /* The taproot's own wander, so branches leave the line rather than the
+       column the line started in. */
+    const x = TRUNK + Math.sin(t * 3.1) * 1.4;
+    grow(x, y, i % 2 === 0 ? 1 : -1, 1, round(t, 3));
   }
 
   return roots;

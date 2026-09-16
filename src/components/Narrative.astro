@@ -114,24 +114,35 @@ const roots = buildRoots(30117, 0, 94);
     {
       roots.map((root) => (
         <path
-          class:list={['narr-root', root.finds ? null : 'narr-root--dry']}
+          class:list={[
+            'narr-root',
+            `narr-root--${root.order}`,
+            root.finds ? null : 'narr-root--dry',
+          ]}
           d={root.d}
           fill="none"
           vector-effect="non-scaling-stroke"
-          style={`--len:${root.len};--order:${root.order}`}
+          style={`--len:${root.len};--seq:${root.seq}`}
         />
       ))
     }
   </svg>
 
+  {/*
+    Only roots that actually end get a mark. Marking every junction produced a
+    rash of dots down the system and made it read as a diagram of nodes rather
+    than as something that grew.
+  */}
   <div class="narr-tips" data-narr-beat="3">
     {
-      roots.slice(1).map((root) => (
-        <span
-          class:list={['narr-tip', root.finds ? 'narr-tip--found' : 'narr-tip--dry']}
-          style={`--x:${root.tip.x}%;--y:${root.tip.y}%;--order:${root.order}`}
-        />
-      ))
+      roots
+        .filter((root) => root.tip !== null && root.order > 0)
+        .map((root) => (
+          <span
+            class:list={['narr-tip', root.finds ? 'narr-tip--found' : 'narr-tip--dry']}
+            style={`--x:${root.tip!.x}%;--y:${root.tip!.y}%;--seq:${root.seq}`}
+          />
+        ))
     }
   </div>
 </div>

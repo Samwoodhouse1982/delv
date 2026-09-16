@@ -3335,16 +3335,21 @@ main:focus {
  */
 .narr-seed {
   position: absolute;
-  /* Where the trunk starts. See the TRUNK constant in lib/narrative.ts. */
+  /* Where the taproot starts. See the TRUNK constant in lib/narrative.ts. */
   left: 28%;
   /* Just below the line, so it reads as having crossed it rather than as
      sitting on it. 2.4cqw rather than a percentage of the stage: the distance
      should look the same whatever the page's height turns out to be. */
   top: var(--ground);
   margin-top: 2.4cqw;
-  width: 1.15cqw;
-  aspect-ratio: 1;
-  border-radius: 50%;
+  width: 1.05cqw;
+  /*
+   * Taller than it is wide, and rounder at the bottom than the top: a seed
+   * shape rather than one more dot in a drawing already full of dots. Still
+   * geometry, not an illustration of a seed.
+   */
+  aspect-ratio: 0.72;
+  border-radius: 46% 46% 50% 50% / 62% 62% 38% 38%;
   background: var(--mark);
   translate: -50% -50%;
 }
@@ -3357,9 +3362,26 @@ main:focus {
  */
 .narr-root {
   stroke: var(--rule, #429ea6);
-  stroke-width: 1;
   stroke-linecap: round;
   opacity: 0.42;
+}
+/*
+ * Weight steps down by branch order. This is the single strongest cue that a
+ * line is a root rather than an arc, and its absence is why the first version
+ * read as neither a tree nor anything else. `non-scaling-stroke` means these
+ * are screen pixels, so the taproot is a little over a hairline and the finest
+ * branches are under one.
+ */
+.narr-root--0 {
+  stroke-width: 1.7;
+  opacity: 0.5;
+}
+.narr-root--1 {
+  stroke-width: 1.1;
+}
+.narr-root--2 {
+  stroke-width: 0.7;
+  opacity: 0.34;
 }
 /* A probe that reached nothing. Taupe, not blue: it measured nothing. */
 .narr-root--dry {
@@ -3411,15 +3433,15 @@ main:focus {
       stroke-dashoffset: var(--len);
       animation: narrDraw linear both;
       animation-timeline: view();
-      animation-range: cover calc(24% + var(--order) * 22%) cover
-        calc(52% + var(--order) * 22%);
+      animation-range: cover calc(20% + var(--seq) * 26%) cover
+        calc(46% + var(--seq) * 26%);
     }
     [data-motion] [data-narr] .narr-tip {
       opacity: 0;
       animation: narrTip linear both;
       animation-timeline: view();
-      animation-range: cover calc(46% + var(--order) * 22%) cover
-        calc(58% + var(--order) * 22%);
+      animation-range: cover calc(42% + var(--seq) * 26%) cover
+        calc(54% + var(--seq) * 26%);
     }
   }
 
@@ -3434,13 +3456,13 @@ main:focus {
     [data-motion] [data-narr-observed] .narr-tip {
       opacity: 0;
       transition:
-        opacity 0.9s ease calc(var(--order, 0) * 0.35s),
-        transform 0.9s ease calc(var(--order, 0) * 0.35s);
+        opacity 0.9s ease calc(var(--seq, 0) * 0.5s),
+        transform 0.9s ease calc(var(--seq, 0) * 0.5s);
     }
     [data-motion] [data-narr-observed] .narr-root {
       stroke-dasharray: var(--len) var(--len);
       stroke-dashoffset: var(--len);
-      transition: stroke-dashoffset 1.3s ease calc(var(--order, 0) * 0.35s);
+      transition: stroke-dashoffset 1.3s ease calc(var(--seq, 0) * 0.5s);
     }
     [data-motion] [data-narr-observed] .narr-seed {
       transform: translateY(-3.5cqw);
