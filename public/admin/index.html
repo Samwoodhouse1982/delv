@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>delv. · edit the site</title>
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <!--
+      Sveltia CMS: a drop-in replacement for Decap that reads the same
+      config.yml, but with drag-to-reorder that works on a phone and no
+      build step of its own. Pinned to an exact version, from the CDN the
+      site already allows.
+
+      Everything it does is a commit to this repository. Saving writes the
+      JSON in src/content/pages/, Vercel builds, and the change is live in
+      about a minute. That means edits are revertable exactly like code —
+      see REVERT.md — which a hosted CMS with its own database would not be.
+    -->
+    <script
+      src="https://unpkg.com/@sveltia/cms@0.213.5/dist/sveltia-cms.mjs"
+      type="module"
+    ></script>
+    <noscript>
+      This page is an editor and needs JavaScript. The content it edits is
+      plain JSON in src/content/pages/ and can be edited in the repository
+      directly if this ever stops working.
+    </noscript>
+  </body>
+</html>

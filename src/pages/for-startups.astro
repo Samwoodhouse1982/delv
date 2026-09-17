@@ -1,90 +1,23 @@
 ---
+/**
+ * The page is a block list in src/content/pages/for-startups.json, rendered in
+ * the order that file gives. Layout lives in the content now, so Sam can
+ * reorder the sections without a developer; see src/content.config.ts.
+ */
+import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import CtaBand from '../components/CtaBand.astro';
-import DetailList from '../components/DetailList.astro';
-import Note from '../components/Note.astro';
-import Pillars from '../components/Pillars.astro';
-import Quote from '../components/Quote.astro';
-import Results from '../components/Results.astro';
-import Rule from '../components/Rule.astro';
-import StageList from '../components/StageList.astro';
-import Figure from '../components/Figure.astro';
-import { cta, hero, meta, moments, outcome, outcomeImage, where } from '../data/for-startups';
-import { placement, quoteFor, resultsFor } from '../data/proof';
+import Blocks from '../components/Blocks.astro';
 
-const proofResults = resultsFor('for-startups');
-const proofQuote = quoteFor('for-startups');
-const proofCopy = placement['for-startups'];
+const page = await getEntry('pages', 'for-startups');
+if (!page) throw new Error('Missing content: src/content/pages/for-startups.json');
+const { meta, blocks } = page.data;
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
-  <div class="wrap hero">
-    <h1>{hero.heading}</h1>
-    <p class="sub" set:html={hero.sub} />
-    <div class="hero-actions">
-      {
-        hero.actions?.map((action) => (
-          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
-            {action.label}
-          </a>
-        ))
-      }
-    </div>
-  </div>
-
-  <div class="wrap"><Rule /></div>
-
-  <div class="band">
-    <div class="wrap">
-      <h2 style="max-width:20ch">{moments.heading}</h2>
-      <StageList rows={moments.rows} class="mt-block" />
-    </div>
-  </div>
-
-  <div class="band dim">
-    <div class="wrap">
-      <div class="split" style="margin-bottom:30px">
-        <h2>{where.heading}</h2>
-        <p class="muted" style="margin:0" set:html={where.lede} />
-      </div>
-      <Pillars items={where.pillars} />
-    </div>
-  </div>
-
-  <div class="band mint">
-    <div class="wrap split">
-      <div>
-        <h2>{outcome.heading}</h2>
-        <Rule short class="mt-rule" />
-        <Figure figure={outcomeImage} class="mt-block" />
-      </div>
-      <div>
-        <DetailList items={outcome.details} />
-        <Note text={outcome.note} />
-      </div>
-    </div>
-  </div>
-
-  {
-    proofResults.length > 0 && (
-      <div class="band band--tight">
-        <div class="wrap">
-          <h2 style="margin-bottom:clamp(24px,3vw,36px)">{proofCopy.heading}</h2>
-          <Results items={proofResults} />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    proofQuote && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <Quote quote={proofQuote} />
-        </div>
-      </div>
-    )
-  }
-
-  <CtaBand cta={cta} />
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  noindex={meta.noindex}
+>
+  <Blocks blocks={blocks} />
 </Base>

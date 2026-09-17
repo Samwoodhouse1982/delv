@@ -1,23 +1,23 @@
 ---
+/**
+ * Home.
+ *
+ * The page is a block list in src/content/pages/index.json, rendered in the
+ * order that file gives. See src/content.config.ts for the block schema and
+ * why the layout moved into the content.
+ *
+ * The JSON-LD stays here: it is structured data about the organisation for
+ * search engines, not page content, and nothing in the CMS should be able to
+ * change what the site claims to be.
+ */
+import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import ClaimDemo from '../components/ClaimDemo.astro';
-import CtaBand from '../components/CtaBand.astro';
-import Pillars from '../components/Pillars.astro';
-import ProblemList from '../components/ProblemList.astro';
-import Quote from '../components/Quote.astro';
-import Results from '../components/Results.astro';
-import Rule from '../components/Rule.astro';
-import Absorption from '../components/graphics/Absorption.astro';
+import Blocks from '../components/Blocks.astro';
 import { site } from '../data/site';
-import Figure from '../components/Figure.astro';
-import { claim, cta, hero, meta, problems, stages, table, tableImage, what } from '../data/home';
-import { placement, quoteFor, resultsFor } from '../data/proof';
 
-// Empty until there is proof to publish, and both bands render nothing when
-// they are. See src/data/proof.ts.
-const proofResults = resultsFor('home');
-const proofQuote = quoteFor('home');
-const proofCopy = placement.home;
+const page = await getEntry('pages', 'index');
+if (!page) throw new Error('Missing content: src/content/pages/index.json');
+const { meta, blocks } = page.data;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -32,101 +32,11 @@ const jsonLd = {
 };
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage} jsonLd={jsonLd}>
-  <div class="wrap hero">
-    <h1 class="h1-lockup" set:html={hero.heading} />
-    <p class="sub" set:html={hero.sub} />
-    <div class="hero-actions">
-      {
-        hero.actions?.map((action) => (
-          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
-            {action.label}
-          </a>
-        ))
-      }
-    </div>
-    <ClaimDemo claim={claim} />
-  </div>
-
-  <div class="wrap"><Rule /></div>
-
-  <div class="band dark">
-    <div class="wrap">
-      <div class="split">
-        <div><h2>{what.heading}</h2></div>
-        <div>
-          {what.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-          <p class="muted" set:html={what.muted} />
-        </div>
-      </div>
-      <Absorption class="mt-block" />
-    </div>
-  </div>
-
-  <div class="band mint">
-    <div class="wrap">
-      <div class="split" style="margin-bottom:clamp(28px,3vw,44px)">
-        <h2>{problems.heading}</h2>
-        <p class="muted" style="margin:0" set:html={problems.lede} />
-      </div>
-      <ProblemList items={problems.items} />
-    </div>
-  </div>
-
-  <div class="band dim band--tight">
-    <div class="wrap">
-      <div class="split" style="margin-bottom:28px">
-        <h2>{stages.heading}</h2>
-        <p class="muted" style="margin:0" set:html={stages.lede} />
-      </div>
-      <Pillars items={stages.pillars} shapes />
-      <p class="mt-cta">
-        <a class="btn btn--ghost" href={stages.action.href}>{stages.action.label}</a>
-      </p>
-    </div>
-  </div>
-
-  {
-    proofResults.length > 0 && (
-      <div class="band">
-        <div class="wrap">
-          <div class="split" style="margin-bottom:clamp(28px,3vw,44px)">
-            <h2>{proofCopy.heading}</h2>
-            {proofCopy.lede && (
-              <p class="muted" style="margin:0" set:html={proofCopy.lede} />
-            )}
-          </div>
-          <Results items={proofResults} />
-        </div>
-      </div>
-    )
-  }
-
-  <div class="band">
-    <div class="wrap split">
-      <div>
-        <h2>{table.heading}</h2>
-        <Rule short class="mt-rule" />
-        <Figure figure={tableImage} class="mt-block" />
-      </div>
-      <div>
-        {table.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-        <p>
-          <a class="btn btn--ghost" href={table.action.href}>{table.action.label}</a>
-        </p>
-      </div>
-    </div>
-  </div>
-
-  {
-    proofQuote && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <Quote quote={proofQuote} />
-        </div>
-      </div>
-    )
-  }
-
-  <CtaBand cta={cta} />
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  jsonLd={jsonLd}
+>
+  <Blocks blocks={blocks} />
 </Base>

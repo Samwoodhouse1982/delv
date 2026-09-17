@@ -1,5 +1,16 @@
 ---
-import type { BenchMember } from '../data/who-we-are';
+/**
+ * Moved here from src/data/who-we-are.ts when the pages became content
+ * collections and that file went. The shape is the component's, not a page's.
+ */
+export interface BenchMember {
+  /** Omit until there is a real person who has agreed to be named. */
+  name?: string;
+  /** The discipline. Doubles as the heading when there is no name. */
+  role: string;
+  /** One sentence: what they are brought in for. */
+  body: string;
+}
 
 interface Props {
   members: BenchMember[];

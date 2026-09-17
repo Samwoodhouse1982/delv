@@ -38,6 +38,8 @@ import QA from './QA.astro';
 import Quote from './Quote.astro';
 import Results from './Results.astro';
 import Rule from './Rule.astro';
+import Mark from './graphics/Mark.astro';
+import Split from './Split.astro';
 import StageList from './StageList.astro';
 import Absorption from './graphics/Absorption.astro';
 import EngagementFlow from './graphics/EngagementFlow.astro';
@@ -77,6 +79,9 @@ const proof = block.type === 'proof' ? block : null;
 const proofQuote = block.type === 'proofQuote' ? block : null;
 const form = block.type === 'contactForm' ? block : null;
 const graphic = block.type === 'graphic' ? block : null;
+const stage = block.type === 'stage' ? block : null;
+const callout = block.type === 'callout' ? block : null;
+const stack = block.type === 'stack' ? block : null;
 const cta = block.type === 'cta' ? block : null;
 
 /*
@@ -97,15 +102,20 @@ const quote = proofQuote
 
 {
   hero && (
-    <div class="wrap hero">
+    <div class="wrap hero" style={hero.tightBottom ? 'padding-bottom:20px' : undefined}>
       <h1 class={hero.lockup ? 'h1-lockup' : undefined} set:html={hero.heading} />
       <p class="sub" set:html={hero.sub} />
       {/*
-        The wrapper is emitted whether or not there are actions, as the page
-        templates did. A conditional around it changes Astro's whitespace
-        handling inside the anchors — `>Label<` rather than `> Label <` — and
-        the parity check against the pre-migration build catches it.
+        Only when there are actions. Four pages open with a heading and a
+        sub alone, and an empty wrapper on those is markup that was never
+        there — the parity check against the pre-migration build catches it.
+
+        The explicit `{' '}` inside the anchor is not decoration either:
+        Astro emits `>Label<` rather than `> Label <` once this JSX sits a
+        level deeper than it did in the page templates, and that is a
+        difference the same check refuses to let through.
       */}
+      {hero.actions.length > 0 && (
       <div class="hero-actions">
         {hero.actions.map((a) => (
           <a class:list={['btn', a.ghost && 'btn--ghost']} href={a.href}>
@@ -114,6 +124,8 @@ const quote = proofQuote
           </a>
         ))}
       </div>
+      )}
+      {hero.claim && <ClaimDemo claim={hero.claim} />}
     </div>
   )
 }
@@ -136,8 +148,8 @@ const quote = proofQuote
 
 {
   prose && prose.layout === 'split' && (
-    <Band band={prose.band} tight={prose.tight}>
-      <div class="wrap split">
+    <Band band={prose.band} tight={prose.tight} plain={prose.plain}>
+      <Split nested={prose.nestSplit}>
         <div>
           {prose.heading && <h2 style={width(prose.headingWidth)} set:html={prose.heading} />}
           {prose.headingRule && <Rule short class="mt-rule" />}
@@ -149,21 +161,55 @@ const quote = proofQuote
           ))}
           {prose.muted && <p class="muted" set:html={prose.muted} />}
           {prose.caption && <p class="caption" set:html={prose.caption} />}
+          {!prose.graphicAfter && prose.graphic === 'restatement' && (
+            <Restatement class="mt-block" />
+          )}
+          {!prose.graphicAfter && prose.graphic === 'absorption' && (
+            <Absorption class="mt-block" />
+          )}
+          {!prose.graphicAfter && prose.graphic === 'engagementFlow' && (
+            <EngagementFlow class="mt-block" />
+          )}
+          {prose.action && (
+            <p>
+              <a
+                class:list={['btn', prose.action.ghost && 'btn--ghost']}
+                href={prose.action.href}
+              >
+                {prose.action.label}
+              </a>
+            </p>
+          )}
         </div>
-      </div>
+        {prose.graphicAfter && prose.graphic === 'absorption' && (
+          <Absorption slot="after" class="mt-block" />
+        )}
+        {prose.graphicAfter && prose.graphic === 'restatement' && (
+          <Restatement slot="after" class="mt-block" />
+        )}
+        {prose.graphicAfter && prose.graphic === 'engagementFlow' && (
+          <EngagementFlow slot="after" class="mt-block" />
+        )}
+      </Split>
     </Band>
   )
 }
 
 {
   prose && prose.layout === 'full' && (
-    <Band band={prose.band} tight={prose.tight}>
+    <Band band={prose.band} tight={prose.tight} plain={prose.plain}>
       <div class="wrap">
         {prose.heading && <h2 style={width(prose.headingWidth)} set:html={prose.heading} />}
         {prose.lede && <p class="muted" set:html={prose.lede} />}
-        {prose.paragraphs.map((p) => (
-          <p set:html={p} />
-        ))}
+        {prose.bodyMax ? (
+          <div class="body-max mt-rule">
+            {prose.paragraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+        ) : (
+          prose.paragraphs.map((p) => <p set:html={p} />)
+        )}
         {prose.muted && <p class="muted" set:html={prose.muted} />}
         {prose.caption && <p class="caption" set:html={prose.caption} />}
         {prose.figure && <Figure figure={prose.figure} class="mt-block" />}
@@ -182,7 +228,17 @@ const quote = proofQuote
             {pillars.lede && <p class="muted" style="margin:0" set:html={pillars.lede} />}
           </div>
         )}
-        <Pillars items={pillars.items} marks={pillars.marks} />
+        <Pillars items={pillars.items} marks={pillars.marks} shapes={pillars.shapes} />
+        {pillars.action && (
+          <p class="mt-cta">
+            <a
+              class:list={['btn', pillars.action.ghost && 'btn--ghost']}
+              href={pillars.action.href}
+            >
+              {pillars.action.label}
+            </a>
+          </p>
+        )}
       </div>
     </Band>
   )
@@ -202,6 +258,10 @@ const quote = proofQuote
           </div>
         )}
         <StageList rows={stages.rows} class="mt-block" />
+        {stages.graphic === 'engagementFlow' && <EngagementFlow class="mt-block" />}
+        {stages.graphic === 'restatement' && <Restatement class="mt-block" />}
+        {stages.graphic === 'absorption' && <Absorption class="mt-block" />}
+        {stages.figure && <Figure figure={stages.figure} class="mt-block" />}
       </div>
     </Band>
   )
@@ -210,17 +270,25 @@ const quote = proofQuote
 {
   details && details.layout === 'split' && (
     <Band band={details.band} tight={details.tight}>
-      <div class="wrap split">
+      <Split nested={details.nestSplit}>
         <div>
           {details.heading && <h2 set:html={details.heading} />}
           {details.headingRule && <Rule short class="mt-rule" />}
-          {details.figure && <Figure figure={details.figure} class="mt-block" />}
+          {details.figure && details.figureSide === 'left' && (
+            <Figure figure={details.figure} class="mt-block" />
+          )}
         </div>
         <div>
+          {details.paragraphs.map((p) => (
+            <p set:html={p} />
+          ))}
           <DetailList items={details.items} />
           {details.note && <Note text={details.note} />}
+          {details.figure && details.figureSide === 'right' && (
+            <Figure figure={details.figure} class="mt-block" />
+          )}
         </div>
-      </div>
+      </Split>
     </Band>
   )
 }
@@ -255,13 +323,23 @@ const quote = proofQuote
   offers && (
     <Band band={offers.band} tight={offers.tight}>
       <div class="wrap">
-        {offers.heading && (
-          <div class="split" style={GAP[offers.headingGap]}>
-            <h2 set:html={offers.heading} />
-            {offers.lede && <p class="muted" style="margin:0" set:html={offers.lede} />}
-          </div>
-        )}
-        <OfferGrid items={offers.items} />
+        {offers.groups.map((g, i) => (
+          <>
+            {g.heading && i === 0 && (
+              <div class="split" style={GAP[offers.headingGap]}>
+                <h2 set:html={g.heading} />
+                {g.lede && <p class="muted" style="margin:0" set:html={g.lede} />}
+              </div>
+            )}
+            {g.heading && i > 0 && (
+              <div class="split offer-next">
+                <h2 class="as-h3" set:html={g.heading} />
+                {g.lede && <p class="muted" style="margin:0" set:html={g.lede} />}
+              </div>
+            )}
+            <OfferGrid items={g.items} marks={g.marks} />
+          </>
+        ))}
       </div>
     </Band>
   )
@@ -271,7 +349,7 @@ const quote = proofQuote
   qa && (
     <Band band={qa.band} tight={qa.tight}>
       <div class="wrap">
-        {qa.heading && <h2 set:html={qa.heading} />}
+        {qa.heading && <h2 style={GAP[qa.headingGap]} set:html={qa.heading} />}
         <QA items={qa.items} />
       </div>
     </Band>
@@ -324,10 +402,15 @@ const quote = proofQuote
   proof && results.length > 0 && (
     <Band band={proof.band} tight={proof.tight}>
       <div class="wrap">
-        {proofHeading && (
-          <h2 style="margin-bottom:clamp(24px,3vw,36px)" set:html={proofHeading} />
+        {proofHeading && !proofLede && (
+          <h2 style={GAP[proof.headingGap]} set:html={proofHeading} />
         )}
-        {proofLede && <p class="muted" set:html={proofLede} />}
+        {proofHeading && proofLede && (
+          <div class="split" style={GAP[proof.headingGap]}>
+            <h2 set:html={proofHeading} />
+            <p class="muted" style="margin:0" set:html={proofLede} />
+          </div>
+        )}
         <Results items={results} />
       </div>
     </Band>
@@ -346,10 +429,21 @@ const quote = proofQuote
 
 {
   form && (
-    <Band band={form.band} tight={form.tight}>
-      <div class="wrap">
-        <ContactForm />
-      </div>
+    <Band band={form.band} tight={form.tight} plain={form.plain}>
+      <Split>
+        <div>
+          <ContactForm />
+        </div>
+        <div>
+          {/*
+            h2, not h3: it sits directly under the page h1, so an h3 would skip
+            a level. `as-h3` keeps the type size the design asks for.
+          */}
+          {form.heading && <h2 class="as-h3" set:html={form.heading} />}
+          <DetailList items={form.items} class="mt-rule" />
+          {form.note && <Note text={form.note} />}
+        </div>
+      </Split>
     </Band>
   )
 }
@@ -379,6 +473,68 @@ const quote = proofQuote
     <Band band={graphic.band} tight={graphic.tight}>
       <div class="wrap">
         <EngagementFlow class="mt-block" />
+      </div>
+    </Band>
+  )
+}
+
+{
+  stack && (
+    <Band band={stack.band} tight={stack.tight}>
+      <div class="wrap split">
+        <div>
+          {stack.heading && <h2 set:html={stack.heading} />}
+          {stack.headingRule && <Rule short class="mt-rule" />}
+        </div>
+        <div class="stack">
+          {stack.items.map((i) => (
+            <div>
+              <h3 set:html={i.heading} />
+              <p class="mt-tight" set:html={i.body} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </Band>
+  )
+}
+
+{
+  stage && (
+    <Band band={stage.band} tight={stage.tight}>
+      <div class="wrap split">
+        <div>
+          {stage.mark && <Mark kind={stage.mark} class="stage-mark" />}
+          <span class="stage-label ui">{stage.label}</span>
+          <h2 set:html={stage.heading} />
+          <p class="lede mt-lede" set:html={stage.lede} />
+        </div>
+        <div>
+          {stage.paragraphs.map((p) => (
+            <p set:html={p} />
+          ))}
+          <DetailList items={stage.details} />
+          {stage.figure && <Figure figure={stage.figure} class="mt-block" />}
+          {stage.graphic === 'restatement' && <Restatement class="mt-block" />}
+          {stage.graphic === 'absorption' && <Absorption class="mt-block" />}
+          {stage.graphic === 'engagementFlow' && <EngagementFlow class="mt-block" />}
+        </div>
+      </div>
+    </Band>
+  )
+}
+
+{
+  callout && (
+    <Band band={callout.band} tight={callout.tight}>
+      <div class="wrap">
+        <h2 style={width(callout.headingWidth)} set:html={callout.heading} />
+        <p style="margin-top:18px;max-width:54ch" set:html={callout.body} />
+        <p class="mt-cta">
+          <a class="btn" href={callout.action.href}>
+            {callout.action.label}
+          </a>
+        </p>
       </div>
     </Band>
   )

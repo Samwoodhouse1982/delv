@@ -1,76 +1,23 @@
 ---
+/**
+ * The page is a block list in src/content/pages/who-we-are.json, rendered in
+ * the order that file gives. Layout lives in the content now, so Sam can
+ * reorder the sections without a developer; see src/content.config.ts.
+ */
+import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Bench from '../components/Bench.astro';
-import Bios from '../components/Bios.astro';
-import CtaBand from '../components/CtaBand.astro';
-import Quote from '../components/Quote.astro';
-import Rule from '../components/Rule.astro';
-import Figure from '../components/Figure.astro';
-import { bench, cta, different, hero, meta, people, teamImage } from '../data/who-we-are';
-import { quoteFor } from '../data/proof';
+import Blocks from '../components/Blocks.astro';
 
-const proofQuote = quoteFor('who-we-are');
+const page = await getEntry('pages', 'who-we-are');
+if (!page) throw new Error('Missing content: src/content/pages/who-we-are.json');
+const { meta, blocks } = page.data;
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
-  <div class="wrap hero">
-    <h1>{hero.heading}</h1>
-    <p class="sub" set:html={hero.sub} />
-  </div>
-
-  <div class="wrap"><Rule /></div>
-
-  <div class="band">
-    <div class="wrap">
-      <Bios people={people} />
-    </div>
-  </div>
-
-  <div class="band dim">
-    <div class="wrap split">
-      <div>
-        <h2>{different.heading}</h2>
-        <Rule short class="mt-rule" />
-      </div>
-      <div class="stack">
-        {
-          different.items.map((item) => (
-            <div>
-              <h3>{item.heading}</h3>
-              <p class="mt-tight" set:html={item.body} />
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </div>
-
-  <div class="band">
-    <div class="wrap">
-      <div class="split">
-        <div>
-          <h2>{bench.heading}</h2>
-          <Figure figure={teamImage} class="mt-rule" />
-        </div>
-        <div>
-          {bench.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-          <p class="muted" set:html={bench.muted} />
-        </div>
-      </div>
-      {/* Empty until there are real specialists to name — see the data file. */}
-      <Bench members={bench.people} />
-    </div>
-  </div>
-
-  {
-    proofQuote && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <Quote quote={proofQuote} />
-        </div>
-      </div>
-    )
-  }
-
-  <CtaBand cta={cta} />
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  noindex={meta.noindex}
+>
+  <Blocks blocks={blocks} />
 </Base>

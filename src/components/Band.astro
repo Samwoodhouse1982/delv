@@ -10,11 +10,15 @@
 interface Props {
   band: 'paper' | 'linen' | 'mint' | 'deep' | 'none';
   tight?: boolean;
+  /** Suppresses the decorative discs. See the note on `plain` in the schema. */
+  plain?: boolean;
 }
-const { band, tight = false } = Astro.props;
+const { band, tight = false, plain = false } = Astro.props;
 
 const ground = { paper: '', linen: 'dim', mint: 'mint', deep: 'dark', none: '' }[band];
-const cls = ['band', tight ? 'band--tight' : '', ground].filter(Boolean).join(' ');
+const cls = ['band', tight ? 'band--tight' : '', ground, plain ? 'contact-page' : '']
+  .filter(Boolean)
+  .join(' ');
 ---
 
 {band === 'none' ? <slot /> : <div class={cls}><slot /></div>}

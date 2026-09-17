@@ -1,0 +1,36 @@
+{
+  "route": "privacy",
+  "order": 8,
+  "meta": {
+    "title": "Privacy · delv.",
+    "description": "How DELV Consulting Ltd handles personal data collected through this website.",
+    "ogImage": "/og/privacy.png",
+    "noindex": true
+  },
+  "blocks": [
+    {
+      "type": "hero",
+      "band": "none",
+      "name": "Hero",
+      "heading": "Privacy notice.",
+      "sub": "How we handle the personal data you give us through this website.",
+      "actions": []
+    },
+    {
+      "type": "rule",
+      "band": "none",
+      "name": "Rule"
+    },
+    {
+      "type": "prose",
+      "band": "paper",
+      "name": "Notice",
+      "heading": "This notice is not written yet",
+      "paragraphs": [
+        "The privacy notice is being drafted and will be published here before the site goes live.",
+        "In the meantime, if you want to know what we hold about you or ask us to delete it, email us and we will answer."
+      ],
+      "bodyMax": true
+    }
+  ]
+}

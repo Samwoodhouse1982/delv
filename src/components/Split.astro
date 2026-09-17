@@ -1,0 +1,37 @@
+---
+/**
+ * The two-column grid, in whichever of its two equivalent forms the page used.
+ *
+ * The templates wrote `<div class="wrap split">` in eleven places and
+ * `<div class="wrap"><div class="split">` in one. They lay out identically —
+ * `.split` is a grid with no box of its own, so it makes no difference which
+ * element carries the wrap's padding, and the columns match to the pixel at
+ * 360, 700, 1024, 1280 and 1600px. This exists so the parity check against
+ * the pre-migration build can stay strict rather than learning to forgive a
+ * difference, and so the choice is made in one place instead of inline.
+ */
+interface Props {
+  nested?: boolean;
+  /**
+   * Rendered after the grid but still inside the wrap. Only meaningful in the
+   * nested form, which is the only one that has an inside to be after.
+   */
+  after?: boolean;
+}
+const { nested = false } = Astro.props;
+---
+
+{
+  nested ? (
+    <div class="wrap">
+      <div class="split">
+        <slot />
+      </div>
+      <slot name="after" />
+    </div>
+  ) : (
+    <div class="wrap split">
+      <slot />
+    </div>
+  )
+}

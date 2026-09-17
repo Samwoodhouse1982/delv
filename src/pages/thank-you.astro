@@ -1,7 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import Rule from '../components/Rule.astro';
-import { form, next } from '../data/contact';
+import { getEntry } from 'astro:content';
+import { form } from '../data/contact';
+
+/*
+ * The "what happens next" list is the contact page's, read from its content
+ * entry rather than copied. Two pages promising different things after the
+ * same form is exactly the kind of drift this site argues against, and the
+ * CMS only edits it in one place.
+ */
+const contactPage = await getEntry('pages', 'contact');
+const next = contactPage?.data.blocks.find((b) => b.type === 'contactForm');
+if (!next) throw new Error('contact.json has no contactForm block');
 import DetailList from '../components/DetailList.astro';
 
 // Where a submission without JavaScript lands. With JavaScript the form is

@@ -97,6 +97,21 @@ const base = {
    * scripts/content-parity.mjs rather than assumed.
    */
   headingGap: z.enum(['normal', 'wide']).default('normal'),
+  /**
+   * Suppresses the band's decorative discs. Emits the `contact-page` class,
+   * which is named for the page it was written for rather than for what it
+   * does — the note is in global.css beside the --coral rule.
+   */
+  plain: z.boolean().default(false),
+  /**
+   * Whether a two-column grid sits on the `.wrap` or inside it. Faithfulness
+   * to the original markup rather than a design choice: two sections nested
+   * them and the rest combined them. The two lay out identically — columns
+   * match to the pixel at 360, 700, 1024, 1280 and 1600px, because `.split`
+   * is a grid with no box of its own — so this keeps the parity check strict
+   * rather than teaching it to forgive. The CMS hides it.
+   */
+  nestSplit: z.boolean().default(false),
 };
 
 /**
@@ -117,6 +132,21 @@ const block = z.discriminatedUnion('type', [
     actions: z.array(action).default([]),
     /** The home page's two-line lockup, which has its own measured fit. */
     lockup: z.boolean().default(false),
+    /** Less space under the hero, for a page whose first block is a form. */
+    tightBottom: z.boolean().default(false),
+    /**
+     * The before / after claim demo, which sits inside the hero rather than
+     * after it. Part of the hero block because it is part of the hero's
+     * markup: it cannot be moved away from the heading without moving the
+     * heading with it.
+     */
+    claim: z
+      .object({
+        weak: z.object({ label: z.string(), text: z.string() }),
+        strong: z.object({ label: z.string(), text: z.string() }),
+        caption: z.string(),
+      })
+      .optional(),
   }),
 
   /* A measurement rule across the page, or a short one. */
@@ -144,6 +174,14 @@ const block = z.discriminatedUnion('type', [
     /** Caps the heading's measure, in ch. The old inline max-width. */
     headingWidth: z.number().optional(),
     figure: figure.optional(),
+    /** A section graphic after the body. Enterprise's calculator uses it. */
+    graphic: z.enum(['absorption', 'restatement', 'engagementFlow']).optional(),
+    /** Holds the paragraphs to a reading measure. Long-form pages want it. */
+    bodyMax: z.boolean().default(false),
+    /** Puts the graphic under the whole split rather than in the body column. */
+    graphicAfter: z.boolean().default(false),
+    /** A button after the body. */
+    action: action.optional(),
   }),
 
   /* The before / after claim demo. Home page, once. */
@@ -172,6 +210,10 @@ const block = z.discriminatedUnion('type', [
       )
       .default([]),
     marks: z.array(markKind).optional(),
+    /** Graphic 03, the large stage shapes. Home only. */
+    shapes: z.boolean().default(false),
+    /** A button under the grid. */
+    action: action.optional(),
   }),
 
   /* A stepped list: heading, when, body. */
@@ -190,6 +232,42 @@ const block = z.discriminatedUnion('type', [
         }),
       )
       .default([]),
+    /** After the list. How we work draws the engagement under its own stages. */
+    graphic: z.enum(['absorption', 'restatement', 'engagementFlow']).optional(),
+    figure: figure.optional(),
+  }),
+
+  /*
+   * One of the three stages on What we do: a mark, a label, a heading and a
+   * lede on the left; the argument and the deliverables on the right. Its own
+   * block rather than a variant of `prose`, because the left column carries
+   * four things in a fixed order and nothing else on the site does.
+   */
+  z.object({
+    ...base,
+    type: z.literal('stage'),
+    mark: markKind.optional(),
+    label: z.string(),
+    heading: z.string(),
+    lede: z.string(),
+    paragraphs: z.array(z.string()).default([]),
+    details: z.array(z.string()).default([]),
+    figure: figure.optional(),
+    graphic: z.enum(['absorption', 'restatement', 'engagementFlow']).optional(),
+  }),
+
+  /*
+   * A closing statement inside a band, with one action. Not the same as `cta`:
+   * that is the site-wide closing band with its own component and ground,
+   * this sits in the page's own rhythm. What we do ends on one.
+   */
+  z.object({
+    ...base,
+    type: z.literal('callout'),
+    heading: z.string(),
+    headingWidth: z.number().optional(),
+    body: z.string(),
+    action: action.omit({ ghost: true }),
   }),
 
   /* A deliverables list, optionally with a figure beside it and a closing note. */
@@ -197,11 +275,31 @@ const block = z.discriminatedUnion('type', [
     ...base,
     type: z.literal('details'),
     heading: z.string().optional(),
+    /** Above the list. Enterprise's claims library sets the scene first. */
+    paragraphs: z.array(z.string()).default([]),
     items: z.array(z.string()).default([]),
     note: z.string().optional(),
     layout: z.enum(['full', 'split']).default('split'),
     headingRule: z.boolean().default(false),
     figure: figure.optional(),
+    /** Which column the figure sits in. Under the heading, or under the list. */
+    figureSide: z.enum(['left', 'right']).default('left'),
+
+  }),
+
+  /*
+   * A heading beside a stack of short sub-sections. Who we are uses it for
+   * "What makes us different": three h3s and a paragraph each, which is a
+   * different thing from a details list and a different thing from prose.
+   */
+  z.object({
+    ...base,
+    type: z.literal('stack'),
+    heading: z.string().optional(),
+    headingRule: z.boolean().default(false),
+    items: z
+      .array(z.object({ heading: z.string(), body: z.string() }))
+      .default([]),
   }),
 
   /* The tick-marked problem list. */
@@ -217,15 +315,28 @@ const block = z.discriminatedUnion('type', [
   z.object({
     ...base,
     type: z.literal('offers'),
-    heading: z.string().optional(),
-    lede: z.string().optional(),
-    items: z
+    /**
+     * Groups rather than one list. How we work runs two grids in one band —
+     * where to start, then where it goes next — and the second heading is
+     * smaller and tighter to the grid above it. Modelling that as two blocks
+     * would put them on two grounds.
+     */
+    groups: z
       .array(
         z.object({
-          heading: z.string(),
-          meta: z.string(),
-          body: z.string(),
-          action: action.omit({ ghost: true }).optional(),
+          heading: z.string().optional(),
+          lede: z.string().optional(),
+          items: z
+            .array(
+              z.object({
+                heading: z.string(),
+                meta: z.string(),
+                body: z.string(),
+                action: action.omit({ ghost: true }).optional(),
+              }),
+            )
+            .default([]),
+          marks: z.array(markKind).optional(),
         }),
       )
       .default([]),
@@ -305,10 +416,17 @@ const block = z.discriminatedUnion('type', [
     page: z.string(),
   }),
 
-  /* The enquiry form. */
+  /*
+   * The enquiry form, and the "what happens next" column beside it. One block
+   * because the two are a single promise: the form asks, and the column says
+   * what asking gets you.
+   */
   z.object({
     ...base,
     type: z.literal('contactForm'),
+    heading: z.string().optional(),
+    items: z.array(z.string()).default([]),
+    note: z.string().optional(),
   }),
 
   /* One of the section graphics. */

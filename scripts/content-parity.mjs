@@ -31,6 +31,10 @@ let gapChanges = 0;
 const norm = (h, count) => {
   const m = h.match(/<main[^>]*>([\s\S]*)<\/main>/);
   let s = (m ? m[1] : h).replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();
+  /* Class order carries no meaning in CSS, and the renderer composes the band
+     classes in a different order from the hand-written templates. Sorted so
+     the check tests what a reader sees rather than how a string was built. */
+  s = s.replace(/class="([^"]+)"/g, (_, c) => `class="${c.trim().split(/\s+/).sort().join(' ')}"`);
   if (count) gapChanges += (s.match(GAPS) ?? []).length;
   return s.replace(GAPS, 'margin-bottom:GAP');
 };

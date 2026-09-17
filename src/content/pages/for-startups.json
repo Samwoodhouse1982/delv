@@ -1,0 +1,132 @@
+{
+  "route": "for-startups",
+  "order": 3,
+  "meta": {
+    "title": "For startups · delv.",
+    "description": "How delv. helps healthtech founders build the proof a stalled deal, a raise or an outcomes contract is about to need.",
+    "ogImage": "/og/for-startups.png",
+    "noindex": false
+  },
+  "blocks": [
+    {
+      "type": "hero",
+      "band": "none",
+      "name": "Hero",
+      "heading": "For founders with traction and no proof yet.",
+      "sub": "Early-stage healthtech gets judged on evidence long before it has any. We help you build the base, and the narrative, early enough that it compounds instead of costing you a quarter.",
+      "actions": [
+        {
+          "label": "Start a conversation",
+          "href": "/contact"
+        },
+        {
+          "label": "See what we do",
+          "href": "/what-we-do",
+          "ghost": true
+        }
+      ]
+    },
+    {
+      "type": "rule",
+      "band": "none",
+      "name": "Rule"
+    },
+    {
+      "type": "stages",
+      "band": "paper",
+      "name": "Three moments",
+      "heading": "Three moments when founders call us",
+      "headingWidth": 20,
+      "rows": [
+        {
+          "heading": "The deal that will not close",
+          "when": "Usually the second or third NHS conversation",
+          "body": "The clinical team love it. Then it reaches finance, and somebody asks what it saves and against what baseline. Enthusiasm scores nothing in that meeting."
+        },
+        {
+          "heading": "The raise",
+          "when": "Eight to twelve weeks before the process opens",
+          "body": "Diligence will test the gap between what the deck claims and what the data supports. Closing that gap in advance is cheaper than explaining it live, and it changes the questions you get asked."
+        },
+        {
+          "heading": "The contract with outcomes attached",
+          "when": "After signature, sometimes too soon after",
+          "body": "Outcomes-based agreements tie revenue to demonstrable impact. If nobody designed the measurement before go-live, the evidence you need may not exist by the time it is due."
+        }
+      ]
+    },
+    {
+      "type": "pillars",
+      "band": "linen",
+      "name": "Where you are matters",
+      "heading": "Where you are matters",
+      "lede": "The same three stages, weighted differently depending on how much evidence you can realistically generate yet.",
+      "items": [
+        {
+          "step": "Pre-seed to seed",
+          "heading": "Build the base",
+          "body": "Decide what you will need to prove, and instrument for it now. It costs very little at this stage and is expensive to retrofit once you have customers, integrations and a roadmap to defend."
+        },
+        {
+          "step": "Series A",
+          "heading": "Turn traction into evidence",
+          "body": "Convert live deployments into defensible proof points. A first real value model, a business case your buyers can reuse internally, and an investor narrative that matches the data room."
+        },
+        {
+          "step": "Series B and scale",
+          "heading": "Standardise it",
+          "body": "One claims library, one model, consistent numbers across markets and reps. Procurement moves faster, and new evidence slots in without a rebuild.",
+          "action": {
+            "label": "More on this",
+            "href": "/scale-ups"
+          }
+        }
+      ]
+    },
+    {
+      "type": "details",
+      "band": "mint",
+      "name": "What you end up with",
+      "heading": "What you end up with",
+      "layout": "split",
+      "headingRule": true,
+      "figure": {
+        "label": "The deliverables as objects: a claims library, a business case pack, a one-page evidence map. Flat lay or on a desk, ordered rather than styled.",
+        "ratio": "3/2"
+      },
+      "items": [
+        "A clear statement of what your product is worth, to whom, and under what conditions",
+        "A value model with sourced assumptions, built to be questioned",
+        "A claims library your team can use without checking with legal every time",
+        "Materials that work in procurement, in a data room, and on a stand at a conference",
+        "A measurement plan that keeps producing evidence after we leave"
+      ],
+      "note": "What we do not do: market sizing, fundraising theatre, or inventing a comparator to make a number look better. If the honest answer is smaller than you hoped, you will hear it from us first."
+    },
+    {
+      "type": "proof",
+      "band": "paper",
+      "tight": true,
+      "name": "Proof",
+      "page": "for-startups"
+    },
+    {
+      "type": "proofQuote",
+      "band": "linen",
+      "tight": true,
+      "name": "Quote",
+      "page": "for-startups"
+    },
+    {
+      "type": "cta",
+      "band": "none",
+      "name": "Closing call to action",
+      "heading": "Start with a Value Audit.",
+      "body": "A fixed-fee look at what you claim, what your data can support, and what to fix first. Enough to make the next decision with, whether or not you work with us after it.",
+      "action": {
+        "label": "Start a conversation",
+        "href": "/contact"
+      }
+    }
+  ]
+}
