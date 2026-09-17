@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# The editor. Not secret — it is useless without a GitHub login — but there is
+# no reason for it to appear in a search result.
+Disallow: /admin
+
 Sitemap: https://delv.health/sitemap-index.xml

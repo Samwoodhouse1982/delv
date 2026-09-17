@@ -1,0 +1,460 @@
+# The editing interface for delv.health.
+#
+# This mirrors src/content.config.ts. The two have to agree: this file decides
+# what Sam can type, and that one decides what the build will accept. When a
+# block gains a field, it gains it in both, and the build fails until it does.
+#
+# What is deliberately not here
+#
+# `nestSplit` is a faithfulness flag, not a design choice — it exists so the
+# parity check against the pre-migration build could stay strict. Exposing it
+# would be offering a control that changes nothing.
+#
+# The proof results and the quotes are not here either. They live in
+# src/data/proof.ts because the same figure appears on several pages, and a
+# number that disagrees with itself across two pages is the precise thing this
+# company sells against. A block chooses where proof appears; it cannot choose
+# what the proof says.
+#
+# Neither is the JSON-LD, the navigation, or the form's field names. The field
+# names are the contract with api/contact.js, and renaming one from a CMS
+# would break the form with no error anywhere.
+
+backend:
+  name: github
+  repo: Samwoodhouse1982/delv
+  branch: main
+  # Every save is a commit. That is the point: edits revert like code does.
+  commit_messages:
+    update: 'Edit {{collection}} “{{slug}}” from the CMS'
+
+# Sveltia can edit the working copy straight from the browser with no server,
+# which is the fastest way to try a change before it is committed anywhere.
+local_backend: true
+
+media_folder: public/img
+public_folder: /img
+
+# Shown above the editor, so the one thing that is easy to get wrong is said
+# before it can be.
+site_url: https://delv.health
+display_url: https://delv.health
+logo_url: /brand/delv-icon.svg
+
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: src/content/pages
+    extension: json
+    format: json
+    create: false
+    delete: false
+    identifier_field: route
+    summary: '{{fields.meta.title}}'
+    sortable_fields: [order, route]
+    fields:
+      - { name: route, widget: hidden }
+      - { name: order, widget: hidden }
+
+      - name: meta
+        label: Search and sharing
+        widget: object
+        collapsed: true
+        fields:
+          - name: title
+            label: Browser tab and search result title
+            widget: string
+            hint: The full title, including “delv. ·”.
+          - name: description
+            label: Search result description
+            widget: text
+            pattern:
+              ['^.{1,165}$', 'Keep it under 165 characters or Google truncates it']
+          - name: ogImage
+            label: Sharing image
+            widget: string
+            hint: A filename in public/og/, like /og/home.png.
+          - name: noindex
+            label: Hide from search engines
+            widget: boolean
+            default: false
+
+      - name: blocks
+        label: Sections
+        label_singular: Section
+        widget: list
+        # Drag to reorder. This is the whole reason the pages became data.
+        collapsed: true
+        summary: '{{fields.name}}'
+        typeKey: type
+        types:
+          # -------------------------------------------------------- hero
+          - name: hero
+            label: Hero
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - { name: heading, label: Heading, widget: string }
+              - { name: sub, label: Standfirst, widget: text }
+              - name: actions
+                label: Buttons
+                widget: list
+                required: false
+                fields:
+                  - { name: label, widget: string }
+                  - { name: href, label: Goes to, widget: string }
+                  - { name: ghost, label: Outline style, widget: boolean, default: false }
+              - name: lockup
+                label: Two-line lockup
+                widget: boolean
+                default: false
+                hint: Home page only. The heading has its own measured fit.
+              - name: tightBottom
+                label: Less space underneath
+                widget: boolean
+                default: false
+
+          # -------------------------------------------------------- rule
+          - name: rule
+            label: Measurement rule
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - { name: short, label: Short, widget: boolean, default: false }
+
+          # ------------------------------------------------------- prose
+          - name: prose
+            label: Text
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - &band
+                name: band
+                label: Background
+                widget: select
+                default: paper
+                options:
+                  - { label: Paper, value: paper }
+                  - { label: Linen, value: linen }
+                  - { label: Mint, value: mint }
+                  - { label: Deep blue, value: deep }
+                  - { label: None, value: none }
+              - &tight { name: tight, label: Less vertical space, widget: boolean, default: false }
+              - { name: heading, widget: string, required: false }
+              - { name: lede, label: Standfirst, widget: text, required: false }
+              - name: layout
+                widget: select
+                default: full
+                options:
+                  - { label: Full width, value: full }
+                  - { label: Heading beside the text, value: split }
+              - { name: paragraphs, widget: list, field: { name: text, widget: text } }
+              - { name: muted, label: Closing line, widget: text, required: false }
+              - { name: caption, label: Caption, widget: text, required: false }
+              - { name: headingRule, label: Rule under the heading, widget: boolean, default: false }
+              - name: action
+                label: Button
+                widget: object
+                required: false
+                fields:
+                  - { name: label, widget: string }
+                  - { name: href, label: Goes to, widget: string }
+                  - { name: ghost, label: Outline style, widget: boolean, default: true }
+              - &figure
+                name: figure
+                label: Picture
+                widget: object
+                required: false
+                collapsed: true
+                fields:
+                  - name: label
+                    label: What the picture needs to be
+                    widget: text
+                    hint: Written for whoever takes it. Shown in the placeholder until there is one.
+                  - { name: ratio, label: Shape, widget: string, hint: 'Like 16/9, 3/2, 4/5' }
+                  - { name: caption, widget: string, required: false }
+                  - { name: src, label: The picture, widget: image, required: false }
+                  - { name: alt, label: Alt text, widget: string, required: false }
+
+          # ------------------------------------------------------ stages
+          - name: stages
+            label: Stepped list
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - { name: lede, label: Standfirst, widget: text, required: false }
+              - name: rows
+                label: Steps
+                widget: list
+                fields:
+                  - { name: heading, widget: string }
+                  - { name: when, label: Stage or timing, widget: string }
+                  - { name: body, widget: text }
+              - *figure
+
+          # ------------------------------------------------------ stage
+          - name: stage
+            label: One stage (Define / Measure / Articulate)
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - { name: label, label: Small label above the heading, widget: string }
+              - { name: heading, widget: string }
+              - { name: lede, label: The question it answers, widget: text }
+              - { name: paragraphs, widget: list, field: { name: text, widget: text } }
+              - { name: details, label: What it involves, widget: list, field: { name: item, widget: text } }
+              - *figure
+
+          # ----------------------------------------------------- pillars
+          - name: pillars
+            label: Cards
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - { name: lede, label: Standfirst, widget: text, required: false }
+              - name: items
+                label: Cards
+                widget: list
+                fields:
+                  - { name: step, label: Small label, widget: string }
+                  - { name: heading, widget: string }
+                  - { name: body, widget: text }
+                  - name: action
+                    widget: object
+                    required: false
+                    fields:
+                      - { name: label, widget: string }
+                      - { name: href, label: Goes to, widget: string }
+
+          # ----------------------------------------------------- details
+          - name: details
+            label: Deliverables list
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - { name: paragraphs, label: Text above the list, widget: list, required: false, field: { name: text, widget: text } }
+              - { name: items, label: The list, widget: list, field: { name: item, widget: text } }
+              - { name: note, label: Closing note, widget: text, required: false }
+              - { name: headingRule, label: Rule under the heading, widget: boolean, default: false }
+              - *figure
+              - name: figureSide
+                label: Picture goes
+                widget: select
+                default: left
+                options:
+                  - { label: Under the heading, value: left }
+                  - { label: Under the list, value: right }
+
+          # ------------------------------------------------------- stack
+          - name: stack
+            label: Heading beside short sections
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - { name: headingRule, label: Rule under the heading, widget: boolean, default: false }
+              - name: items
+                widget: list
+                fields:
+                  - { name: heading, widget: string }
+                  - { name: body, widget: text }
+
+          # ---------------------------------------------------- problems
+          - name: problems
+            label: Tick list
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - { name: lede, label: Standfirst, widget: text, required: false }
+              - { name: items, widget: list, field: { name: item, widget: text } }
+
+          # ------------------------------------------------------ offers
+          - name: offers
+            label: Offer cards
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - name: groups
+                label: Groups of cards
+                widget: list
+                fields:
+                  - { name: heading, widget: string, required: false }
+                  - { name: lede, label: Standfirst, widget: text, required: false }
+                  - name: items
+                    widget: list
+                    fields:
+                      - { name: heading, widget: string }
+                      - { name: meta, label: Price or timing, widget: string }
+                      - { name: body, widget: text }
+                      - name: action
+                        widget: object
+                        required: false
+                        fields:
+                          - { name: label, widget: string }
+                          - { name: href, label: Goes to, widget: string }
+
+          # ---------------------------------------------------------- qa
+          - name: qa
+            label: Questions and answers
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string, required: false }
+              - name: items
+                widget: list
+                fields:
+                  - { name: question, widget: string }
+                  - { name: answer, widget: text }
+
+          # ------------------------------------------------------ people
+          - name: people
+            label: The founders
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - name: items
+                label: People
+                widget: list
+                fields:
+                  - { name: name, widget: string }
+                  - { name: role, widget: string }
+                  - { name: paragraphs, widget: list, field: { name: text, widget: text } }
+                  - { name: portrait, label: Headshot, widget: object, required: false, collapsed: true, fields: [ { name: label, widget: text }, { name: ratio, widget: string }, { name: src, widget: image, required: false }, { name: alt, widget: string, required: false } ] }
+
+          # ------------------------------------------------------- bench
+          - name: bench
+            label: The wider bench
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - { name: heading, widget: string, required: false }
+              - { name: paragraphs, widget: list, field: { name: text, widget: text } }
+              - { name: muted, label: Closing line, widget: text, required: false }
+              - *figure
+              - name: members
+                label: Specialists
+                widget: list
+                required: false
+                fields:
+                  - name: name
+                    widget: string
+                    required: false
+                    hint: Leave empty until someone has agreed to be named.
+                  - { name: role, label: Discipline, widget: string }
+                  - { name: body, widget: text }
+
+          # ------------------------------------------------------ figure
+          - name: figure
+            label: Picture on its own
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - *figure
+
+          # ------------------------------------------------------- proof
+          - name: proof
+            label: Proof figures
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - name: page
+                label: Which page's figures
+                widget: string
+                hint: The figures themselves live in src/data/proof.ts, not here.
+              - { name: heading, widget: string, required: false }
+              - { name: lede, label: Standfirst, widget: text, required: false }
+
+          - name: proofQuote
+            label: Client quote
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - name: page
+                label: Which page's quote
+                widget: string
+                hint: The quote itself lives in src/data/proof.ts, not here.
+
+          # ------------------------------------------------- contactForm
+          - name: contactForm
+            label: Enquiry form
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, label: Heading beside the form, widget: string, required: false }
+              - { name: items, label: What happens next, widget: list, field: { name: item, widget: text } }
+              - { name: note, label: Closing note, widget: text, required: false }
+
+          # ----------------------------------------------------- graphic
+          - name: graphic
+            label: Section graphic
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - name: kind
+                widget: select
+                options:
+                  - { label: Same ink, one form, value: absorption }
+                  - { label: One finding, more than one job, value: restatement }
+                  - { label: The engagement drawing itself, value: engagementFlow }
+
+          # ----------------------------------------------------- callout
+          - name: callout
+            label: Statement with a button
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - *band
+              - *tight
+              - { name: heading, widget: string }
+              - { name: body, widget: text }
+              - name: action
+                widget: object
+                fields:
+                  - { name: label, widget: string }
+                  - { name: href, label: Goes to, widget: string }
+
+          # --------------------------------------------------------- cta
+          - name: cta
+            label: Closing call to action
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: Label in this list, widget: string, required: false }
+              - { name: heading, widget: string }
+              - { name: body, widget: text }
+              - name: action
+                widget: object
+                fields:
+                  - { name: label, widget: string }
+                  - { name: href, label: Goes to, widget: string }

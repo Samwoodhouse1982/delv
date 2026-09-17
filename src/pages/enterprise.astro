@@ -1,143 +1,23 @@
 ---
-import Base from '../layouts/Base.astro';
-import CtaBand from '../components/CtaBand.astro';
-import DetailList from '../components/DetailList.astro';
-import Figure from '../components/Figure.astro';
-import Note from '../components/Note.astro';
-import Pillars from '../components/Pillars.astro';
-import Quote from '../components/Quote.astro';
-import Results from '../components/Results.astro';
-import Rule from '../components/Rule.astro';
-import StageList from '../components/StageList.astro';
-import Restatement from '../components/graphics/Restatement.astro';
-import {
-  calculator,
-  changes,
-  changesImage,
-  cta,
-  hero,
-  library,
-  libraryImage,
-  meta,
-  moments,
-  version,
-} from '../data/enterprise';
-import { placement, quoteFor, resultsFor } from '../data/proof';
-
-/*
- * The proof slot is deliberately empty, and not because the registry is.
- *
- * The obvious candidate is the symptom assessment card, "procurement cycle cut
- * from nine months to five, one claims library replacing four inconsistent
- * decks". That is this page's thesis stated almost word for word, but it
- * already runs on the home page and on Startups, and Startups is not being
- * reopened. Rather than run one card on three pages or invent a second, the
- * band is built and left unfilled until a real engagement is chosen for it.
- * See §13 of the build brief.
+/**
+ * The page is a block list in src/content/pages/enterprise.json, rendered in
+ * the order that file gives. Layout lives in the content now, so Sam can
+ * reorder the sections without a developer; see src/content.config.ts.
  */
-const proofResults = resultsFor('enterprise');
-const proofQuote = quoteFor('enterprise');
-const proofCopy = placement.enterprise;
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/Blocks.astro';
+
+const page = await getEntry('pages', 'enterprise');
+if (!page) throw new Error('Missing content: src/content/pages/enterprise.json');
+const { meta, blocks } = page.data;
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
-  <div class="wrap hero">
-    <h1>{hero.heading}</h1>
-    <p class="sub" set:html={hero.sub} />
-    <div class="hero-actions">
-      {
-        hero.actions?.map((action) => (
-          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
-            {action.label}
-          </a>
-        ))
-      }
-    </div>
-  </div>
-
-  <div class="wrap"><Rule /></div>
-
-  <div class="band">
-    <div class="wrap">
-      <h2 style="max-width:20ch">{moments.heading}</h2>
-      <StageList rows={moments.rows} class="mt-block" />
-    </div>
-  </div>
-
-  <div class="band dim">
-    <div class="wrap">
-      <div class="split" style="margin-bottom:30px">
-        <h2>{version.heading}</h2>
-        <p class="muted" style="margin:0" set:html={version.lede} />
-      </div>
-      <Pillars items={version.pillars} marks={version.marks} />
-    </div>
-  </div>
-
-  <div class="band mint">
-    <div class="wrap split">
-      <div>
-        <h2>{changes.heading}</h2>
-        <Rule short class="mt-rule" />
-        <Figure figure={changesImage} class="mt-block" />
-      </div>
-      <div>
-        <DetailList items={changes.details} />
-        <Note text={changes.note} />
-      </div>
-    </div>
-  </div>
-
-  {/* The headline deliverable for this audience, so it gets a band of its own. */}
-  <div class="band dark">
-    <div class="wrap">
-      <div class="split">
-        <div>
-          <h2>{library.heading}</h2>
-          <Rule short class="mt-rule" />
-        </div>
-        <div>
-          {library.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-          <DetailList items={library.spec} />
-          <Figure figure={libraryImage} class="mt-block" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="band band--tight">
-    <div class="wrap split">
-      <div>
-        <h2>{calculator.heading}</h2>
-        <Rule short class="mt-rule" />
-      </div>
-      <div>
-        {calculator.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-        <Restatement class="mt-block" />
-      </div>
-    </div>
-  </div>
-
-  {
-    proofResults.length > 0 && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <h2 style="margin-bottom:clamp(24px,3vw,36px)">{proofCopy.heading}</h2>
-          <Results items={proofResults} />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    proofQuote && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <Quote quote={proofQuote} />
-        </div>
-      </div>
-    )
-  }
-
-  <CtaBand cta={cta} />
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  noindex={meta.noindex}
+>
+  <Blocks blocks={blocks} />
 </Base>

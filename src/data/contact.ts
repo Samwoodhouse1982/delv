@@ -1,16 +1,12 @@
-import type { Hero, PageMeta } from './types';
-
-export const meta: PageMeta = {
-  title: 'Start a conversation · delv.',
-  description:
-    'Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We reply within two working days.',
-  ogImage: '/og/contact.png',
-};
-
-export const hero: Hero = {
-  heading: 'Start a conversation.',
-  sub: 'Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We will come back within two working days.',
-};
+/**
+ * The enquiry form's fields and its copy.
+ *
+ * The page's own copy — its heading, its sub, and the "what happens next"
+ * list — moved to src/content/pages/contact.json when the pages became
+ * content collections. What is left here is the form itself, which is
+ * structure rather than content: the field names are the contract with
+ * api/contact.js, and a CMS that could rename them could break the form.
+ */
 
 export interface Field {
   id: string;
@@ -117,13 +113,3 @@ export const form = {
   invalidEmail: 'That email address is missing something. Check it and try again.',
 };
 
-export const next = {
-  heading: 'What happens next',
-  items: [
-    'We reply within two working days, from a real person',
-    'A 30-minute call to understand the problem, with no deck',
-    'If there is a fit, a short written brief with deliverables and pricing',
-    'If there is not, we will tell you, and point you somewhere better if we can',
-  ],
-  note: 'Working to a tender or funding deadline? Put the date in your first message and we will tell you honestly whether it is achievable.',
-};
