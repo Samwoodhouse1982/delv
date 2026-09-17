@@ -1513,10 +1513,12 @@ nav.main .nav-panel a[aria-current="page"] {
  * The reservation. `max-width` on the pair, not padding on one column: the
  * rings are 11.19cqw centred at 87%, so they start at 81.4% of the block, and
  * ending the columns at 78% keeps every line clear of them by construction
- * rather than by a padding value that happens to be big enough today.
+ * rather than by a padding value that happens to be big enough today. The
+ * caption is held to the same line, for the same reason.
  */
 @media (min-width: 901px) {
-  .claim-pair {
+  .claim-pair,
+  .claim .caption {
     max-width: 78%;
   }
 }
@@ -1528,6 +1530,17 @@ nav.main .nav-panel a[aria-current="page"] {
   /* The band the mark drops into has to exist before it can sit in it. */
   .claim {
     padding-bottom: clamp(96px, 10vw, 120px);
+  }
+  /*
+   * And the caption has to stay out of it. Narrow is the one arrangement where
+   * the mark is below the columns rather than beside them, so it is the one
+   * arrangement where the caption and the mark want the same band. The rings
+   * are 11.19cqw centred at 84%, so they start at 78.4%; 72% clears them the
+   * same way the columns clear them at width, by construction rather than by
+   * a value that happens to be enough for today's caption.
+   */
+  .claim .caption {
+    max-width: 72%;
   }
 }
 /*
