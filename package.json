@@ -13,13 +13,14 @@
     "build": "astro build",
     "build:preview": "PLACEHOLDER_PREVIEW=1 astro build",
     "preview": "astro preview",
-    "check": "astro check && npm run a11y",
+    "check": "astro check && npm run a11y && npm run cms",
     "check:preview": "PLACEHOLDER_PREVIEW=1 astro build && npm run a11y",
     "a11y": "node scripts/a11y.mjs",
     "fonts:metrics": "node scripts/font-metrics.mjs",
     "og": "node scripts/og.mjs",
     "icons": "node scripts/icons.mjs",
-    "parity": "node scripts/content-parity.mjs"
+    "parity": "node scripts/content-parity.mjs",
+    "cms": "node scripts/cms-schema-parity.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

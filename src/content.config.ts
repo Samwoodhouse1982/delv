@@ -184,15 +184,6 @@ const block = z.discriminatedUnion('type', [
     action: action.optional(),
   }),
 
-  /* The before / after claim demo. Home page, once. */
-  z.object({
-    ...base,
-    type: z.literal('claim'),
-    weak: z.object({ label: z.string(), text: z.string() }),
-    strong: z.object({ label: z.string(), text: z.string() }),
-    caption: z.string(),
-  }),
-
   /* A numbered or stepped set of cards. */
   z.object({
     ...base,

@@ -64,7 +64,6 @@ const GAP = {
 /* Narrowed once here, so the template stays a flat list of conditionals. */
 const hero = block.type === 'hero' ? block : null;
 const ruleB = block.type === 'rule' ? block : null;
-const claim = block.type === 'claim' ? block : null;
 const prose = block.type === 'prose' ? block : null;
 const pillars = block.type === 'pillars' ? block : null;
 const stages = block.type === 'stages' ? block : null;
@@ -135,14 +134,6 @@ const quote = proofQuote
     <div class="wrap">
       <Rule short={ruleB.short} />
     </div>
-  )
-}
-
-{
-  claim && (
-    <ClaimDemo
-      claim={{ weak: claim.weak, strong: claim.strong, caption: claim.caption }}
-    />
   )
 }
 

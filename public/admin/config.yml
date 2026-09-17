@@ -24,6 +24,16 @@ backend:
   name: github
   repo: Samwoodhouse1982/delv
   branch: main
+
+  # The sign-in relay. It holds the GitHub client secret, which cannot live in
+  # a browser, and exchanges the authorisation code for a token. Its source is
+  # in cms-auth/ and the three setup steps are in cms-auth/README.md.
+  #
+  # REPLACE THE SUBDOMAIN with the one `wrangler deploy` prints. Until this is
+  # a real URL the editor loads and the sign-in button does nothing.
+  base_url: https://delv-cms-auth.CHANGE-ME.workers.dev
+  auth_endpoint: auth
+
   # Every save is a commit. That is the point: edits revert like code does.
   commit_messages:
     update: 'Edit {{collection}} “{{slug}}” from the CMS'
@@ -94,6 +104,18 @@ collections:
             label: Hero
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: band, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - { name: heading, label: Heading, widget: string }
               - { name: sub, label: Standfirst, widget: text }
@@ -114,12 +136,49 @@ collections:
                 label: Less space underneath
                 widget: boolean
                 default: false
+              # Home page only. This has to be here even though it is not a
+              # section of its own: the editor writes back the fields it knows
+              # about, so a hero saved without these would lose the before and
+              # after demo entirely, with nothing to say it had gone.
+              - name: claim
+                label: Before / after claim
+                widget: object
+                required: false
+                collapsed: true
+                fields:
+                  - name: weak
+                    label: Before
+                    widget: object
+                    fields:
+                      - { name: label, widget: string }
+                      - { name: text, widget: text }
+                  - name: strong
+                    label: After
+                    widget: object
+                    fields:
+                      - { name: label, widget: string }
+                      - { name: text, widget: text }
+                  - name: caption
+                    label: The note underneath
+                    widget: text
 
           # -------------------------------------------------------- rule
           - name: rule
             label: Measurement rule
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: band, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - { name: short, label: Short, widget: boolean, default: false }
 
@@ -128,6 +187,20 @@ collections:
             label: Text
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: bodyMax, widget: hidden }
+              - { name: graphic, widget: hidden }
+              - { name: graphicAfter, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: headingWidth, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - &band
                 name: band
@@ -182,6 +255,18 @@ collections:
             label: Stepped list
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: graphic, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: headingWidth, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -201,6 +286,19 @@ collections:
             label: One stage (Define / Measure / Articulate)
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: graphic, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: mark, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - { name: label, label: Small label above the heading, widget: string }
@@ -215,11 +313,31 @@ collections:
             label: Cards
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: marks, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: shapes, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
               - { name: heading, widget: string, required: false }
               - { name: lede, label: Standfirst, widget: text, required: false }
+              - name: action
+                label: Button under the grid
+                widget: object
+                required: false
+                fields:
+                  - { name: label, widget: string }
+                  - { name: href, label: Goes to, widget: string }
+                  - { name: ghost, label: Outline style, widget: boolean, default: true }
               - name: items
                 label: Cards
                 widget: list
@@ -239,6 +357,17 @@ collections:
             label: Deliverables list
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: layout, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -261,6 +390,16 @@ collections:
             label: Heading beside short sections
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -277,6 +416,16 @@ collections:
             label: Tick list
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -289,6 +438,16 @@ collections:
             label: Offer cards
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -316,6 +475,16 @@ collections:
             label: Questions and answers
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -331,6 +500,17 @@ collections:
             label: The founders
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - name: items
@@ -347,6 +527,17 @@ collections:
             label: The wider bench
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - { name: heading, widget: string, required: false }
@@ -370,6 +561,16 @@ collections:
             label: Picture on its own
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -380,6 +581,16 @@ collections:
             label: Proof figures
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -394,6 +605,16 @@ collections:
             label: Client quote
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -407,6 +628,16 @@ collections:
             label: Enquiry form
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -419,6 +650,16 @@ collections:
             label: Section graphic
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -434,6 +675,17 @@ collections:
             label: Statement with a button
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: headingGap, widget: hidden }
+              - { name: headingWidth, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - *band
               - *tight
@@ -450,6 +702,18 @@ collections:
             label: Closing call to action
             summary: '{{fields.name}}'
             fields:
+              # Hidden, not absent. The editor writes back the fields it
+              # knows about, so a field it has never heard of is deleted on
+              # the first save — silently, with the page only wrong after
+              # somebody edits it. These are settings made once during the
+              # migration that are not choices worth offering, so they ride
+              # along rather than being lost. scripts/cms-schema-parity.mjs
+              # fails the moment this list stops matching the schema.
+              - { name: band, widget: hidden }
+              - { name: headingGap, widget: hidden }
+              - { name: nestSplit, widget: hidden }
+              - { name: plain, widget: hidden }
+              - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - { name: heading, widget: string }
               - { name: body, widget: text }

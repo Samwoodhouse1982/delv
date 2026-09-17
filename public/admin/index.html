@@ -23,6 +23,12 @@
       src="https://unpkg.com/@sveltia/cms@0.213.5/dist/sveltia-cms.mjs"
       type="module"
     ></script>
+    <!--
+      If this page is blank, the CDN script above did not load — check the
+      version and filename against the npm registry before anything else.
+      If it loads but the sign-in button does nothing, base_url in config.yml
+      is still the placeholder. cms-auth/README.md covers both.
+    -->
     <noscript>
       This page is an editor and needs JavaScript. The content it edits is
       plain JSON in src/content/pages/ and can be edited in the repository

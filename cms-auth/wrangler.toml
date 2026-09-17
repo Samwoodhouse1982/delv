@@ -1,0 +1,12 @@
+# The OAuth relay for the CMS. See worker.js for what it does and README.md
+# for how to deploy it.
+#
+# The two secrets are not here and must never be: set them with
+# `wrangler secret put`, which stores them encrypted on Cloudflare.
+
+name = "delv-cms-auth"
+main = "worker.js"
+compatibility_date = "2026-09-17"
+
+# No KV, no D1, no bindings. The worker holds nothing between requests except
+# a short-lived cookie it sets on the reader's own browser.
