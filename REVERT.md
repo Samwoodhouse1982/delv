@@ -53,6 +53,14 @@ so this is reversible in turn.
 
 Use this when the experiment is being abandoned.
 
+**A force-push back onto an old commit may not redeploy.** Vercel keys builds
+by commit SHA, so moving `main` back onto a SHA it has already built can leave
+production pointed at the newer build: the repository is right and the live
+site is a version behind it, which looks exactly like a revert that did not
+work. This happened on 17 September 2026 and cost an hour. Either promote the
+old deployment by hand (route 1) or push one further commit so there is a SHA
+Vercel has not seen.
+
 ### 3. Revert the merge, keeping the history
 
 ```
@@ -85,6 +93,21 @@ pushes succeed — so `pre-growth-narrative` is a branch instead. It pins the sa
 commit and works the same way for every command above. If the tag rule is ever
 relaxed, `git tag -a pre-growth-narrative e83773f` and push it; the local tag
 already exists in this working copy.
+
+## What happened to the growth narrative
+
+Built 15 to 16 September 2026, merged, and reverted on the 17th at Sam's
+request. It is not deleted: the whole of it is on
+**`origin/claude/sweet-carson-uaraxe`** at `3150a22` — the branching root
+system, the stem and canopy, the page-level stage architecture, the mechanism
+that stills the section graphics, and a 15-assertion test suite.
+
+If it is ever picked up again, start with the architecture rather than the
+drawing. The ground line was put in the document flow rather than fixed to the
+viewport, which is right for the descent and is also what left the tree with
+nowhere to stand: by the end of the page the horizon is thousands of pixels
+above, so beats 5 and 6 needed a second horizon at the foot of the page. That
+decision is the one to revisit first.
 
 ## One thing this does not cover
 
