@@ -1,0 +1,17 @@
+---
+/**
+ * A page's blocks, in the order the content file gives them.
+ *
+ * Thin on purpose: the ordering lives in the data, the markup lives in
+ * Block.astro, and this is the seam between them.
+ */
+import type { CollectionEntry } from 'astro:content';
+import Block from './Block.astro';
+
+interface Props {
+  blocks: CollectionEntry<'pages'>['data']['blocks'];
+}
+const { blocks } = Astro.props;
+---
+
+{blocks.map((block) => <Block block={block} />)}

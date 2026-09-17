@@ -1,0 +1,353 @@
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+/**
+ * The content schema. One page is an ordered list of blocks.
+ *
+ * ## Why the pages became data
+ *
+ * Sam asked to edit the copy and the order of the sections himself, 17 Sep
+ * 2026. Copy alone would have been a small job — it was already typed objects
+ * in `src/data/`. Order is the larger one: it used to live in the page
+ * templates as hand-written markup, so nothing outside the repository could
+ * change it. Each page is now an array here and the templates just render
+ * whatever the array says, in whatever order it says it.
+ *
+ * ## What that costs
+ *
+ * The old templates carried per-section tuning inline — a `max-width:20ch` on
+ * one heading, a `margin-bottom:30px` on one split. Those cannot survive a
+ * list a non-developer reorders, because they were tuned for the section
+ * above and below. They are named options on the blocks instead (`band`,
+ * `tight`, `layout`, `headingWidth`), and the renderer applies them. Every
+ * page still renders byte-for-byte what it rendered before the change —
+ * that is asserted, not assumed, by scripts/content-parity.mjs.
+ *
+ * ## Why Zod rather than the old interfaces
+ *
+ * Same guarantees, enforced at build rather than only in the editor, and the
+ * CMS reads the same shapes. A bad edit in the CMS fails the build instead of
+ * shipping: `astro check` catches a typo in a type, and the schema catches a
+ * missing heading or an unknown block type.
+ *
+ * Strings are still rendered with `set:html`, so they keep their typographic
+ * entities (&rsquo;, &middot;) and must stay HTML-safe: no bare `<` or `&`.
+ */
+
+const action = z.object({
+  label: z.string(),
+  href: z.string(),
+  /** Outline rather than filled. Secondary actions only. */
+  ghost: z.boolean().optional(),
+});
+
+/**
+ * An image slot. `src` is empty everywhere at the moment, so each renders as a
+ * labelled placeholder carrying the brief for the picture that belongs there.
+ * Add `src` and `alt` and it becomes the image in the same space: the box is
+ * sized from `ratio` either way, so nothing on the page moves.
+ */
+const figure = z.object({
+  /** Written as an instruction to whoever takes the photograph. */
+  label: z.string(),
+  /** Aspect ratio as "w/h", e.g. "16/9", "3/2", "4/5". */
+  ratio: z.string().regex(/^\d+\/\d+$/, 'ratio must look like "16/9"'),
+  caption: z.string().optional(),
+  /** Path under public/. Until this is set the slot stays a placeholder. */
+  src: z.string().optional(),
+  /** Required once src is set. Empty string only if purely decorative. */
+  alt: z.string().optional(),
+});
+
+/** The five shapes in the section-graphic vocabulary, at list size. */
+const markKind = z.enum([
+  'unclosed',
+  'evidenced',
+  'activity',
+  'measured',
+  'restated',
+]);
+
+/**
+ * Every block carries these. They are the tuning that used to be inline
+ * styles, reduced to choices a non-developer can make without being able to
+ * make the page ugly.
+ *
+ * `band` is the ground the section sits on. The rhythm of the page is the
+ * alternation between them, which is why it is a choice and not a free
+ * colour: five named grounds, each with its contrast already measured
+ * against the type that sits on it.
+ */
+const base = {
+  /** Shown in the CMS sidebar so a long page is navigable. Never rendered. */
+  name: z.string().optional(),
+  band: z
+    .enum(['paper', 'linen', 'mint', 'deep', 'none'])
+    .default('paper'),
+  /** Less vertical padding. For a section that belongs with the one above. */
+  tight: z.boolean().default(false),
+  /**
+   * The gap under a heading row.
+   *
+   * The templates carried six different values here — 26px, 28px, 30px and
+   * two clamps — arrived at section by section. Four of them sit within 4px
+   * of each other, which is not a distinction anyone will ever want to make
+   * from a CMS, and exposing raw CSS to a content editor is how a page gets
+   * broken by a typo. Two named gaps instead. The visual cost is measured in
+   * scripts/content-parity.mjs rather than assumed.
+   */
+  headingGap: z.enum(['normal', 'wide']).default('normal'),
+};
+
+/**
+ * The blocks.
+ *
+ * A discriminated union on `type`, which is what lets the CMS offer "add a
+ * block" as a typed list and lets the renderer switch on one field. Adding a
+ * block type means adding a member here and a case in Blocks.astro, and the
+ * build fails until both exist.
+ */
+const block = z.discriminatedUnion('type', [
+  /* The page's opening. First block on every page, and not repeatable. */
+  z.object({
+    ...base,
+    type: z.literal('hero'),
+    heading: z.string(),
+    sub: z.string(),
+    actions: z.array(action).default([]),
+    /** The home page's two-line lockup, which has its own measured fit. */
+    lockup: z.boolean().default(false),
+  }),
+
+  /* A measurement rule across the page, or a short one. */
+  z.object({
+    ...base,
+    type: z.literal('rule'),
+    short: z.boolean().default(false),
+  }),
+
+  /* Paragraphs, with or without a heading beside them. */
+  z.object({
+    ...base,
+    type: z.literal('prose'),
+    heading: z.string().optional(),
+    /** Sits beside the heading in a split, above the body in a full block. */
+    lede: z.string().optional(),
+    paragraphs: z.array(z.string()).default([]),
+    /** A closing line in the muted style. */
+    muted: z.string().optional(),
+    /** A caption-styled line under the paragraphs. */
+    caption: z.string().optional(),
+    layout: z.enum(['full', 'split']).default('full'),
+    /** A rule under the heading, in the split layout. */
+    headingRule: z.boolean().default(false),
+    /** Caps the heading's measure, in ch. The old inline max-width. */
+    headingWidth: z.number().optional(),
+    figure: figure.optional(),
+  }),
+
+  /* The before / after claim demo. Home page, once. */
+  z.object({
+    ...base,
+    type: z.literal('claim'),
+    weak: z.object({ label: z.string(), text: z.string() }),
+    strong: z.object({ label: z.string(), text: z.string() }),
+    caption: z.string(),
+  }),
+
+  /* A numbered or stepped set of cards. */
+  z.object({
+    ...base,
+    type: z.literal('pillars'),
+    heading: z.string().optional(),
+    lede: z.string().optional(),
+    items: z
+      .array(
+        z.object({
+          step: z.string(),
+          heading: z.string(),
+          body: z.string(),
+          action: action.omit({ ghost: true }).optional(),
+        }),
+      )
+      .default([]),
+    marks: z.array(markKind).optional(),
+  }),
+
+  /* A stepped list: heading, when, body. */
+  z.object({
+    ...base,
+    type: z.literal('stages'),
+    heading: z.string().optional(),
+    lede: z.string().optional(),
+    headingWidth: z.number().optional(),
+    rows: z
+      .array(
+        z.object({
+          heading: z.string(),
+          when: z.string(),
+          body: z.string(),
+        }),
+      )
+      .default([]),
+  }),
+
+  /* A deliverables list, optionally with a figure beside it and a closing note. */
+  z.object({
+    ...base,
+    type: z.literal('details'),
+    heading: z.string().optional(),
+    items: z.array(z.string()).default([]),
+    note: z.string().optional(),
+    layout: z.enum(['full', 'split']).default('split'),
+    headingRule: z.boolean().default(false),
+    figure: figure.optional(),
+  }),
+
+  /* The tick-marked problem list. */
+  z.object({
+    ...base,
+    type: z.literal('problems'),
+    heading: z.string().optional(),
+    lede: z.string().optional(),
+    items: z.array(z.string()).default([]),
+  }),
+
+  /* The entry-point cards. */
+  z.object({
+    ...base,
+    type: z.literal('offers'),
+    heading: z.string().optional(),
+    lede: z.string().optional(),
+    items: z
+      .array(
+        z.object({
+          heading: z.string(),
+          meta: z.string(),
+          body: z.string(),
+          action: action.omit({ ghost: true }).optional(),
+        }),
+      )
+      .default([]),
+  }),
+
+  /* Questions and answers. */
+  z.object({
+    ...base,
+    type: z.literal('qa'),
+    heading: z.string().optional(),
+    items: z
+      .array(z.object({ question: z.string(), answer: z.string() }))
+      .default([]),
+  }),
+
+  /* The founders. */
+  z.object({
+    ...base,
+    type: z.literal('people'),
+    items: z
+      .array(
+        z.object({
+          name: z.string(),
+          role: z.string(),
+          paragraphs: z.array(z.string()).default([]),
+          portrait: figure.optional(),
+        }),
+      )
+      .default([]),
+  }),
+
+  /* The wider bench: prose beside a figure, then a stepped list. */
+  z.object({
+    ...base,
+    type: z.literal('bench'),
+    heading: z.string().optional(),
+    paragraphs: z.array(z.string()).default([]),
+    muted: z.string().optional(),
+    figure: figure.optional(),
+    /** The wider bench. `name` is omitted until a real person has agreed to
+        be named, and the role doubles as the heading until then. */
+    members: z
+      .array(
+        z.object({
+          name: z.string().optional(),
+          role: z.string(),
+          body: z.string(),
+        }),
+      )
+      .default([]),
+  }),
+
+  /* A picture on its own. */
+  z.object({
+    ...base,
+    type: z.literal('figure'),
+    figure,
+  }),
+
+  /*
+   * The proof slots. These read from src/data/proof.ts by page key rather
+   * than carrying their content here, because the same result appears on more
+   * than one page and a figure that disagrees with itself across two pages is
+   * the exact thing this company sells against. The block controls placement;
+   * proof.ts controls truth.
+   */
+  z.object({
+    ...base,
+    type: z.literal('proof'),
+    page: z.string(),
+    heading: z.string().optional(),
+    lede: z.string().optional(),
+  }),
+  z.object({
+    ...base,
+    type: z.literal('proofQuote'),
+    page: z.string(),
+  }),
+
+  /* The enquiry form. */
+  z.object({
+    ...base,
+    type: z.literal('contactForm'),
+  }),
+
+  /* One of the section graphics. */
+  z.object({
+    ...base,
+    type: z.literal('graphic'),
+    kind: z.enum(['absorption', 'restatement', 'engagementFlow']),
+  }),
+
+  /* The closing band. Last block on every page. */
+  z.object({
+    ...base,
+    type: z.literal('cta'),
+    heading: z.string(),
+    body: z.string(),
+    action: action.omit({ ghost: true }),
+  }),
+]);
+
+const pages = defineCollection({
+  loader: glob({ base: './src/content/pages', pattern: '**/*.json' }),
+  schema: z.object({
+    /** The route, without slashes. "index" is the home page. */
+    route: z.string(),
+    /** Ordering in the CMS list only. */
+    order: z.number().default(0),
+    meta: z.object({
+      /** Full <title>. */
+      title: z.string(),
+      /** One sentence, under 155 characters. */
+      description: z.string().max(165),
+      /** Filename in public/og/. */
+      ogImage: z.string(),
+      /** Keeps a page out of search results. */
+      noindex: z.boolean().default(false),
+    }),
+    blocks: z.array(block).default([]),
+  }),
+});
+
+export const collections = { pages };
+export type Block = z.infer<typeof block>;

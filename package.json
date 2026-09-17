@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Marketing site for delv. — DELV Consulting Ltd",
+  "description": "Marketing site for delv. \u2014 DELV Consulting Ltd",
   "engines": {
     "node": ">=20.3.0"
   },
@@ -18,7 +18,8 @@
     "a11y": "node scripts/a11y.mjs",
     "fonts:metrics": "node scripts/font-metrics.mjs",
     "og": "node scripts/og.mjs",
-    "icons": "node scripts/icons.mjs"
+    "icons": "node scripts/icons.mjs",
+    "parity": "node scripts/content-parity.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

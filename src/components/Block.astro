@@ -1,0 +1,391 @@
+---
+/**
+ * One block.
+ *
+ * ## Why this is a component per block rather than a switch inside a loop
+ *
+ * The first attempt put every block's markup in one `blocks.map(...)`
+ * callback in the template. The Astro compiler closes a long callback early
+ * when JSX is nested inside conditional expressions within it, and reports it
+ * as "Cannot find name 'b'" thirty lines below the real cause — a completely
+ * unhelpful error that moves as you edit. A flat list of top-level
+ * conditionals, one per block type, compiles reliably and reads better.
+ *
+ * ## The rule this file follows
+ *
+ * The markup it emits is the markup the page templates emitted, element for
+ * element and class for class. The site's CSS is 3,000 lines tuned against
+ * those exact selectors, several of them arrived at by measurement rather
+ * than taste, so changing the markup here would silently change the page.
+ * scripts/content-parity.mjs asserts it against a snapshot of the build from
+ * before the migration.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+import Band from './Band.astro';
+import Bench from './Bench.astro';
+import Bios from './Bios.astro';
+import ClaimDemo from './ClaimDemo.astro';
+import ContactForm from './ContactForm.astro';
+import CtaBand from './CtaBand.astro';
+import DetailList from './DetailList.astro';
+import Figure from './Figure.astro';
+import Note from './Note.astro';
+import OfferGrid from './OfferGrid.astro';
+import Pillars from './Pillars.astro';
+import ProblemList from './ProblemList.astro';
+import QA from './QA.astro';
+import Quote from './Quote.astro';
+import Results from './Results.astro';
+import Rule from './Rule.astro';
+import StageList from './StageList.astro';
+import Absorption from './graphics/Absorption.astro';
+import EngagementFlow from './graphics/EngagementFlow.astro';
+import Restatement from './graphics/Restatement.astro';
+import { placement, quoteFor, resultsFor } from '../data/proof';
+
+type Blocks = CollectionEntry<'pages'>['data']['blocks'];
+interface Props {
+  block: Blocks[number];
+}
+const { block } = Astro.props;
+
+/** The old inline `style="max-width:20ch"` on a heading, as a named option. */
+const width = (ch?: number) => (ch ? `max-width:${ch}ch` : undefined);
+
+/** The two surviving heading gaps. See the note on `headingGap` in the schema. */
+const GAP = {
+  normal: 'margin-bottom:clamp(24px,3vw,36px)',
+  wide: 'margin-bottom:clamp(28px,3vw,44px)',
+} as const;
+
+/* Narrowed once here, so the template stays a flat list of conditionals. */
+const hero = block.type === 'hero' ? block : null;
+const ruleB = block.type === 'rule' ? block : null;
+const claim = block.type === 'claim' ? block : null;
+const prose = block.type === 'prose' ? block : null;
+const pillars = block.type === 'pillars' ? block : null;
+const stages = block.type === 'stages' ? block : null;
+const details = block.type === 'details' ? block : null;
+const problems = block.type === 'problems' ? block : null;
+const offers = block.type === 'offers' ? block : null;
+const qa = block.type === 'qa' ? block : null;
+const people = block.type === 'people' ? block : null;
+const bench = block.type === 'bench' ? block : null;
+const figure = block.type === 'figure' ? block : null;
+const proof = block.type === 'proof' ? block : null;
+const proofQuote = block.type === 'proofQuote' ? block : null;
+const form = block.type === 'contactForm' ? block : null;
+const graphic = block.type === 'graphic' ? block : null;
+const cta = block.type === 'cta' ? block : null;
+
+/*
+ * The proof blocks read from src/data/proof.ts by page key rather than
+ * carrying their content, because the same result appears on more than one
+ * page and a figure that disagrees with itself across two pages is the exact
+ * thing this company sells against. The block controls placement; proof.ts
+ * controls truth.
+ */
+const results = proof ? resultsFor(proof.page as Parameters<typeof resultsFor>[0]) : [];
+const proofCopy = proof ? placement[proof.page as keyof typeof placement] : undefined;
+const proofHeading = proof ? (proof.heading ?? proofCopy?.heading) : undefined;
+const proofLede = proof ? (proof.lede ?? proofCopy?.lede) : undefined;
+const quote = proofQuote
+  ? quoteFor(proofQuote.page as Parameters<typeof quoteFor>[0])
+  : null;
+---
+
+{
+  hero && (
+    <div class="wrap hero">
+      <h1 class={hero.lockup ? 'h1-lockup' : undefined} set:html={hero.heading} />
+      <p class="sub" set:html={hero.sub} />
+      {/*
+        The wrapper is emitted whether or not there are actions, as the page
+        templates did. A conditional around it changes Astro's whitespace
+        handling inside the anchors — `>Label<` rather than `> Label <` — and
+        the parity check against the pre-migration build catches it.
+      */}
+      <div class="hero-actions">
+        {hero.actions.map((a) => (
+          <a class:list={['btn', a.ghost && 'btn--ghost']} href={a.href}>
+            {' '}
+            {a.label}{' '}
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+{
+  ruleB && (
+    <div class="wrap">
+      <Rule short={ruleB.short} />
+    </div>
+  )
+}
+
+{
+  claim && (
+    <ClaimDemo
+      claim={{ weak: claim.weak, strong: claim.strong, caption: claim.caption }}
+    />
+  )
+}
+
+{
+  prose && prose.layout === 'split' && (
+    <Band band={prose.band} tight={prose.tight}>
+      <div class="wrap split">
+        <div>
+          {prose.heading && <h2 style={width(prose.headingWidth)} set:html={prose.heading} />}
+          {prose.headingRule && <Rule short class="mt-rule" />}
+          {prose.figure && <Figure figure={prose.figure} class="mt-block" />}
+        </div>
+        <div>
+          {prose.paragraphs.map((p) => (
+            <p set:html={p} />
+          ))}
+          {prose.muted && <p class="muted" set:html={prose.muted} />}
+          {prose.caption && <p class="caption" set:html={prose.caption} />}
+        </div>
+      </div>
+    </Band>
+  )
+}
+
+{
+  prose && prose.layout === 'full' && (
+    <Band band={prose.band} tight={prose.tight}>
+      <div class="wrap">
+        {prose.heading && <h2 style={width(prose.headingWidth)} set:html={prose.heading} />}
+        {prose.lede && <p class="muted" set:html={prose.lede} />}
+        {prose.paragraphs.map((p) => (
+          <p set:html={p} />
+        ))}
+        {prose.muted && <p class="muted" set:html={prose.muted} />}
+        {prose.caption && <p class="caption" set:html={prose.caption} />}
+        {prose.figure && <Figure figure={prose.figure} class="mt-block" />}
+      </div>
+    </Band>
+  )
+}
+
+{
+  pillars && (
+    <Band band={pillars.band} tight={pillars.tight}>
+      <div class="wrap">
+        {pillars.heading && (
+          <div class="split" style={GAP[pillars.headingGap]}>
+            <h2 set:html={pillars.heading} />
+            {pillars.lede && <p class="muted" style="margin:0" set:html={pillars.lede} />}
+          </div>
+        )}
+        <Pillars items={pillars.items} marks={pillars.marks} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  stages && (
+    <Band band={stages.band} tight={stages.tight}>
+      <div class="wrap">
+        {stages.heading && !stages.lede && (
+          <h2 style={width(stages.headingWidth)} set:html={stages.heading} />
+        )}
+        {stages.heading && stages.lede && (
+          <div class="split" style={GAP[stages.headingGap]}>
+            <h2 style={width(stages.headingWidth)} set:html={stages.heading} />
+            <p class="muted" style="margin:0" set:html={stages.lede} />
+          </div>
+        )}
+        <StageList rows={stages.rows} class="mt-block" />
+      </div>
+    </Band>
+  )
+}
+
+{
+  details && details.layout === 'split' && (
+    <Band band={details.band} tight={details.tight}>
+      <div class="wrap split">
+        <div>
+          {details.heading && <h2 set:html={details.heading} />}
+          {details.headingRule && <Rule short class="mt-rule" />}
+          {details.figure && <Figure figure={details.figure} class="mt-block" />}
+        </div>
+        <div>
+          <DetailList items={details.items} />
+          {details.note && <Note text={details.note} />}
+        </div>
+      </div>
+    </Band>
+  )
+}
+
+{
+  details && details.layout === 'full' && (
+    <Band band={details.band} tight={details.tight}>
+      <div class="wrap">
+        {details.heading && <h2 set:html={details.heading} />}
+        <DetailList items={details.items} />
+        {details.note && <Note text={details.note} />}
+      </div>
+    </Band>
+  )
+}
+
+{
+  problems && (
+    <Band band={problems.band} tight={problems.tight}>
+      <div class="wrap">
+        <div class="split" style={GAP[problems.headingGap]}>
+          {problems.heading && <h2 set:html={problems.heading} />}
+          {problems.lede && <p class="muted" style="margin:0" set:html={problems.lede} />}
+        </div>
+        <ProblemList items={problems.items} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  offers && (
+    <Band band={offers.band} tight={offers.tight}>
+      <div class="wrap">
+        {offers.heading && (
+          <div class="split" style={GAP[offers.headingGap]}>
+            <h2 set:html={offers.heading} />
+            {offers.lede && <p class="muted" style="margin:0" set:html={offers.lede} />}
+          </div>
+        )}
+        <OfferGrid items={offers.items} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  qa && (
+    <Band band={qa.band} tight={qa.tight}>
+      <div class="wrap">
+        {qa.heading && <h2 set:html={qa.heading} />}
+        <QA items={qa.items} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  people && (
+    <Band band={people.band} tight={people.tight}>
+      <div class="wrap">
+        <Bios people={people.items} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  bench && (
+    <Band band={bench.band} tight={bench.tight}>
+      <div class="wrap">
+        <div class="split">
+          <div>
+            {bench.heading && <h2 set:html={bench.heading} />}
+            {bench.figure && <Figure figure={bench.figure} class="mt-rule" />}
+          </div>
+          <div>
+            {bench.paragraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+            {bench.muted && <p class="muted" set:html={bench.muted} />}
+          </div>
+        </div>
+        <Bench members={bench.members} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  figure && (
+    <Band band={figure.band} tight={figure.tight}>
+      <div class="wrap">
+        <Figure figure={figure.figure} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  proof && results.length > 0 && (
+    <Band band={proof.band} tight={proof.tight}>
+      <div class="wrap">
+        {proofHeading && (
+          <h2 style="margin-bottom:clamp(24px,3vw,36px)" set:html={proofHeading} />
+        )}
+        {proofLede && <p class="muted" set:html={proofLede} />}
+        <Results items={results} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  proofQuote && quote && (
+    <Band band={proofQuote.band} tight={proofQuote.tight}>
+      <div class="wrap">
+        <Quote quote={quote} />
+      </div>
+    </Band>
+  )
+}
+
+{
+  form && (
+    <Band band={form.band} tight={form.tight}>
+      <div class="wrap">
+        <ContactForm />
+      </div>
+    </Band>
+  )
+}
+
+{
+  graphic && graphic.kind === 'absorption' && (
+    <Band band={graphic.band} tight={graphic.tight}>
+      <div class="wrap">
+        <Absorption class="mt-block" />
+      </div>
+    </Band>
+  )
+}
+
+{
+  graphic && graphic.kind === 'restatement' && (
+    <Band band={graphic.band} tight={graphic.tight}>
+      <div class="wrap">
+        <Restatement class="mt-block" />
+      </div>
+    </Band>
+  )
+}
+
+{
+  graphic && graphic.kind === 'engagementFlow' && (
+    <Band band={graphic.band} tight={graphic.tight}>
+      <div class="wrap">
+        <EngagementFlow class="mt-block" />
+      </div>
+    </Band>
+  )
+}
+
+{
+  cta && (
+    <CtaBand cta={{ heading: cta.heading, body: cta.body, action: cta.action }} />
+  )
+}

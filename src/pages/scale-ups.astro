@@ -1,116 +1,27 @@
 ---
+/**
+ * Scale-ups.
+ *
+ * The page is a block list in src/content/pages/scale-ups.json, rendered in
+ * the order that file gives. There is no layout here any more, deliberately:
+ * Sam edits the copy and the order of the sections himself, and a template
+ * that also carried structure would drift out of step with the content the
+ * moment he moved one.
+ */
+import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import CtaBand from '../components/CtaBand.astro';
-import DetailList from '../components/DetailList.astro';
-import Figure from '../components/Figure.astro';
-import Note from '../components/Note.astro';
-import Pillars from '../components/Pillars.astro';
-import Quote from '../components/Quote.astro';
-import Results from '../components/Results.astro';
-import Rule from '../components/Rule.astro';
-import StageList from '../components/StageList.astro';
-import {
-  calculator,
-  cta,
-  hero,
-  meta,
-  moments,
-  outcome,
-  outcomeImage,
-  work,
-} from '../data/scale-ups';
-import { placement, quoteFor, resultsFor } from '../data/proof';
+import Blocks from '../components/Blocks.astro';
 
-const proofResults = resultsFor('scale-ups');
-const proofQuote = quoteFor('scale-ups');
-const proofCopy = placement['scale-ups'];
+const page = await getEntry('pages', 'scale-ups');
+if (!page) throw new Error('Missing content: src/content/pages/scale-ups.json');
+const { meta, blocks } = page.data;
 ---
 
-<Base title={meta.title} description={meta.description} ogImage={meta.ogImage}>
-  <div class="wrap hero">
-    <h1>{hero.heading}</h1>
-    <p class="sub" set:html={hero.sub} />
-    <div class="hero-actions">
-      {
-        hero.actions?.map((action) => (
-          <a class:list={['btn', action.ghost && 'btn--ghost']} href={action.href}>
-            {action.label}
-          </a>
-        ))
-      }
-    </div>
-  </div>
-
-  <div class="wrap"><Rule /></div>
-
-  <div class="band">
-    <div class="wrap">
-      <h2 style="max-width:20ch">{moments.heading}</h2>
-      <StageList rows={moments.rows} class="mt-block" />
-    </div>
-  </div>
-
-  <div class="band dim">
-    <div class="wrap">
-      <div class="split" style="margin-bottom:30px">
-        <h2>{work.heading}</h2>
-        <p class="muted" style="margin:0" set:html={work.lede} />
-      </div>
-      <Pillars items={work.pillars} marks={work.marks} />
-    </div>
-  </div>
-
-  <div class="band mint">
-    <div class="wrap split">
-      <div>
-        <h2>{outcome.heading}</h2>
-        <Rule short class="mt-rule" />
-        <Figure figure={outcomeImage} class="mt-block" />
-      </div>
-      <div>
-        <DetailList items={outcome.details} />
-        <Note text={outcome.note} />
-      </div>
-    </div>
-  </div>
-
-  {/*
-    Directly after the deliverables, so the calculator reads as the thing the
-    model becomes rather than a separate product.
-  */}
-  <div class="band band--tight">
-    <div class="wrap split">
-      <div>
-        <h2>{calculator.heading}</h2>
-        <Rule short class="mt-rule" />
-      </div>
-      <div>
-        {calculator.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
-        <p class="caption" set:html={calculator.caption} />
-      </div>
-    </div>
-  </div>
-
-  {
-    proofResults.length > 0 && (
-      <div class="band band--tight dim">
-        <div class="wrap">
-          <h2 style="margin-bottom:clamp(24px,3vw,36px)">{proofCopy.heading}</h2>
-          <Results items={proofResults} />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    proofQuote && (
-      <div class="band band--tight">
-        <div class="wrap">
-          <Quote quote={proofQuote} />
-        </div>
-      </div>
-    )
-  }
-
-  <CtaBand cta={cta} />
+<Base
+  title={meta.title}
+  description={meta.description}
+  ogImage={meta.ogImage}
+  noindex={meta.noindex}
+>
+  <Blocks blocks={blocks} />
 </Base>

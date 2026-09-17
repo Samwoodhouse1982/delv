@@ -1,0 +1,20 @@
+---
+/**
+ * The ground a block sits on, or nothing at all.
+ *
+ * Exists so the block renderer never has to write a conditional wrapper
+ * around JSX. `band: "none"` renders the children straight into the page
+ * flow, which is what the hero, the rules, the claim demo and the closing
+ * band need.
+ */
+interface Props {
+  band: 'paper' | 'linen' | 'mint' | 'deep' | 'none';
+  tight?: boolean;
+}
+const { band, tight = false } = Astro.props;
+
+const ground = { paper: '', linen: 'dim', mint: 'mint', deep: 'dark', none: '' }[band];
+const cls = ['band', tight ? 'band--tight' : '', ground].filter(Boolean).join(' ');
+---
+
+{band === 'none' ? <slot /> : <div class={cls}><slot /></div>}
