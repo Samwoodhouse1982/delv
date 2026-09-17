@@ -247,7 +247,7 @@ measurement, one filled aquamarine point is the thing worth counting.
 | # | Graphic | Where it sits | Motion |
 | --- | --- | --- | --- |
 | 01 | Distillation | **Removed 15 Sep 2026.** See below | |
-| 02 | Same ink, one form | Home, the "anyone can report the what" band | 9s loop, script-driven |
+| 02 | Same ink, one form | Home, the "warm fuzzy feelings" band | 9s loop, script-driven |
 | 03 | Define / Measure / Articulate | Home, one shape per pillar | Draws once on reveal |
 | 04 | One finding, more than one job | What we do, Articulate | 11s loop |
 | 05 | The engagement, drawing itself | How we work, the engagement band | 11s loop |
@@ -283,10 +283,11 @@ Three deliberate divergences from the handoff, each for a stated reason:
   stays in `reference/`, and §7b records what the field cost while it was
   there, because the contrast ceiling it forced is the reason two of the
   block's colours are the values they are.
-- Graphic 02 is placed on the "anyone can report the what" band rather than
+- Graphic 02 is placed on the "warm fuzzy feelings" band rather than
   next to the Before / After device. Its own two labels are *the what* and *the
-  why*, which is that band's argument word for word, and it wants a yale blue
-  ground, which that band already has. Putting a second full band inside the
+  why*, which is that band's argument word for word — more so since the copy of
+  18 Sep 2026, which says "it's the “what”, not the “why”" outright — and it
+  wants a yale blue ground, which that band already has. Putting a second full band inside the
   hero, under the claim demo and graphic 01, was too much in one screen.
 - Graphic 03 draws once as its pillar arrives and then stays drawn, instead of
   looping on a shared 9s cycle. The loop is right for a specimen band standing
@@ -393,7 +394,7 @@ All copy is final and lives in `reference/prototype.html`. Move it into `src/dat
 - **Do not rewrite, shorten, expand, or "tighten" any sentence** on your own initiative. Copy is the client's deliverable and has been through review. Sam directs changes to it; this brief does not.
 - **The value of value.** Added 12 Sep 2026, from a colleague's note. delv sells the case for doing the work, not only the work: the proof is the asset, and the narrative, the science communications and research, the value propositions, the tools, the content and the training are all built from it. The argument sits in the Articulate stage on What we do, where the outputs already live, phrased as "you are not buying a report, you are buying the asset everything else is built from".
 - **Knowing where the number has to land.** Same note. The capability being sold is not only the number but the understanding of how the NHS, and health systems elsewhere, actually buy: who signs a business case off, at what level, and how the same argument has to be rebuilt for another system. It appears in the Home "side of the table" section, as a named differentiator on Who we are, and in the "Who do you usually work with?" answer. **Deliberately not claimed: proven success.** The colleague's note mentioned it, but the proof slots are still empty, and asserting a track record the site cannot evidence is the precise failure the site exists to argue against. It goes in when there is a result to put behind it (§13.9).
-- **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "Anyone can report the what" band, in the Measure pillar, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new.
+- **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "warm fuzzy feelings" band, in the Measure pillar, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new.
 - Preserve UK spelling throughout (organisation, prioritise, recognise).
 - Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
 - **No em dashes anywhere.** Sam's instruction, 12 Sep 2026, and it overrides the prototype. Recast each one rather than swapping in a hyphen: a colon where it introduces a list or an elaboration, a comma where it is parenthetical, a full stop where the clauses stand alone. `&middot;` is the separator in page titles. The rendered site is checked for `\u2014` on every build.
@@ -416,7 +417,7 @@ Placeholders in the prototype that need replacing before launch — leave them i
 
 Build these as components and compose the pages from content files.
 
-**Home** — hero (H1 strapline + lede + two CTAs) → claim demo (what/why, captioned "Illustrative") → tick rule → dark band "Anyone can report the what" → "Sound familiar?" six-item problem list → dim band with three pillars → **results band** → "We have been on your side of the table" split → **quote band** → dark CTA band.
+**Home** — hero (H1 strapline + lede + two CTAs) → claim demo (Before / After; the caption went on 18 Sep 2026, see §9) → tick rule → dark band "Move on from warm fuzzy feelings" → "Sound familiar?" six-item problem list → dim band with three pillars → **results band** → "We have been on your side of the table" split → **quote band** → dark CTA band.
 
 **What we do** — hero → tick rule → three alternating bands (Define / Measure / Articulate), each a split with stage label, H2, lede and a detail list → dark band "We will tell you when a claim does not hold."
 
@@ -984,8 +985,11 @@ template, and a reader who visits two of the three pages will see it.
 **Single lines, each optional**
 
 9. **"Sound familiar?"** on Home. The only weak heading on the page.
-   Alternatives: "If two or more of these are true", or "Where this usually
-   bites".
+   Alternatives: "Where this usually bites". ("If two or more of these are
+   true" was the other, and it is spent: it was the block's lede, and Sam's
+   copy edit of 18 Sep 2026 removed it along with the six original items. The
+   heading now carries the block on its own, with `headingGap: wide` doing the
+   work the lede used to do.)
 10. **List saturation on What we do.** Two six-item parallel lists in close
     succession with a triple anaphora between them. The proposal is to trim the
     first list to four and break its uniform rhythm: "money saved, hours

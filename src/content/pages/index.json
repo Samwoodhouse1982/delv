@@ -48,16 +48,15 @@
     {
       "type": "prose",
       "band": "deep",
-      "name": "Anyone can report the what",
-      "heading": "Anyone can report the what",
+      "name": "Move on from warm fuzzy feelings",
+      "heading": "Move on from warm fuzzy feelings",
       "layout": "split",
       "nestSplit": true,
       "paragraphs": [
-        "Downloads, seats, sessions and sign-ups all prove the same thing: somebody turned your product on. None of them tell a commissioner what changed, an investor what it is worth, or a regulator what you are entitled to claim.",
-        "Procurement scores what it can count, and investors discount what they cannot check. A warm quote from a delighted clinician is not evidence, and a nice-to-have does not win a budget line. Minutes, money and metrics do.",
-        "Most healthtech companies know this already. What they usually lack is the time, the data plumbing or the internal agreement to fix it, and the realisation tends to arrive with a tender deadline already moving towards them."
+        "Measuring success in downloads, seats, sessions, likes and registrations only proves that somebody turned your product on. It&rsquo;s the &ldquo;what&rdquo;, not the &ldquo;why&rdquo;. These don&rsquo;t win procurement points, justify investment or increase an exit valuation.",
+        "Organisations of all sizes have to prove ROI, value and impact more: for themselves, for their clients and their users. A nice quote might sound nice, but it doesn&rsquo;t move the commercial needle. For that, it&rsquo;s about minutes, money and metrics now more than ever."
       ],
-      "muted": "We sit between the economists and the optimists. A two-year multi-country study is more than most decisions need. A story from one enthusiastic ward is less. What works is a number your buyer can put their name to, pitched at the level the decision gets made.",
+      "muted": "We sit between the economists and the optimists, finding the right balance of value to help you find and talk about numbers that your buyer can believe in, that remove barriers to purchase, and make you indispensable.",
       "graphic": "absorption",
       "graphicAfter": true
     },
@@ -67,14 +66,13 @@
       "name": "Sound familiar?",
       "headingGap": "wide",
       "heading": "Sound familiar?",
-      "lede": "If two or more of these are true, there is usually a month of work that changes the shape of your year.",
       "items": [
-        "Your marketing claims have run ahead of the evidence behind them, and someone has started asking for the source: a customer, a regulator, or your own quality team.",
-        "Procurement keeps asking for a business case, and every deal stalls at the same point.",
-        "You are raising, and the deck says &ldquo;proven&rdquo; where the data room says &ldquo;pilot&rdquo;.",
-        "You have signed an outcomes-based agreement and now have to evidence delivery in order to get paid.",
-        "Sales, product, data and clinical each describe your value differently, and all of them are a bit right.",
-        "The product generates plenty of data. None of it was set up to prove anything."
+        "Your marketing claims don&rsquo;t set you apart from the competition.",
+        "You keep losing prospect deals when scored on impact ratings.",
+        "You have signed a risk-sharing contract that requires real-world evidence.",
+        "Sales, product, data and clinical each don&rsquo;t know which proof points matter to the market.",
+        "You have a bunch of claims but no way of auditing, managing, or quality checking them.",
+        "You&rsquo;re claiming &ldquo;proven&rdquo; based on deployment, not proof."
       ]
     },
     {
