@@ -82,22 +82,22 @@
       "tight": true,
       "name": "Define. Measure. Articulate.",
       "heading": "Define. Measure. Articulate.",
-      "lede": "Three stages, in that order. Most people call us for the third and find out they need the first.",
+      "lede": "A simple approach for complicated subjects.",
       "items": [
         {
           "step": "Stage one",
           "heading": "Define",
-          "body": "What value means here: to you, to your buyer, and to whoever signs off the money. We audit the claims you already make and decide which are worth proving."
+          "body": "What value means here: to you, to your buyers, and to whoever holds the purse strings. We audit the claims you already make, decide which are worth proving, and highlight gaps and opportunities."
         },
         {
           "step": "Stage two",
           "heading": "Measure",
-          "body": "Financial, operational and clinical impact, built from the data you have, with the gaps named rather than papered over. One number with a stated basis beats three paragraphs of narrative."
+          "body": "Financial, operational and clinical impact, built from the data you have, or from data we work with your teams to acquire. We help you build a standardised and systematic approach to value and ROI."
         },
         {
           "step": "Stage three",
           "heading": "Articulate",
-          "body": "The same finding, shaped for a trust business case, an investor update and a sales conversation, plus the rules for how each claim can be used."
+          "body": "Stats, facts, ROI measures, publishable evidence: we convert the numbers into high-impact differentiators, with disclaimers, references, and rules for how each claim can be used."
         }
       ],
       "shapes": true,
@@ -146,10 +146,9 @@
       "type": "cta",
       "band": "none",
       "name": "Closing call to action",
-      "heading": "Let&rsquo;s build your value story.",
-      "body": "Tell us where the evidence gap is hurting most. If we are not the right people, we will say so on the call.",
+      "heading": "We don&rsquo;t just write your value story; we help you build the book.",
       "action": {
-        "label": "Start a conversation",
+        "label": "Let’s talk",
         "href": "/contact"
       }
     }

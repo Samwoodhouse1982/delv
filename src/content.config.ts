@@ -30,11 +30,20 @@ import { glob } from 'astro/loaders';
  * shipping: `astro check` catches a typo in a type, and the schema catches a
  * missing heading or an unknown block type.
  *
- * Strings are still rendered with `set:html`, so they keep their typographic
+ * Most strings are rendered with `set:html`, so they keep their typographic
  * entities (&rsquo;, &middot;) and must stay HTML-safe: no bare `<` or `&`.
+ * A few are not — see `action.label` below — and those want the character
+ * itself. `npm run entities` fails the build if the two are ever mixed up.
  */
 
 const action = z.object({
+  /**
+   * Rendered as text, not HTML: every component interpolates this into the
+   * button rather than calling `set:html`. So an entity here ships literally,
+   * as `Let&rsquo;s talk` on the page, which is what happened on 18 Sep 2026
+   * when the home page's closing button got the first apostrophe any button
+   * on the site had ever had. Write the character: ’, not `&rsquo;`.
+   */
   label: z.string(),
   href: z.string(),
   /** Outline rather than filled. Secondary actions only. */
@@ -444,7 +453,13 @@ const block = z.discriminatedUnion('type', [
     ...base,
     type: z.literal('cta'),
     heading: z.string(),
-    body: z.string(),
+    /**
+     * Optional since 18 Sep 2026. The home page's closing band makes its
+     * whole argument in the heading now, and a band with an empty paragraph
+     * in it is not the same thing as a band with no paragraph. The other
+     * five closing bands still have one.
+     */
+    body: z.string().optional(),
     action: action.omit({ ghost: true }),
   }),
 ]);

@@ -61,7 +61,7 @@ export interface QaItem {
 
 export interface CtaBand {
   heading: string;
-  body: string;
+  body?: string;
   action: { label: string; href: string };
 }
 

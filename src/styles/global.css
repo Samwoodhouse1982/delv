@@ -3016,6 +3016,20 @@ figure.figure:not([class*="mt-"]) {
   margin-top: 18px;
   max-width: 50ch;
 }
+/*
+ * A closing band with no paragraph, which the home page became on
+ * 18 Sep 2026. 18px is the right gap under a line of body text and much too
+ * tight under four lines of display type, so the button gets its own.
+ *
+ * The adjacent sibling is doing the work: it matches only when `.mt-cta`
+ * follows the heading directly, which is only true when the paragraph is
+ * absent. The five closing bands that still have one are untouched, which is
+ * the point — the alternative was raising `.mt-cta` to beat `.cta-band p` on
+ * specificity, and that would have moved every button on the site.
+ */
+.cta-band h2 + .mt-cta {
+  margin-top: 34px;
+}
 
 /* --------------------------------------------------------------------------
    Form

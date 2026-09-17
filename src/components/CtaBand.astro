@@ -10,7 +10,7 @@ const { cta } = Astro.props;
 <div class="dark cta-band">
   <div class="wrap">
     <h2 set:html={cta.heading} />
-    <p set:html={cta.body} />
+    {cta.body && <p set:html={cta.body} />}
     <p class="mt-cta">
       <a class="btn" href={cta.action.href}>{cta.action.label}</a>
     </p>

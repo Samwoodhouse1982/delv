@@ -702,7 +702,10 @@ collections:
               - *band
               - *tight
               - { name: heading, widget: string }
-              - { name: body, widget: text }
+              # Optional since 18 Sep 2026: the home page's closing band has
+              # no paragraph. Without `required: false` the editor would
+              # refuse to save that page at all.
+              - { name: body, widget: text, required: false }
               - name: action
                 widget: object
                 fields:
@@ -728,7 +731,10 @@ collections:
               - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - { name: heading, widget: string }
-              - { name: body, widget: text }
+              # Optional since 18 Sep 2026: the home page's closing band has
+              # no paragraph. Without `required: false` the editor would
+              # refuse to save that page at all.
+              - { name: body, widget: text, required: false }
               - name: action
                 widget: object
                 fields:

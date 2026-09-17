@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Marketing site for delv. \u2014 DELV Consulting Ltd",
+  "description": "Marketing site for delv. — DELV Consulting Ltd",
   "engines": {
     "node": ">=20.3.0"
   },
@@ -13,14 +13,15 @@
     "build": "astro build",
     "build:preview": "PLACEHOLDER_PREVIEW=1 astro build",
     "preview": "astro preview",
-    "check": "astro check && npm run a11y && npm run cms",
+    "check": "astro check && npm run a11y && npm run cms && npm run entities",
     "check:preview": "PLACEHOLDER_PREVIEW=1 astro build && npm run a11y",
     "a11y": "node scripts/a11y.mjs",
     "fonts:metrics": "node scripts/font-metrics.mjs",
     "og": "node scripts/og.mjs",
     "icons": "node scripts/icons.mjs",
     "parity": "node scripts/content-parity.mjs",
-    "cms": "node scripts/cms-schema-parity.mjs"
+    "cms": "node scripts/cms-schema-parity.mjs",
+    "entities": "node scripts/entities.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
