@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "Start a conversation.",
-      "sub": "Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We will come back within two working days.",
+      "sub": [
+        "Tell us where the evidence gap is hurting: a stalled deal, an approaching raise, a claim you are no longer sure about. We will come back within two working days."
+      ],
       "actions": [],
       "tightBottom": true
     },

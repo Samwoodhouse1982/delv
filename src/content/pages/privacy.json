@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "Privacy notice.",
-      "sub": "How we handle the personal data you give us through this website.",
+      "sub": [
+        "How we handle the personal data you give us through this website."
+      ],
       "actions": []
     },
     {

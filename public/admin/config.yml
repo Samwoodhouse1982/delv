@@ -118,7 +118,13 @@ collections:
               - { name: tight, widget: hidden }
               - { name: name, label: Label in this list, widget: string, required: false }
               - { name: heading, label: Heading, widget: string }
-              - { name: sub, label: Standfirst, widget: text }
+              - name: sub
+                label: Standfirst
+                widget: list
+                # A list, because the home page opens with two paragraphs.
+                # A plain text field here would write a string back and the
+                # build would reject it.
+                field: { name: text, widget: text }
               - name: actions
                 label: Buttons
                 widget: list
@@ -161,6 +167,12 @@ collections:
                   - name: caption
                     label: The note underneath
                     widget: text
+                    # Optional since 18 Sep 2026, when the home page's two
+                    # claims stopped deriving from each other and the note
+                    # tying them together had nothing left to say. Without
+                    # `required: false` the editor would refuse to save the
+                    # home hero at all, because the field is now absent.
+                    required: false
 
           # -------------------------------------------------------- rule
           - name: rule

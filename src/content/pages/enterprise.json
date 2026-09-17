@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "You have the evidence. It does not agree with itself.",
-      "sub": "At scale the problem is rarely a shortage of proof. It is four credible versions of the same number, in four places, with nobody empowered to choose between them. We build the single version, and the rules that keep it true.",
+      "sub": [
+        "At scale the problem is rarely a shortage of proof. It is four credible versions of the same number, in four places, with nobody empowered to choose between them. We build the single version, and the rules that keep it true."
+      ],
       "actions": [
         {
           "label": "Start a conversation",

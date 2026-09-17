@@ -3,7 +3,7 @@ interface Props {
   claim: {
     weak: { label: string; text: string };
     strong: { label: string; text: string };
-    caption: string;
+    caption?: string;
   };
 }
 const { claim } = Astro.props;
@@ -52,7 +52,7 @@ const { claim } = Astro.props;
     </div>
   </div>
 
-  <p class="caption">{claim.caption}</p>
+  {claim.caption && <p class="caption">{claim.caption}</p>}
 </div>
 
 <script>

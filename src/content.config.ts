@@ -128,7 +128,13 @@ const block = z.discriminatedUnion('type', [
     ...base,
     type: z.literal('hero'),
     heading: z.string(),
-    sub: z.string(),
+    /**
+     * The standfirst, one entry per paragraph. A list rather than a string
+     * because the home page's opening became two paragraphs on 18 Sep 2026
+     * and `.hero .sub` carries its own top margin, so two of them space
+     * themselves. Every other page has one.
+     */
+    sub: z.array(z.string()).min(1),
     actions: z.array(action).default([]),
     /** The home page's two-line lockup, which has its own measured fit. */
     lockup: z.boolean().default(false),
@@ -144,7 +150,13 @@ const block = z.discriminatedUnion('type', [
       .object({
         weak: z.object({ label: z.string(), text: z.string() }),
         strong: z.object({ label: z.string(), text: z.string() }),
-        caption: z.string(),
+        /**
+         * Optional since 18 Sep 2026. It carried the arithmetic tying the two
+         * lines together, and the word "Illustrative" with it; when the lines
+         * stopped deriving from each other there was nothing left for it to
+         * explain. See the note in index.json.
+         */
+        caption: z.string().optional(),
       })
       .optional(),
   }),

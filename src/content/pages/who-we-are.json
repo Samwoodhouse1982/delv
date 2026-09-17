@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "We have been in your shoes.",
-      "sub": "Between us we have worked across the digital health ecosystem: clinical practice, global health technology, health systems, and startups trying to get their first real contract over the line.",
+      "sub": [
+        "Between us we have worked across the digital health ecosystem: clinical practice, global health technology, health systems, and startups trying to get their first real contract over the line."
+      ],
       "actions": []
     },
     {

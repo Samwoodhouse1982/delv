@@ -750,12 +750,15 @@ h3 .mark {
 }
 
 /*
- * The delays are the score. Typing takes 52 characters at 31ms plus a 100ms
- * lead, so it finishes at about 1.7s, and everything below is timed from
- * there. Change the copy and these want re-timing with it.
+ * The delays are the score. Typing takes 30 characters at 31ms plus a 100ms
+ * lead, so it finishes at about 1.03s, and everything below is timed from
+ * there — the gaps between the beats are unchanged, the whole score just
+ * starts 0.67s earlier than it did, because the copy shortened from 52
+ * characters to 30 on 18 Sep 2026. Change the copy again and these want
+ * re-timing again: a delay left behind leaves a silent pause on screen.
  */
 [data-claim-armed].is-running .claim-strike {
-  animation: strike 0.7s cubic-bezier(0.3, 0.6, 0.3, 1) 1.85s forwards;
+  animation: strike 0.7s cubic-bezier(0.3, 0.6, 0.3, 1) 1.2s forwards;
 }
 @keyframes strike {
   0% {
@@ -776,7 +779,7 @@ h3 .mark {
 }
 
 [data-claim-armed].is-running .claim-reveal {
-  animation: reveal 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) 2.75s forwards;
+  animation: reveal 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) 2.1s forwards;
 }
 @keyframes reveal {
   to {
@@ -786,7 +789,7 @@ h3 .mark {
 }
 
 [data-claim-armed].is-running .mark--sweep {
-  animation: sweep 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) 3.35s forwards;
+  animation: sweep 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) 2.7s forwards;
 }
 @keyframes sweep {
   to {
@@ -804,14 +807,14 @@ h3 .mark {
  * `data-motion` the outer ring gets both.
  */
 [data-claim-armed].is-running .claim-resolve {
-  animation: claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 4.15s forwards;
+  animation: claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 3.5s forwards;
 }
 /*
  * The outer ring runs both, and the two have to hand over cleanly.
  *
- * The breathe carries the same 4.15s delay as the beat it belongs to: without
+ * The breathe carries the same 3.5s delay as the beat it belongs to: without
  * it the loop starts at zero and paints the ring in at full opacity, over the
- * armed state, four seconds before the claim it is answering.
+ * armed state, three and a half seconds before the claim it is answering.
  *
  * And this one claimResolve does not fill forwards, where the other two marks
  * do. Later animations win for a shared property, so a forward fill here would
@@ -821,8 +824,8 @@ h3 .mark {
  */
 [data-motion] [data-claim-armed].is-running .claim-field .gfx-ring--breathe {
   animation:
-    gfxBreathe 6s ease-in-out 4.15s infinite,
-    claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 4.15s;
+    gfxBreathe 6s ease-in-out 3.5s infinite,
+    claimResolve 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 3.5s;
 }
 
 /*
@@ -1448,11 +1451,11 @@ nav.main .nav-panel a[aria-current="page"] {
 
 /*
  * The padding used to be sized so the field of marks had clear air above the
- * labels and below the caption. The field has gone, so it is back to being
- * ordinary separation: enough below the tick rule that the block starts, and
- * enough under the caption that the hero ends. The right fifth is still held
- * empty for the resolution mark, which is a reservation rather than padding
- * and lives further down.
+ * labels and below the caption. Both have gone — the field on 15 Sep 2026,
+ * the caption on 18 Sep — so it is back to being ordinary separation: enough
+ * below the tick rule that the block starts, and enough under the two claims
+ * that the hero ends. The right fifth is still held empty for the resolution
+ * mark, which is a reservation rather than padding and lives further down.
  */
 .claim {
   position: relative;
@@ -2467,7 +2470,7 @@ figure.figure:not([class*="mt-"]) {
    * of its sequence. Leaving this here as well was worse than redundant: the
    * browser keeps an animation's start time when only the rule around it
    * changes, so the loop's clock began when `data-motion` landed rather than
-   * when the sequence did. Its 4.15s delay was then measured from page load,
+   * when the sequence did. Its delay was then measured from page load,
    * and on any page where the reader took longer than that to scroll down, the
    * ring was already on screen while everything around it was still armed.
    */

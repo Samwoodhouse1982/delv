@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "Priced before we start. Useful after we leave.",
-      "sub": "We work inside your team rather than presenting to it. You see the deliverables and the price before you commit to anything, and what we hand over has to keep working once we have gone.",
+      "sub": [
+        "We work inside your team rather than presenting to it. You see the deliverables and the price before you commit to anything, and what we hand over has to keep working once we have gone."
+      ],
       "actions": []
     },
     {

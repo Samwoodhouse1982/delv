@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "The proof is already in your deployment data.",
-      "sub": "Twelve months of live use across several trusts, and a product generating data that nobody set up to prove anything. Most of the work is digging through what you already have, before any modelling starts. We go and get the number, then build it so your team can run it again without us.",
+      "sub": [
+        "Twelve months of live use across several trusts, and a product generating data that nobody set up to prove anything. Most of the work is digging through what you already have, before any modelling starts. We go and get the number, then build it so your team can run it again without us."
+      ],
       "actions": [
         {
           "label": "Start a conversation",

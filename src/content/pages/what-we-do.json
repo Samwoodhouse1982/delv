@@ -13,7 +13,9 @@
       "band": "none",
       "name": "Hero",
       "heading": "Define. Measure. Articulate.",
-      "sub": "Projects of any size run through the same three stages. We can start at any of them, but we check the first one is sound before we build on it.",
+      "sub": [
+        "Projects of any size run through the same three stages. We can start at any of them, but we check the first one is sound before we build on it."
+      ],
       "actions": []
     },
     {

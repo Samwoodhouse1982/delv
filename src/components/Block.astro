@@ -103,7 +103,9 @@ const quote = proofQuote
   hero && (
     <div class="wrap hero" style={hero.tightBottom ? 'padding-bottom:20px' : undefined}>
       <h1 class={hero.lockup ? 'h1-lockup' : undefined} set:html={hero.heading} />
-      <p class="sub" set:html={hero.sub} />
+      {hero.sub.map((paragraph) => (
+        <p class="sub" set:html={paragraph} />
+      ))}
       {/*
         Only when there are actions. Four pages open with a heading and a
         sub alone, and an empty wrapper on those is markup that was never

@@ -13,7 +13,10 @@
       "band": "none",
       "name": "Hero",
       "heading": "<span class=\"hl\">Prove the <span class=\"mark\">value</span>.</span><span class=\"hl\">Prove your why.</span>",
-      "sub": "Your product works. Proving what it is worth to the person signing the budget is a different job. We help healthtech companies define, measure and articulate value, so that the claims you make in market hold up when someone checks the working.",
+      "sub": [
+        "We know that you believe in your product; it&rsquo;s likely your team, investors, and end users do too. Sadly, vanity metrics and surface-level data aren&rsquo;t beneficial if you cannot show the evidence of value and impact.",
+        "We help healthtech companies define, measure and articulate value, so you can replace the nice qualitative statements with the hard metrics and evidence that help you grow."
+      ],
       "actions": [
         {
           "label": "Start a conversation",
@@ -29,13 +32,12 @@
       "claim": {
         "weak": {
           "label": "Before",
-          "text": "15,000 consultations a week run through the platform."
+          "text": "15,000 downloads since launch."
         },
         "strong": {
           "label": "After",
-          "text": "Two minutes back on each one: 500 clinician hours a week, at one trust."
-        },
-        "caption": "Illustrative, and both lines describe the same trust in the same week. 15,000 consultations at two minutes each is 500 hours. The first number reports activity; the second is the one a finance director can take into a business case."
+          "text": "Saved 2 minutes per consultation, releasing 500 clinician hours every week."
+        }
       }
     },
     {
