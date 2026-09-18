@@ -393,7 +393,7 @@ All copy is final and lives in `reference/prototype.html`. Move it into `src/dat
 
 - **Do not rewrite, shorten, expand, or "tighten" any sentence** on your own initiative. Copy is the client's deliverable and has been through review. Sam directs changes to it; this brief does not.
 - **The value of value.** Added 12 Sep 2026, from a colleague's note. delv sells the case for doing the work, not only the work: the proof is the asset, and the narrative, the science communications and research, the value propositions, the tools, the content and the training are all built from it. The argument sits in the Articulate stage on What we do, where the outputs already live, phrased as "you are not buying a report, you are buying the asset everything else is built from".
-- **Knowing where the number has to land.** Same note. The capability being sold is not only the number but the understanding of how the NHS, and health systems elsewhere, actually buy: who signs a business case off, at what level, and how the same argument has to be rebuilt for another system. It appears in the Home "side of the table" section, as a named differentiator on Who we are, and in the "Who do you usually work with?" answer. **Deliberately not claimed: proven success.** The colleague's note mentioned it, but the proof slots are still empty, and asserting a track record the site cannot evidence is the precise failure the site exists to argue against. It goes in when there is a result to put behind it (§13.9).
+- **Knowing where the number has to land.** Same note. The capability being sold is not only the number but the understanding of how the NHS, and health systems elsewhere, actually buy: who signs a business case off, at what level, and how the same argument has to be rebuilt for another system. It appears as a named differentiator on Who we are and in the "Who do you usually work with?" answer. (It was in the Home "side of the table" section too, until Sam's copy edit of 18 Sep 2026 replaced both of that block's paragraphs; Home now introduces the founders rather than the buying knowledge, and the argument is carried on the two pages above.) **Deliberately not claimed: proven success.** The colleague's note mentioned it, but the proof slots are still empty, and asserting a track record the site cannot evidence is the precise failure the site exists to argue against. It goes in when there is a result to put behind it (§13.9).
 - **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "warm fuzzy feelings" band, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new. (It was in the Home Measure pillar too, as "one number with a stated basis beats three paragraphs of narrative", until Sam's copy edit of 18 Sep 2026 gave that pillar the standardised-approach argument instead. The principle is unchanged; it is carried in three places now rather than four.)
 - Preserve UK spelling throughout (organisation, prioritise, recognise).
 - Preserve typographic characters: `&rsquo;` for apostrophes, `&middot;` in meta strings.
@@ -975,11 +975,13 @@ template, and a reader who visits two of the three pages will see it.
    `hold up` and the verb `defend` were all at three or more, so a synonym
    would only have moved the repetition. "Quietly indefensible" on What we
    do is a different word and stays.
-7. **"a sceptical analyst"**, done. The Startups deliverable now reads "a
-   value model with sourced assumptions, built to be questioned", which
-   also takes "analyst" from four instances to three. The phrase survives
-   once, on the Home proof lede, which is where it does the most work. It
-   lives in `proof.ts` under `placement.home`, not in `home.ts`.
+7. **"a sceptical analyst"**, done, and then gone. The Startups deliverable
+   reads "a value model with sourced assumptions, built to be questioned",
+   which took "analyst" from four instances to three. The last one was the
+   Home proof lede, and Sam deleted that lede on 18 Sep 2026 along with the
+   heading above it, so the phrase is not on the site at all now. Nothing
+   needs doing; this is only here so the next person does not go looking for
+   it in `proof.ts`.
 8. **Two meta descriptions still open "How delv."** (Startups, Enterprise).
    Scale-ups was recast in the Tier 1 pass. Defensible as a pattern; worth a
    look if the other two are ever regenerated.

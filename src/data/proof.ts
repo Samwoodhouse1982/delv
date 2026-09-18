@@ -155,8 +155,12 @@ export const placement: Record<
   { heading?: string; lede?: string; results: string[]; quote: string | null }
 > = {
   home: {
-    heading: 'What it has been worth',
-    lede: 'Every figure here is one we would hand to a sceptical analyst, with the basis attached.',
+    /*
+     * No lede since 18 Sep 2026, on Sam's edit. The component already draws a
+     * heading without one as a plain h2 rather than a split, so there is
+     * nothing to change but this.
+     */
+    heading: 'Without proof, what&rsquo;s the point?',
     results: isPreview ? ['sample-1', 'sample-2', 'sample-3'] : [],
     quote: isPreview ? 'sample-home' : null,
   },
