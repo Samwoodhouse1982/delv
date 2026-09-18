@@ -392,7 +392,7 @@ Every one of these is gated twice: inside `prefers-reduced-motion: no-preference
 All copy is final and lives in `reference/prototype.html`. Move it into `src/data/*.ts` as typed objects. Rules:
 
 - **Do not rewrite, shorten, expand, or "tighten" any sentence** on your own initiative. Copy is the client's deliverable and has been through review. Sam directs changes to it; this brief does not.
-- **The value of value.** Added 12 Sep 2026, from a colleague's note. delv sells the case for doing the work, not only the work: the proof is the asset, and the narrative, the science communications and research, the value propositions, the tools, the content and the training are all built from it. The argument sits in the Articulate stage on What we do, where the outputs already live, phrased as "you are not buying a report, you are buying the asset everything else is built from".
+- **The value of value.** Added 12 Sep 2026, from a colleague's note. delv sells the case for doing the work, not only the work: the proof is the asset, and the narrative, the science communications and research, the value propositions, the tools, the content and the training are all built from it. The argument sits in the Articulate stage on What we do, where the outputs already live, phrased as "you are not buying a report, you are buying the asset everything else is built from". Since 18 Sep 2026 that stage names science communications outright, as strategy plus support with research proposals, papers and journal submissions.
 - **Knowing where the number has to land.** Same note. The capability being sold is not only the number but the understanding of how the NHS, and health systems elsewhere, actually buy: who signs a business case off, at what level, and how the same argument has to be rebuilt for another system. It appears as a named differentiator on Who we are and in the "Who do you usually work with?" answer. (It was in the Home "side of the table" section too, until Sam's copy edit of 18 Sep 2026 replaced both of that block's paragraphs; Home now introduces the founders rather than the buying knowledge, and the argument is carried on the two pages above.) **Deliberately not claimed: proven success.** The colleague's note mentioned it, but the proof slots are still empty, and asserting a track record the site cannot evidence is the precise failure the site exists to argue against. It goes in when there is a result to put behind it (§13.9).
 - **Metrics over narrative.** Added at Sam's request, 12 Sep 2026. Procurement scores what it can count and investors discount what they cannot check, so the copy says so: a nice-to-have and a warm quote from a delighted clinician do not win a budget line, and minutes, money and metrics do. The line lands on Home in the "warm fuzzy feelings" band, in the Measure stage on What we do, and in the first of the three moments on For startups. Keep that voice in anything new. (It was in the Home Measure pillar too, as "one number with a stated basis beats three paragraphs of narrative", until Sam's copy edit of 18 Sep 2026 gave that pillar the standardised-approach argument instead. The principle is unchanged; it is carried in three places now rather than four.)
 - Preserve UK spelling throughout (organisation, prioritise, recognise).
@@ -1030,11 +1030,13 @@ template, and a reader who visits two of the three pages will see it.
    copy edit of 18 Sep 2026 removed it along with the six original items. The
    heading now carries the block on its own, with `headingGap: wide` doing the
    work the lede used to do.)
-10. **List saturation on What we do.** Two six-item parallel lists in close
-    succession with a triple anaphora between them. The proposal is to trim the
-    first list to four and break its uniform rhythm: "money saved, hours
-    released, appointments freed, and the readmissions that did not happen".
-    The second list earns its length.
+10. **List saturation on What we do.** Two parallel lists in close succession
+    with a triple anaphora between them. The proposal is to trim the first list
+    to four and break its uniform rhythm: "money saved, hours released,
+    appointments freed, and the readmissions that did not happen". The second
+    list earns its length, and grew to eight on 18 Sep 2026 when Sam added
+    filmed client case studies and science communications, which makes trimming
+    the first one more worth doing rather than less.
 11. **The six tests on How we work.** Six labelled adjectives with colon
     definitions is a recognisable consultancy-deck shape, and the list does not
     spell anything. Four may land harder. Relevant and Marketable overlap.
