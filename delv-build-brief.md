@@ -509,6 +509,40 @@ The overlay is `aria-hidden`, has no focusable children, and any key or click
 ends it early. That last is not in the handoff: 5.5 seconds is a long time to
 hold someone who arrived to read something.
 
+**Portrait gets its own stage and two lines.** Added 18 Sep 2026, on Sam's
+report that it did not sit well on a phone, and he was being generous. The
+handoff composes on a fixed 1600x900 stage scaled to cover the viewport, and
+cover takes whichever axis needs more: on a 390x844 phone that is the height,
+scaling by 0.94 and putting the 801px phrase on screen at 751px inside 390px
+of viewport. The reader saw **iver val** &mdash; no d, no full stop, no logo,
+in a piece whose entire subject is a phrase condensing into one. A tablet held
+upright cropped it the same way, so the switch is the viewport's aspect ratio
+rather than a width breakpoint.
+
+Portrait composes on 900x1600 with **deliver** over **value.**, and the merge
+gains a vertical component: the two lines close as the letters slide together,
+so **delv.** lands on one line exactly as it always did. Everything else &mdash;
+timing, easing, colour, the dive &mdash; is untouched, and the landscape
+rendering is unchanged to within frame-timing noise (measured: mean pixel
+difference 0.05&ndash;0.8 of 255 against 0.0&ndash;0.6 between two runs of the
+same build).
+
+Making it possible meant giving up half-flow, half-transform positioning. Each
+letter used to take its place in the line from flex layout and move from there
+by transform, which cannot express two lines becoming one. Positions are now
+computed outright, which the script was already equipped for since it measures
+every advance width with canvas. The two are provably identical on one line,
+for every character and every frame: the old expression reduces to the new one
+algebraically, and the screenshots agree.
+
+`npm run intro` lays the overlay out at eighteen viewport shapes and fails if
+any visible letter is off screen. It exists because nothing else could have
+caught this: axe is clean (the overlay is `aria-hidden` and carries no
+content), the overflow check is clean (`position: fixed` inside
+`overflow: hidden` clips rather than scrolls), and the page diff is clean (the
+markup never changed). Run against the old code it fails all ten portrait
+shapes and passes all eight landscape ones.
+
 ### Proof and quotes
 
 Added after the prototype, at Sam's request, against §13.6. Two components and

@@ -425,14 +425,25 @@ footer :focus-visible {
   overflow: hidden;
 }
 
+/*
+ * The virtual stage the whole piece is composed on. Everything inside is in
+ * stage pixels, and the script scales the stage to cover the viewport.
+ *
+ * Its size is a variable because portrait needs a portrait stage. A 1600x900
+ * stage covering a 390x844 phone is scaled by its height, to 0.94, which puts
+ * the 801px phrase on screen at 751px inside 390px of viewport: the reader
+ * saw "iver val", with neither the d nor the full stop the whole thing is
+ * about. The script swaps in 900x1600 and two lines there. Defaults live here
+ * so the stage is the right shape before the script runs.
+ */
 .intro-stage {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 1600px;
-  height: 900px;
-  margin-left: -800px;
-  margin-top: -450px;
+  width: var(--intro-stage-w, 1600px);
+  height: var(--intro-stage-h, 900px);
+  margin-left: calc(var(--intro-stage-w, 1600px) / -2);
+  margin-top: calc(var(--intro-stage-h, 900px) / -2);
 }
 .intro-zoom {
   position: absolute;
@@ -454,25 +465,45 @@ footer :focus-visible {
   position: relative;
   flex-shrink: 0;
 }
+/*
+ * A point, not a box. Every character is placed from it by transform, so the
+ * row has no layout of its own to disagree with.
+ *
+ * It used to be a centred flex row, which meant a character's position was
+ * half flow and half transform: the flow gave it a place in one line and the
+ * transform moved it from there. That is not extensible to two lines, and it
+ * was never necessary — the script measures every advance width with canvas
+ * anyway, so it already knew where each character should go. Now it says so.
+ * Proved equivalent on one line: the old position reduces to the new one
+ * exactly, for every character and every frame.
+ */
 .intro-row {
   font-family: "EB Garamond", "EB Garamond Fallback", Georgia, serif;
   font-weight: 600;
   font-size: 150px;
   line-height: 1.2;
-  display: flex;
-  flex-shrink: 0;
-  align-items: baseline;
-  justify-content: center;
+  position: relative;
+  width: 0;
+  height: 0;
   /* Revealed by the script once the row has been measured. */
   visibility: hidden;
 }
 .intro.is-ready .intro-row {
   visibility: visible;
 }
+/*
+ * `height` and the negative `margin-top` are set by the script, to the line
+ * height in stage pixels, so a character's transform addresses the centre of
+ * its own line box. That is the origin the measured dot offset is relative
+ * to, which is what keeps the full stop, the hole and the zoom on the same
+ * point.
+ */
 .intro-row > span {
-  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
   white-space: pre;
-  flex-shrink: 0;
   transform-origin: 50% 80%;
   opacity: 0;
 }

@@ -32,14 +32,24 @@ const PHRASE = 'deliver value.';
 </div>
 
 <script>
-  const STAGE_W = 1600;
-  const STAGE_H = 900;
+  /*
+   * Two stages, one piece. Landscape composes on 1600x900 as the handoff
+   * specifies; portrait composes on 900x1600 with the phrase broken over two
+   * lines, because a 1600-wide stage covering a portrait phone is scaled by
+   * its height and the phrase runs off both edges. See the note in the CSS.
+   */
+  const STAGE = {
+    wide: { w: 1600, h: 900 },
+    tall: { w: 900, h: 1600 },
+  };
   const SIZE = 150;
   const ROW_H = SIZE * 1.2;
   const FONT = `600 ${SIZE}px "EB Garamond", Georgia, serif`;
 
   const KEEP = new Set([0, 1, 2, 8, 13]);
   const PERIOD = 13;
+  /** Where the line breaks in portrait. The space itself takes no width there. */
+  const SPACE = 7;
 
   const CUE = { Arrive: 0, Mark: 1.2, Merge: 2.0, Lock: 3.0, Enter: 4.3 };
   const DURATION = 5.5;
@@ -104,13 +114,30 @@ const PHRASE = 'deliver value.';
     const spans = Array.from(row.children) as HTMLElement[];
     const chars = spans.map((s) => s.textContent!.replace(' ', ' '));
 
-    const fit = () =>
+    /*
+     * Portrait gets the tall stage and two lines. The test is the viewport's
+     * own shape rather than a width breakpoint, because the problem is an
+     * aspect ratio: a tablet held upright at 768x1024 crops the phrase just
+     * as a phone does, and a phone turned sideways does not.
+     */
+    const twoLine = () => innerHeight > innerWidth;
+
+    let stageW = STAGE.wide.w;
+    let stageH = STAGE.wide.h;
+
+    const fit = () => {
+      const { w, h } = twoLine() ? STAGE.tall : STAGE.wide;
+      stageW = w;
+      stageH = h;
+      const shell = stage.parentElement as HTMLElement;
+      shell.style.setProperty('--intro-stage-w', `${w}px`);
+      shell.style.setProperty('--intro-stage-h', `${h}px`);
       stage.style.setProperty(
         'transform',
-        `scale(${Math.max(innerWidth / STAGE_W, innerHeight / STAGE_H)})`,
+        `scale(${Math.max(innerWidth / w, innerHeight / h)})`,
       );
+    };
     fit();
-    addEventListener('resize', fit, { passive: true });
 
     /*
      * Measure only once the real font is in. The handoff is explicit about
@@ -136,21 +163,96 @@ const PHRASE = 'deliver value.';
       };
     };
 
+    /**
+     * Where every character starts and where it ends, in stage pixels about
+     * the row's centre.
+     *
+     * The whole merge is one interpolation between the two. `end` is always
+     * "delv." on a single line: each kept character at the running total of
+     * the kept widths before it, each dropped one at the same place as the
+     * kept character that follows it, which is where they were going anyway
+     * and where they are invisible by the time they arrive.
+     *
+     * `start` is the phrase as written. On one line that is the running total
+     * of every width, and the vertical term is zero from beginning to end, so
+     * the motion is exactly the horizontal collapse it has always been. On two
+     * it is each line's own running total, one line above the centre and one
+     * below, and the vertical term closes as the horizontal one does: the two
+     * lines come together into the one line "delv." lands on.
+     *
+     * Both layouts are centred on zero by construction. The old code centred
+     * the full phrase by flow and then translated the group back by half the
+     * dropped width to re-centre what was left; this needs no such correction,
+     * and the two are provably the same for every character and every frame.
+     */
+    const plan = (W: number[], two: boolean) => {
+      const sum = (ns: number[]) => ns.reduce((a, b) => a + b, 0);
+      const startX: number[] = [];
+      const startY: number[] = [];
+      const endX: number[] = [];
+
+      const keptW = sum(W.filter((_, i) => KEEP.has(i)));
+      let pen = 0;
+      for (let i = 0; i < W.length; i++) {
+        endX.push(pen - keptW / 2);
+        if (KEEP.has(i)) pen += W[i];
+      }
+
+      if (!two) {
+        const fullW = sum(W);
+        let x = 0;
+        for (let i = 0; i < W.length; i++) {
+          startX.push(x - fullW / 2);
+          startY.push(0);
+          x += W[i];
+        }
+      } else {
+        /* The space becomes the line break, so it takes no width. */
+        const width = (i: number) => (i === SPACE ? 0 : W[i]);
+        const lines = [
+          { from: 0, to: SPACE, y: -ROW_H / 2 },
+          { from: SPACE + 1, to: W.length - 1, y: ROW_H / 2 },
+        ];
+        for (const line of lines) {
+          let lineW = 0;
+          for (let i = line.from; i <= line.to; i++) lineW += width(i);
+          let x = 0;
+          for (let i = line.from; i <= line.to; i++) {
+            startX[i] = x - lineW / 2;
+            startY[i] = line.y;
+            x += width(i);
+          }
+        }
+      }
+      return { startX, startY, endX };
+    };
+
     const run = (M: ReturnType<typeof measure>) => {
       const W = M.w;
-      const dropBefore: number[] = [];
-      let acc = 0;
-      for (let i = 0; i < chars.length; i++) {
-        dropBefore.push(acc);
-        if (!KEEP.has(i)) acc += W[i];
-      }
-      const dropTotal = acc;
-      const fullWidth = W.reduce((a, b) => a + b, 0);
+      let at = plan(W, twoLine());
 
       // Fixed measured widths, set once. Animating width would reflow the row
       // every frame, which is what the handoff warns visibly janks.
-      spans.forEach((s, i) => (s.style.width = `${W[i]}px`));
+      spans.forEach((s, i) => {
+        s.style.width = `${W[i]}px`;
+        /* So a character's transform addresses the centre of its own line
+           box, which is the origin the measured dot offset is relative to. */
+        s.style.height = `${ROW_H}px`;
+        s.style.marginTop = `${-ROW_H / 2}px`;
+      });
       overlay.classList.add('is-ready');
+
+      /*
+       * A rotation mid-play changes the stage, and with it which layout the
+       * characters are flying between. Recomputing is fourteen additions, and
+       * the frame after it puts everything where the new plan says, so the
+       * piece carries on rather than finishing off the side of the screen.
+       */
+      const onResize = () => {
+        fit();
+        at = plan(W, twoLine());
+      };
+      addEventListener('resize', onResize, { passive: true });
 
       const collapseW = collapse(CUE.Merge, CUE.Merge + 0.85);
       const fadeOut = collapse(CUE.Merge, CUE.Merge + 0.36);
@@ -172,13 +274,14 @@ const PHRASE = 'deliver value.';
 
         const groupScale = 1 + 0.17 * push;
         const prog = 1 - collapseW(T);
-        const recentre = (dropTotal / 2) * prog;
+
+        /* Where a character is now: its start, moved towards its end. */
+        const px = (i: number) => at.startX[i] + (at.endX[i] - at.startX[i]) * prog;
+        const py = (i: number) => at.startY[i] * (1 - prog);
 
         const dotX =
-          STAGE_W / 2 +
-          groupScale *
-            (fullWidth / 2 - W[PERIOD] + M.dotCenterFromPen - dropTotal * prog + recentre);
-        const dotY = STAGE_H / 2 + M.dotCenterY * groupScale;
+          stageW / 2 + groupScale * (px(PERIOD) + M.dotCenterFromPen);
+        const dotY = stageH / 2 + groupScale * (py(PERIOD) + M.dotCenterY);
         const holeSize = M.dotSize * groupScale * Math.pow(HOLE_MAX, diveP);
         const groundSize = GROUND_END + (GROUND_START - GROUND_END) * shrink;
 
@@ -189,7 +292,7 @@ const PHRASE = 'deliver value.';
 
         ground.style.width = `${groundSize}px`;
         ground.style.height = `${groundSize}px`;
-        group.style.transform = `scale(${groupScale}) translateX(${recentre}px)`;
+        group.style.transform = `scale(${groupScale})`;
 
         for (let i = 0; i < spans.length; i++) {
           const s = spans[i];
@@ -211,7 +314,7 @@ const PHRASE = 'deliver value.';
 
           s.style.opacity = String(opacity);
           s.style.transform =
-            `translate(${-dropBefore[i] * prog}px, ${(1 - p) * 58}px)` +
+            `translate(${px(i)}px, ${py(i) + (1 - p) * 58}px)` +
             ` rotate(${(1 - p) * -7}deg)${extra}`;
         }
 
@@ -235,7 +338,7 @@ const PHRASE = 'deliver value.';
         ended = true;
         cancelAnimationFrame(raf);
         clearTimeout(window.__delvIntroGuard);
-        removeEventListener('resize', fit);
+        removeEventListener('resize', onResize);
         finish();
       };
 
