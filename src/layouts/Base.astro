@@ -80,12 +80,12 @@ const ogUrl = new URL(ogImage, Astro.site).href;
        * who should not see it. Three ways out: already seen this session,
        * reduced motion, or storage unavailable.
        *
-       * REPLAY_EVERY_VISIT is Sam's, 13 Sep 2026: while the site is on a test
-       * domain with no traffic he wants the animation on every load rather
-       * than once a session. SET IT BACK TO false BEFORE LAUNCH. It is the
-       * only thing that changes; Intro.astro still records the visit on every
-       * play, so flipping this one boolean restores the original behaviour
-       * exactly, with no other edit anywhere.
+       * REPLAY_EVERY_VISIT was Sam's, 13 Sep 2026: while the site was on a
+       * test domain with no traffic he wanted the animation on every load
+       * rather than once a session. Set back to false on his instruction,
+       * 18 Sep 2026, which is the launch behaviour. Intro.astro recorded the
+       * visit on every play throughout, so this one boolean was the whole of
+       * it, then and now.
        *
        * Reduced motion is not part of it and never will be. That is an
        * accessibility guarantee, not a preference about how often to show a
@@ -98,7 +98,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
        * waits on the font. On a slow connection the two drift apart and this
        * would otherwise cut the animation off part-way through.
        */
-      var REPLAY_EVERY_VISIT = true; /* SET TO false BEFORE LAUNCH */
+      var REPLAY_EVERY_VISIT = false;
 
       try {
         var seen =

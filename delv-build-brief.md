@@ -488,14 +488,16 @@ head, not in the component, because deciding any later means a returning
 visitor sees a frame of the overlay before it is removed. `sessionStorage`
 means it replays in a new tab; `localStorage` would make it once-ever.
 
-**Suspended 13 Sep 2026 at Sam's request** while the site is on a test domain
-with no traffic: `REPLAY_EVERY_VISIT` in that head script is `true`, so the
-animation plays on every page load. Nothing else changed. `Intro.astro` still
-records the visit on every play, so setting the flag back to `false` restores
-the once-a-session behaviour exactly, with no other edit. It is a launch
-blocker (§13.13). Reduced motion is deliberately outside the flag: skipping
-the overlay there is an accessibility guarantee, not a preference about how
-often to show a brand animation.
+**Suspended 13 Sep 2026 at Sam's request** while the site was on a test domain
+with no traffic, and **restored 18 Sep 2026**, also at his: `REPLAY_EVERY_VISIT`
+in that head script is `false` again, and the animation plays once a session.
+It was always only the one boolean — `Intro.astro` recorded the visit on every
+play throughout — so nothing else moved in either direction. Checked on the
+way back: the first load of a session plays, the next page does not, a new
+session plays again, and a repeat load leaves no overlay in the DOM and no
+scroll lock on the body. Reduced motion is deliberately outside the flag:
+skipping the overlay there is an accessibility guarantee, not a preference
+about how often to show a brand animation.
 
 **Reduced motion skips it entirely.** The overlay is never rendered at all,
 rather than rendered and hurried.
@@ -957,7 +959,7 @@ rather than a fix. Keep them in step.
 10. **The Value Incubator and the Value Due Diligence Framework.** Both are named offers in the business plan and neither is on the site. If they are real, they belong on How we work next to the Value Audit; if they were working titles, this brief should stop citing them.
 11. **Investors as an audience.** The plan gives them a full proposition. The site gives them two mentions and a line in the contact form. A page, or a section on For startups, is a scope call.
 12. **The Enterprise proof card.** The band is built and deliberately empty, and it stays empty even in placeholder preview. The card that fits the page is the symptom assessment one, "procurement cycle cut from nine months to five", which is this page's thesis almost word for word. It already runs on Home and on Startups, and Startups is not being reopened. Running one card on three pages, or inventing a fourth to avoid that, is exactly what this site argues against. What to look for: a multi-market or multi-business-unit vendor where consolidating the claims or the calculators produced a measurable commercial result, written to the same pattern with the basis line underneath.
-13. **The intro plays on every load.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `true`, so the 5.5-second animation runs on every page view rather than once a session. Sam asked for this on 13 Sep 2026 while the site is on a test domain. **Set it back to `false` before launch**, or every internal page click costs a visitor five and a half seconds. Nothing else has to change with it.
+13. ~~**The intro plays on every load.**~~ **Closed 18 Sep 2026.** `REPLAY_EVERY_VISIT` in the head script in `src/layouts/Base.astro` is `false`, so the 5.5-second animation runs once a session rather than on every page view. Sam had asked for every load on 13 Sep 2026 while the site was on a test domain; he asked for it back on 18 Sep. Nothing else had to change with it, in either direction.
 14. **Retire the prototype as the copy reference.** `reference/prototype.html` is 34% verbatim against the data files after the 13 Sep amends pass, and `/scale-ups` and `/enterprise` share none of it. It is still the reference for layout, spacing and the motifs. Someone reading it for wording will be reading an old draft.
 15. **A price anchor** on the Value Audit. Startups screen on cost, and "fixed fee" without a from-price does not clear that screen.
 
