@@ -317,7 +317,18 @@ collections:
               - { name: heading, widget: string }
               - { name: lede, label: The question it answers, widget: text }
               - { name: paragraphs, widget: list, field: { name: text, widget: text } }
-              - { name: details, label: What it involves, widget: list, field: { name: item, widget: text } }
+              # Label and detail, not one line, since 18 Sep 2026: each row on
+              # the page is a disclosure that opens to its detail. A plain
+              # text field here would write strings back and the build would
+              # reject them. Leaving "What opens underneath" empty is allowed
+              # and gives a row that does not open.
+              - name: details
+                label: What it involves
+                widget: list
+                summary: '{{fields.label}}'
+                fields:
+                  - { name: label, label: The deliverable, widget: string }
+                  - { name: body, label: What opens underneath, widget: text, required: false }
               - *figure
 
           # ----------------------------------------------------- pillars

@@ -1,0 +1,54 @@
+---
+/**
+ * The deliverables under a stage, as disclosures rather than bullets.
+ *
+ * ## Why this is not DetailList
+ *
+ * `DetailList` renders the short lists elsewhere on the site, which are four
+ * or five items with nothing behind them. These are four, six and eight, one
+ * under another down a single page, and on a phone they were a wall of
+ * wrapping lines nobody scans. Each row now shows the deliverable and opens
+ * to the qualifier.
+ *
+ * `DetailList` is untouched. Three other call sites use it and none of them
+ * wanted this.
+ *
+ * ## Why `<details>` and no JavaScript
+ *
+ * Because everything it needs is already in the element. It opens without a
+ * script, so it works on a page whose JavaScript failed; the summary is a
+ * button to the keyboard and announced as expanded or collapsed to a screen
+ * reader, with no ARIA to get wrong; and the browser's own find-in-page opens
+ * a closed row to show a match, which no hand-built accordion does.
+ *
+ * A row with no `body` is not a disclosure at all, just a line. Wrapping it in
+ * a `<details>` with nothing inside would give the reader a control that opens
+ * onto nothing.
+ */
+interface Props {
+  items: { label: string; body?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<ul class="detail detail--open">
+  {
+    items.map((item) =>
+      item.body ? (
+        <li class="row--opens">
+          <details>
+            <summary>
+              <span class="detail-label" set:html={item.label} />
+              <span class="detail-mark" aria-hidden="true" />
+            </summary>
+            <p set:html={item.body} />
+          </details>
+        </li>
+      ) : (
+        <li>
+          <span class="detail-label" set:html={item.label} />
+        </li>
+      ),
+    )
+  }
+</ul>

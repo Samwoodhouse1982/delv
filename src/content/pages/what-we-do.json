@@ -36,10 +36,22 @@
         "Then we look honestly at what you already say. Most companies are carrying a mix of claims: some evidenced, some inherited from a pitch deck two years ago, some quietly indefensible. Sorting them is uncomfortable and fast."
       ],
       "details": [
-        "An audit of your current messaging, claims and proof points, including the ones nobody can source",
-        "Hypotheses for the claims that would move deals, ranked by what it would cost to prove them",
-        "A baseline of whatever real-world or research data you already hold, and a review of what the product would need to capture",
-        "Sessions with commercial, product, data and clinical to agree one version of the story"
+        {
+          "label": "An audit of your current messaging, claims and proof points",
+          "body": "Including the ones nobody can source."
+        },
+        {
+          "label": "Hypotheses for the claims that would move deals",
+          "body": "Ranked by what it would cost to prove them."
+        },
+        {
+          "label": "A baseline of the real-world and research data you hold",
+          "body": "Plus a review of what the product would need to capture."
+        },
+        {
+          "label": "Sessions with commercial, product, data and clinical",
+          "body": "To agree one version of the story."
+        }
       ]
     },
     {
@@ -56,12 +68,30 @@
         "Length is not evidence either. A buyer will not read four pages of narrative to find the number, and a reviewer who has to hunt for it will assume it is not there. We work to figures a finance lead can lift straight into a model."
       ],
       "details": [
-        "Metric selection for your market and buyer, not a generic ROI template",
-        "Data extraction, and measurement of the gain that is attributable to you",
-        "Modelling with a documented assumptions log and sourced comparators",
-        "Health economic analysis where it is warranted, and a straight answer when it is not",
-        "Data gathering at client sites where the evidence has to come from the field",
-        "A repeatable flow so evidence keeps refreshing instead of ageing in a slide"
+        {
+          "label": "Metric selection for your market and buyer",
+          "body": "Not a generic ROI template."
+        },
+        {
+          "label": "Data extraction and measurement",
+          "body": "The gain that is attributable to you."
+        },
+        {
+          "label": "Modelling",
+          "body": "With a documented assumptions log and sourced comparators."
+        },
+        {
+          "label": "Health economic analysis",
+          "body": "Where it is warranted, and a straight answer when it is not."
+        },
+        {
+          "label": "Data gathering at client sites",
+          "body": "Where the evidence has to come from the field."
+        },
+        {
+          "label": "A repeatable flow",
+          "body": "So evidence keeps refreshing instead of ageing in a slide."
+        }
       ],
       "figure": {
         "label": "A value model on screen. An assumptions log, sourced comparators, a figure with its basis visible next to it. Shot close, legible but not readable.",
@@ -83,14 +113,38 @@
         "What you are buying is the asset the rest of your commercial material is built from, rather than a report. One finding, built properly, becomes a sales proposition, an investor narrative, a conference abstract and the numbers inside an ROI tool."
       ],
       "details": [
-        "A claims and evidence library holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request",
-        "ROI calculators, from sales-led walkthroughs to short web tools for lead generation",
-        "Business case templates, white papers, briefings and award submissions",
-        "Client case studies captured end to end: filmed, written, shared and promoted",
-        "Science communications strategy, and support with research proposals, papers and journal submissions",
-        "Investor and board materials that connect evidence to the commercial model",
-        "Disclaimers and usage rules, so claims are communicated responsibly",
-        "Internal enablement, so the fiftieth sales conversation sounds like the first"
+        {
+          "label": "A claims and evidence library",
+          "body": "Holding every claim you make: versioned, sourced and auditable, so any claim can be traced back on request."
+        },
+        {
+          "label": "ROI calculators",
+          "body": "From sales-led walkthroughs to short web tools for lead generation."
+        },
+        {
+          "label": "Written materials",
+          "body": "Business case templates, white papers, briefings and award submissions."
+        },
+        {
+          "label": "Client case studies",
+          "body": "Captured end to end: filmed, written, shared and promoted."
+        },
+        {
+          "label": "Science communications strategy",
+          "body": "With support for research proposals, papers and journal submissions."
+        },
+        {
+          "label": "Investor and board materials",
+          "body": "Connecting evidence to the commercial model."
+        },
+        {
+          "label": "Disclaimers and usage rules",
+          "body": "So claims are communicated responsibly."
+        },
+        {
+          "label": "Internal enablement",
+          "body": "So the fiftieth sales conversation sounds like the first."
+        }
       ],
       "graphic": "restatement"
     },

@@ -263,7 +263,22 @@ const block = z.discriminatedUnion('type', [
     heading: z.string(),
     lede: z.string(),
     paragraphs: z.array(z.string()).default([]),
-    details: z.array(z.string()).default([]),
+    /**
+     * The deliverables, as label and detail rather than one line each.
+     *
+     * Changed 18 Sep 2026: the three lists run to four, six and eight items
+     * and sit one under another down a single page, which on a phone is a
+     * wall. Each row is now a disclosure — the deliverable is the tappable
+     * label, the qualifier opens underneath. `body` is optional, so a row
+     * with nothing to open is still a plain row.
+     *
+     * This shape is the stage block's alone. The `details` block type on the
+     * other pages still takes plain strings and still renders plain bullets:
+     * those are short lists that have nothing to hide.
+     */
+    details: z
+      .array(z.object({ label: z.string(), body: z.string().optional() }))
+      .default([]),
     figure: figure.optional(),
     graphic: z.enum(['absorption', 'restatement', 'engagementFlow']).optional(),
   }),

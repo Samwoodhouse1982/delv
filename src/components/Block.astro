@@ -29,6 +29,7 @@ import ClaimDemo from './ClaimDemo.astro';
 import ContactForm from './ContactForm.astro';
 import CtaBand from './CtaBand.astro';
 import DetailList from './DetailList.astro';
+import StageDetails from './StageDetails.astro';
 import Figure from './Figure.astro';
 import Note from './Note.astro';
 import OfferGrid from './OfferGrid.astro';
@@ -506,7 +507,7 @@ const quote = proofQuote
           {stage.paragraphs.map((p) => (
             <p set:html={p} />
           ))}
-          <DetailList items={stage.details} />
+          <StageDetails items={stage.details} />
           {stage.figure && <Figure figure={stage.figure} class="mt-block" />}
           {stage.graphic === 'restatement' && <Restatement class="mt-block" />}
           {stage.graphic === 'absorption' && <Absorption class="mt-block" />}

@@ -984,6 +984,44 @@ h3 .mark {
   .problems li::before {
     transition: width 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
   }
+
+  /*
+   * The row opening.
+   *
+   * `<details>` snaps by default, because until recently there was no way to
+   * transition to a height nobody has computed yet. `interpolate-size` is that
+   * way: it lets `auto` be an endpoint. It is set on the element rather than
+   * on `:root` deliberately — as an inherited property it would otherwise
+   * change what every `auto` on the site can animate to, which is a large
+   * change to make for one accordion.
+   *
+   * `content-visibility` has to travel with it, with `allow-discrete`, or the
+   * closed content is hidden on the first frame and the height animates over
+   * nothing.
+   *
+   * Where `::details-content` is not supported the rows still open, just
+   * instantly, which is what they did before this existed.
+   */
+  @supports (interpolate-size: allow-keywords) and (selector(::details-content)) {
+    .detail--open details {
+      interpolate-size: allow-keywords;
+    }
+    .detail--open details::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size 0.26s cubic-bezier(0.2, 0.7, 0.3, 1),
+        content-visibility 0.26s allow-discrete;
+    }
+    .detail--open details[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  .detail--open .detail-mark::before,
+  .detail--open .detail-mark::after {
+    transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
   .detail li:hover::before {
     width: 15px;
   }
@@ -1857,6 +1895,116 @@ nav.main .nav-panel a[aria-current="page"] {
 /* The light hairline on a deep band is louder than the text it separates. */
 .dark .detail li {
   border-bottom-color: var(--hair-dark);
+}
+
+/* --------------------------------------------------------------------------
+   The stage deliverables, as disclosures
+
+   Same hairlines, same left tick, same rhythm as the list above: this is the
+   plain detail list that opens, not a new kind of thing on the page. What is
+   added is a control, so the things a control needs are here — a pointer, a
+   focus ring, a mark that says which way it goes.
+
+   `.detail--open` rather than a new block, because every rule above still
+   applies and only the row's contents change.
+   -------------------------------------------------------------------------- */
+
+/*
+ * The row's padding belongs to the summary, not to the item around it.
+ *
+ * On the list this is derived from, `.detail li` carries `11px 0` and that is
+ * only spacing. Here it would be a dead margin: the summary is the control, so
+ * padding outside it is 22px of row a thumb can land on and nothing happens.
+ * Measured before the move: a 25px target inside a 47px row.
+ *
+ * The left indent stays on the item, because it is what clears the tick mark,
+ * and the hairline stays on the item too so the rule still spans the row when
+ * the row is open.
+ */
+.detail--open li.row--opens {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.detail--open summary {
+  /* The whole row, so the tap target is the row and not the words. */
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  cursor: pointer;
+  /* The browser's own triangle, twice: once for everyone, once for Safari. */
+  list-style: none;
+}
+.detail--open summary::-webkit-details-marker {
+  display: none;
+}
+/*
+ * The ring goes round the row, not round the text. `outline-offset: 3px` is
+ * the site's value and it is right for a link inside a paragraph; on a row
+ * this wide it would collide with the hairline above and below, so this one
+ * sits just inside instead.
+ */
+.detail--open summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+.dark .detail--open summary:focus-visible {
+  outline-color: var(--mark);
+}
+
+/*
+ * A plus that becomes a minus. Two 1px bars: one always horizontal, one that
+ * rotates a quarter turn out of the way when the row opens.
+ *
+ * Graphite, not the brand teal the tick on the left uses, and this is the one
+ * place on the site where those two differ. The tick is decoration and is
+ * allowed to sit at 2.93:1 against the band; this mark is the only thing
+ * telling a sighted reader the row opens at all, which makes it a UI component
+ * indicator under SC 1.4.11 and puts a 3:1 floor under it. Measured at 2.93:1
+ * in brand and 5.05:1 in graphite.
+ */
+.detail--open .detail-mark {
+  position: relative;
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  /* Nudged to sit with the first line's x-height rather than its baseline. */
+  align-self: center;
+}
+.detail--open .detail-mark::before,
+.detail--open .detail-mark::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 11px;
+  height: 1px;
+  background: var(--graphite);
+}
+.dark .detail--open .detail-mark::before,
+.dark .detail--open .detail-mark::after {
+  background: var(--on-brand);
+}
+.detail--open .detail-mark::after {
+  transform: rotate(90deg);
+}
+.detail--open details[open] .detail-mark::after {
+  transform: rotate(0deg);
+}
+
+.detail--open details p {
+  /* The item has no bottom padding any more, so the open body carries it. */
+  margin: 0 0 13px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--graphite);
+  /* Clear of the mark on the right, which the label already clears. */
+  padding-right: 27px;
+  max-width: 54ch;
+}
+.dark .detail--open details p {
+  color: var(--on-brand);
 }
 
 .qa {

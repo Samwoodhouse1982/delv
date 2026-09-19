@@ -334,6 +334,35 @@ to pause the beats behind it: the block is inside the viewport while the
 overlay is over it, so intersection alone would play the whole sequence to a
 covered screen.
 
+**The stage deliverables open, from 19 Sep 2026**, at Sam's request, and this
+is the only thing on the site a reader operates rather than watches.
+
+The three lists on What we do run to four, six and eight items one under
+another, which on a phone was a wall of wrapping lines nobody scans. Each row
+is now a `<details>`: the deliverable is the label, the qualifier opens
+underneath. Native, so it needs no JavaScript, is a button to the keyboard,
+is announced as expanded or collapsed without any ARIA to get wrong, and is
+opened by the browser's own find-in-page when a match is inside a closed row.
+Checked: it opens by tap, by Enter, and with JavaScript off.
+
+Two things it needed that a bullet does not. The row's padding moved from the
+list item onto the summary, because the summary is the control and padding
+outside it is dead: measured before the move, a 25px target inside a 47px row.
+And the plus is graphite rather than the brand teal the tick beside it uses —
+the tick is decoration and may sit at 2.93:1, but the plus is the only thing
+telling a sighted reader the row opens, which is a UI component indicator
+under SC 1.4.11 and has a 3:1 floor. Graphite measures 5.05:1.
+
+The open is animated with `interpolate-size` and `::details-content`, which is
+what makes a height of `auto` a reachable endpoint; `interpolate-size` is set
+on the element rather than `:root`, because it is inherited and would
+otherwise change what every `auto` on the site can animate to. Measured: 13
+distinct heights across the open with motion allowed, one under reduced
+motion. A browser without either feature still opens the row, instantly.
+
+`DetailList` is untouched and still renders plain bullets for the `details`
+block type on the other pages. Those are short lists with nothing to hide.
+
 Nothing else on the site moves except the section graphics above and the logo
 dot below.
 
@@ -1030,13 +1059,13 @@ template, and a reader who visits two of the three pages will see it.
    copy edit of 18 Sep 2026 removed it along with the six original items. The
    heading now carries the block on its own, with `headingGap: wide` doing the
    work the lede used to do.)
-10. **List saturation on What we do.** Two parallel lists in close succession
-    with a triple anaphora between them. The proposal is to trim the first list
-    to four and break its uniform rhythm: "money saved, hours released,
-    appointments freed, and the readmissions that did not happen". The second
-    list earns its length, and grew to eight on 18 Sep 2026 when Sam added
-    filmed client case studies and science communications, which makes trimming
-    the first one more worth doing rather than less.
+10. ~~**List saturation on What we do.**~~ **Addressed differently, 19 Sep
+    2026.** Two parallel lists in close succession with a triple anaphora
+    between them, and the second had just grown to eight items. The proposal
+    was to trim the first to four; what happened instead is that all three
+    stage lists became disclosures, so each row is one short line until a
+    reader opens it. The saturation was a length problem and the length is
+    gone. The anaphora between the lists is untouched and still worth a look.
 11. **The six tests on How we work.** Six labelled adjectives with colon
     definitions is a recognisable consultancy-deck shape, and the list does not
     spell anything. Four may land harder. Relevant and Marketable overlap.
