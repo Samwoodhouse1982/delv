@@ -24,6 +24,24 @@
  * A row with no `body` is not a disclosure at all, just a line. Wrapping it in
  * a `<details>` with nothing inside would give the reader a control that opens
  * onto nothing.
+ *
+ * ## Open above 800px, closed below
+ *
+ * 800px is where `.split` stacks. Above it the list sits in a column beside
+ * the stage heading with room to spare and there is nothing to gain by hiding
+ * eight lines; below it the column is the whole width and the list was the
+ * wall this replaced.
+ *
+ * The rows are open in the markup and a script closes them, never the other
+ * way round. The two are not equivalent: whatever happens to the script, the
+ * state it fails into is everything visible. It is inline and sits directly
+ * after the list so it runs while the parser is still here, before this part
+ * of the page has painted, rather than expanded and then collapsing.
+ *
+ * It runs once. Crossing 800px afterwards, by resizing or by turning a phone,
+ * leaves the rows as they are: someone who has opened four of them has said
+ * something about what they want to read, and a resize is not a reason to
+ * throw that away.
  */
 interface Props {
   items: { label: string; body?: string }[];
@@ -36,7 +54,7 @@ const { items } = Astro.props;
     items.map((item) =>
       item.body ? (
         <li class="row--opens">
-          <details>
+          <details open>
             <summary>
               <span class="detail-label" set:html={item.label} />
               <span class="detail-mark" aria-hidden="true" />
@@ -52,3 +70,15 @@ const { items } = Astro.props;
     )
   }
 </ul>
+
+<script is:inline>
+  (function () {
+    var list = document.currentScript.previousElementSibling;
+    if (!list || !window.matchMedia) return;
+    /* 800px is the `.split` stacking breakpoint, in one place in the CSS and
+       one here. If that moves, this moves with it. */
+    if (!matchMedia('(max-width: 800px)').matches) return;
+    var rows = list.querySelectorAll('details[open]');
+    for (var i = 0; i < rows.length; i++) rows[i].open = false;
+  })();
+</script>

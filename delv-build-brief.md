@@ -343,7 +343,26 @@ is now a `<details>`: the deliverable is the label, the qualifier opens
 underneath. Native, so it needs no JavaScript, is a button to the keyboard,
 is announced as expanded or collapsed without any ARIA to get wrong, and is
 opened by the browser's own find-in-page when a match is inside a closed row.
-Checked: it opens by tap, by Enter, and with JavaScript off.
+Checked: it opens by tap and by Enter.
+
+**Open above 800px, closed below**, which is where `.split` stacks. Above it
+the list sits in a column beside the stage heading with room to spare and
+there is nothing to gain by hiding eight lines; below it the column is the
+whole width and the list is the wall this replaced. Sam's call, 19 Sep 2026,
+over collapsing everywhere.
+
+The rows are open in the markup and an inline script closes them, never the
+other way round, and the two are not equivalent: whatever happens to the
+script, the state it fails into is everything visible. Checked with JavaScript
+disabled — 18 of 18 open at both widths, and the control still toggles. The
+script sits directly after the list so it runs while the parser is still
+there: measured across the first 40 frames the page ever renders, the row is
+its closed height on every one of them, so nothing expands and collapses.
+
+It runs once. Crossing 800px afterwards, by resizing or by turning a phone,
+leaves the rows alone: someone who has opened four of them has said something
+about what they want to read. Checked: three open at 1280, still three after
+a resize to 390.
 
 Two things it needed that a bullet does not. The row's padding moved from the
 list item onto the summary, because the summary is the control and padding
